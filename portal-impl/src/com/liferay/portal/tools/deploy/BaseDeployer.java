@@ -895,11 +895,13 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 		// after the prefix, or 3.) the recommended deployment context as
 		// specified in liferay-plugin-package.properties, or 4.) the file name.
 
-		if (Validator.isNull(specifiedContext) &&
-			srcFile.getName().startsWith(DEPLOY_TO_PREFIX)) {
+		String srcFileName = srcFile.getName();
 
-			displayName = srcFile.getName().substring(
-				DEPLOY_TO_PREFIX.length(), srcFile.getName().length() - 4);
+		if (Validator.isNull(specifiedContext) &&
+			srcFileName.startsWith(DEPLOY_TO_PREFIX)) {
+
+			displayName = srcFileName.substring(
+				DEPLOY_TO_PREFIX.length(), srcFileName.length() - 4);
 
 			overwrite = true;
 			preliminaryContext = displayName;
@@ -1176,6 +1178,10 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 	public String getExtraContent(
 			double webXmlVersion, File srcFile, String displayName)
 		throws Exception {
+
+		if (displayName.startsWith(StringPool.FORWARD_SLASH)) {
+			displayName = displayName.substring(1);
+		}
 
 		StringBundler sb = new StringBundler(62);
 

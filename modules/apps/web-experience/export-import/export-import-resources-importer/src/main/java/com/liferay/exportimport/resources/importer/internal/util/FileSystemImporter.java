@@ -46,6 +46,7 @@ import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -89,7 +90,6 @@ import com.liferay.portal.kernel.util.MimeTypes;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -2020,7 +2020,7 @@ public class FileSystemImporter extends BaseImporter {
 			"language_entry",
 			"com.liferay.portal.kernel.servlet.taglib.ui.LanguageEntry"
 		},
-		{"rss_feed", "com.liferay.rss.web.util.RSSFeed"},
+		{"rss_feed", "com.liferay.rss.web.internal.util.RSSFeed"},
 		{"site_map", "com.liferay.portal.kernel.model.LayoutSet"},
 		{"site_navigation", "com.liferay.portal.kernel.theme.NavItem"},
 		{"wiki_page", "com.liferay.wiki.model.WikiPage"}

@@ -15,14 +15,17 @@
 package com.liferay.fragment.service.impl;
 
 import com.liferay.fragment.constants.FragmentActionKeys;
+import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.base.FragmentEntryServiceBaseImpl;
-import com.liferay.fragment.service.permission.FragmentEntryPermission;
-import com.liferay.fragment.service.permission.FragmentPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
@@ -35,31 +38,32 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 
 	@Override
 	public FragmentEntry addFragmentEntry(
-			long groupId, long fragmentCollectionId, String name,
+			long groupId, long fragmentCollectionId, String name, int status,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		FragmentPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId,
 			FragmentActionKeys.ADD_FRAGMENT_ENTRY);
 
 		return fragmentEntryLocalService.addFragmentEntry(
-			getUserId(), groupId, fragmentCollectionId, name, serviceContext);
+			getUserId(), groupId, fragmentCollectionId, name, status,
+			serviceContext);
 	}
 
 	@Override
 	public FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String name, String css,
-			String html, String js, ServiceContext serviceContext)
+			String html, String js, int status, ServiceContext serviceContext)
 		throws PortalException {
 
-		FragmentPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId,
 			FragmentActionKeys.ADD_FRAGMENT_ENTRY);
 
 		return fragmentEntryLocalService.addFragmentEntry(
 			getUserId(), groupId, fragmentCollectionId, name, css, html, js,
-			serviceContext);
+			status, serviceContext);
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 		throws PortalException {
 
 		for (long fragmentEntryId : fragmentEntriesIds) {
-			FragmentEntryPermission.check(
+			_fragmentEntryModelResourcePermission.check(
 				getPermissionChecker(), fragmentEntryId, ActionKeys.DELETE);
 
 			fragmentEntryLocalService.deleteFragmentEntry(fragmentEntryId);
@@ -78,18 +82,10 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 	public FragmentEntry deleteFragmentEntry(long fragmentEntryId)
 		throws PortalException {
 
-		FragmentEntryPermission.check(
+		_fragmentEntryModelResourcePermission.check(
 			getPermissionChecker(), fragmentEntryId, ActionKeys.DELETE);
 
 		return fragmentEntryLocalService.deleteFragmentEntry(fragmentEntryId);
-	}
-
-	@Override
-	public List<FragmentEntry> fetchFragmentEntries(long fragmentCollectionId)
-		throws PortalException {
-
-		return fragmentEntryLocalService.fetchFragmentEntries(
-			fragmentCollectionId);
 	}
 
 	@Override
@@ -100,7 +96,7 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			fragmentEntryLocalService.fetchFragmentEntry(fragmentEntryId);
 
 		if (fragmentEntry != null) {
-			FragmentEntryPermission.check(
+			_fragmentEntryModelResourcePermission.check(
 				getPermissionChecker(), fragmentEntry, ActionKeys.VIEW);
 		}
 
@@ -121,6 +117,22 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 
 		return fragmentEntryPersistence.filterCountByG_FCI_LikeN(
 			groupId, fragmentCollectionId, name);
+	}
+
+	@Override
+	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId)
+		throws PortalException {
+
+		return fragmentEntryLocalService.getFragmentEntries(
+			fragmentCollectionId);
+	}
+
+	@Override
+	public List<FragmentEntry> getFragmentEntries(
+		long fragmentCollectionId, int status) {
+
+		return fragmentEntryLocalService.getFragmentEntries(
+			fragmentCollectionId, status);
 	}
 
 	@Override
@@ -155,7 +167,7 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId, String name)
 		throws PortalException {
 
-		FragmentEntryPermission.check(
+		_fragmentEntryModelResourcePermission.check(
 			getPermissionChecker(), fragmentEntryId, ActionKeys.UPDATE);
 
 		return fragmentEntryLocalService.updateFragmentEntry(
@@ -165,17 +177,29 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 	@Override
 	public FragmentEntry updateFragmentEntry(
 			long fragmentEntryId, String name, String css, String html,
-			String js, ServiceContext serviceContext)
+			String js, int status, ServiceContext serviceContext)
 		throws PortalException {
 
-		FragmentEntryPermission.check(
+		_fragmentEntryModelResourcePermission.check(
 			getPermissionChecker(), fragmentEntryId, ActionKeys.UPDATE);
 
 		return fragmentEntryLocalService.updateFragmentEntry(
-			fragmentEntryId, name, css, html, js, serviceContext);
+			getUserId(), fragmentEntryId, name, css, html, js, status,
+			serviceContext);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FragmentEntryServiceImpl.class);
+
+	private static volatile ModelResourcePermission<FragmentEntry>
+		_fragmentEntryModelResourcePermission =
+			ModelResourcePermissionFactory.getInstance(
+				FragmentEntryServiceImpl.class,
+				"_fragmentEntryModelResourcePermission", FragmentEntry.class);
+	private static volatile PortletResourcePermission
+		_portletResourcePermission =
+			PortletResourcePermissionFactory.getInstance(
+				FragmentEntryServiceImpl.class, "_portletResourcePermission",
+				FragmentConstants.RESOURCE_NAME);
 
 }

@@ -74,7 +74,7 @@
 			<var name="portlet" value="Dynamic Data Lists" />
 		</execute>
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="Type#clickAtType" locator1="TextInput#NAME" value1="List Name" />
 		<execute macro="Button#clickSave" />
@@ -1456,8 +1456,10 @@
 
 		<execute macro="DDLDataDefinition#save" />
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="Data Definition Title" />
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Data Definition Title" />
+		</execute>
+
 		<execute function="Click#waitForMenuToggleJSClick" locator1="DDMSelectStructure#DDM_STRUCTURE_ELLIPSIS_1" />
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Manage Templates">
 			<var name="key_menuItem" value="Manage Templates" />
@@ -3499,19 +3501,9 @@
 			<var name="parentPage" value="Parent Page Name" />
 		</execute>
 
-		<toggle name="LPS-68869">
-			<on>
-				<execute macro="DDLRecord#selectLinkToPagePage">
-					<var name="ddlRecordFieldData" value="Child Page Name" />
-				</execute>
-			</on>
-
-			<off>
-				<execute macro="DDLRecord#selectLinkToPageRadio">
-					<var name="ddlRecordFieldData" value="Child Page Name" />
-				</execute>
-			</off>
-		</toggle>
+		<execute macro="DDLRecord#selectLinkToPageRadio">
+			<var name="ddlRecordFieldData" value="Child Page Name" />
+		</execute>
 
 		<execute macro="DDLRecord#viewLinkToPageBreadcrumbCount">
 			<var name="count" value="2" />

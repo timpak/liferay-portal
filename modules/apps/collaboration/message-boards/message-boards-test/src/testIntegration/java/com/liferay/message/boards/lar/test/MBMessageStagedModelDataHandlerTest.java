@@ -30,6 +30,8 @@ import com.liferay.message.boards.kernel.model.MBMessageConstants;
 import com.liferay.message.boards.kernel.service.MBCategoryLocalServiceUtil;
 import com.liferay.message.boards.kernel.service.MBCategoryServiceUtil;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.message.boards.test.util.MBTestUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Repository;
@@ -43,10 +45,8 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portlet.messageboards.util.test.MBTestUtil;
 
 import java.io.InputStream;
 
@@ -186,16 +186,14 @@ public class MBMessageStagedModelDataHandlerTest
 				group.getGroupId(), TestPropsValues.getUserId());
 
 		MBMessage approvedMessage = MBTestUtil.addMessageWithWorkflow(
-			TestPropsValues.getUserId(), group.getGroupId(),
-			MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
+			group.getGroupId(), MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(), true,
 			serviceContext);
 
 		stagedModels.add(approvedMessage);
 
 		MBMessage pendingMessage = MBTestUtil.addMessageWithWorkflow(
-			TestPropsValues.getUserId(), group.getGroupId(),
-			MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
+			group.getGroupId(), MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(), false,
 			serviceContext);
 

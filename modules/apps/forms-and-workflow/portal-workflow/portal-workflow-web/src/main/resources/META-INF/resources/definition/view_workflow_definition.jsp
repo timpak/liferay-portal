@@ -26,7 +26,7 @@ String content = workflowDefinition.getContent();
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
-renderResponse.setTitle(workflowDefinition.getName());
+renderResponse.setTitle(workflowDefinition.getTitle(LanguageUtil.getLanguageId(request)));
 
 String state = (String)request.getParameter(WorkflowWebKeys.WORKFLOW_JSP_STATE);
 
@@ -99,7 +99,7 @@ boolean previewBeforeRestore = WorkflowWebKeys.WORKFLOW_PREVIEW_BEFORE_RESTORE_S
 	<c:choose>
 		<c:when test="<%= !previewBeforeRestore %>">
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" href="<%= editWorkflowDefinitionURL %>" primary="<%= true %>" value="edit" />
+				<aui:button href="<%= editWorkflowDefinitionURL %>" primary="<%= true %>" value="edit" />
 			</aui:button-row>
 		</c:when>
 	</c:choose>

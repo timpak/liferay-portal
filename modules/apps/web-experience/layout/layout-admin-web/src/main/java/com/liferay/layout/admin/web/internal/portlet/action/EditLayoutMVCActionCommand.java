@@ -15,7 +15,7 @@
 package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -178,13 +178,14 @@ public class EditLayoutMVCActionCommand extends BaseMVCActionCommand {
 			}
 		}
 		else {
-			layout.setTypeSettingsProperties(formTypeSettingsProperties);
+			layoutTypeSettingsProperties.putAll(formTypeSettingsProperties);
 
 			layoutTypeSettingsProperties.putAll(
 				layout.getTypeSettingsProperties());
 
 			layout = _layoutService.updateLayout(
-				groupId, privateLayout, layoutId, layout.getTypeSettings());
+				groupId, privateLayout, layoutId,
+				layoutTypeSettingsProperties.toString());
 		}
 
 		HttpServletResponse response = _portal.getHttpServletResponse(

@@ -33,6 +33,7 @@ import com.liferay.blogs.social.BlogsActivityKeys;
 import com.liferay.counter.kernel.model.Counter;
 import com.liferay.counter.kernel.model.CounterModel;
 import com.liferay.counter.model.impl.CounterModelImpl;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
@@ -43,7 +44,6 @@ import com.liferay.document.library.kernel.model.DLFileEntryTypeModel;
 import com.liferay.document.library.kernel.model.DLFileVersionModel;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderModel;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.dynamic.data.lists.constants.DDLPortletKeys;
 import com.liferay.dynamic.data.lists.model.DDLRecordConstants;
 import com.liferay.dynamic.data.lists.model.DDLRecordModel;
@@ -114,6 +114,7 @@ import com.liferay.message.boards.model.impl.MBDiscussionModelImpl;
 import com.liferay.message.boards.model.impl.MBMailingListModelImpl;
 import com.liferay.message.boards.model.impl.MBStatsUserModelImpl;
 import com.liferay.message.boards.model.impl.MBThreadFlagModelImpl;
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.OutputStreamWriter;
@@ -164,7 +165,6 @@ import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.PortletKeys;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -1515,8 +1515,8 @@ public class DataFactory {
 			"Test DDM Structure", sb.toString());
 	}
 
-	public List<PortletPreferencesModel>
-		newDDLPortletPreferencesModels(long plid) {
+	public List<PortletPreferencesModel> newDDLPortletPreferencesModels(
+		long plid) {
 
 		List<PortletPreferencesModel> portletPreferencesModels =
 			new ArrayList<>(3);
@@ -2038,8 +2038,8 @@ public class DataFactory {
 		return journalContentSearchModel;
 	}
 
-	public List<PortletPreferencesModel>
-		newJournalPortletPreferencesModels(long plid) {
+	public List<PortletPreferencesModel> newJournalPortletPreferencesModels(
+		long plid) {
 
 		return Collections.singletonList(
 			newPortletPreferencesModel(

@@ -20,12 +20,14 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.WorkflowDefinitionLink;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.AggregatePredicateFilter;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
@@ -94,8 +96,38 @@ public class WorkflowDefinitionDisplayContext {
 		return firstWorkflowDefinition.getModifiedDate();
 	}
 
+	public String getCreatorUserName(WorkflowDefinition workflowDefinition)
+		throws PortalException {
+
+		List<WorkflowDefinition> workflowDefinitions = getWorkflowDefinitions(
+			workflowDefinition.getName());
+
+		WorkflowDefinition firstWorkflowDefinition = workflowDefinitions.get(0);
+
+		return getUserName(firstWorkflowDefinition);
+	}
+
 	public String getDescription(WorkflowDefinition workflowDefinition) {
 		return HtmlUtil.escape(workflowDefinition.getDescription());
+	}
+
+	public String getDuplicateTitle(WorkflowDefinition workflowDefinition) {
+		if (workflowDefinition == null) {
+			return StringPool.BLANK;
+		}
+
+		ResourceBundle resourceBundle = getResourceBundle();
+
+		String title = workflowDefinition.getTitle();
+
+		String defaultLanguageId = LocalizationUtil.getDefaultLanguageId(title);
+
+		String newTitle = LanguageUtil.format(
+			resourceBundle, "copy-of-x",
+			workflowDefinition.getTitle(defaultLanguageId));
+
+		return LocalizationUtil.updateLocalization(
+			title, "title", newTitle, defaultLanguageId);
 	}
 
 	public Object[] getMessageArguments(
@@ -106,29 +138,37 @@ public class WorkflowDefinitionDisplayContext {
 			return new Object[0];
 		}
 		else if (workflowDefinitionLinks.size() == 1) {
+			WorkflowDefinitionLink workflowDefinitionLink =
+				workflowDefinitionLinks.get(0);
+
 			return new Object[] {
-				getLocalizedAssetName(
-					workflowDefinitionLinks.get(0).getClassName()),
+				getLocalizedAssetName(workflowDefinitionLink.getClassName()),
 				getConfigureAssignementLink()
 			};
 		}
 		else if (workflowDefinitionLinks.size() == 2) {
+			WorkflowDefinitionLink workflowDefinitionLink1 =
+				workflowDefinitionLinks.get(0);
+			WorkflowDefinitionLink workflowDefinitionLink2 =
+				workflowDefinitionLinks.get(1);
+
 			return new Object[] {
-				getLocalizedAssetName(
-					workflowDefinitionLinks.get(0).getClassName()),
-				getLocalizedAssetName(
-					workflowDefinitionLinks.get(1).getClassName()),
+				getLocalizedAssetName(workflowDefinitionLink1.getClassName()),
+				getLocalizedAssetName(workflowDefinitionLink2.getClassName()),
 				getConfigureAssignementLink()
 			};
 		}
 		else {
 			int moreAssets = workflowDefinitionLinks.size() - 2;
 
+			WorkflowDefinitionLink workflowDefinitionLink1 =
+				workflowDefinitionLinks.get(0);
+			WorkflowDefinitionLink workflowDefinitionLink2 =
+				workflowDefinitionLinks.get(1);
+
 			return new Object[] {
-				getLocalizedAssetName(
-					workflowDefinitionLinks.get(0).getClassName()),
-				getLocalizedAssetName(
-					workflowDefinitionLinks.get(1).getClassName()),
+				getLocalizedAssetName(workflowDefinitionLink1.getClassName()),
+				getLocalizedAssetName(workflowDefinitionLink2.getClassName()),
 				moreAssets, getConfigureAssignementLink()
 			};
 		}
@@ -299,9 +339,7 @@ public class WorkflowDefinitionDisplayContext {
 	protected String getConfigureAssignementLink() throws PortletException {
 		PortletURL portletURL = getWorkflowDefinitionLinkPortletURL();
 
-		ResourceBundle resourceBundle =
-			_resourceBundleLoader.loadResourceBundle(
-				_workflowDefinitionRequestHelper.getLocale());
+		ResourceBundle resourceBundle = getResourceBundle();
 
 		return StringUtil.replace(
 			_HTML, new String[] {"[$RENDER_URL$]", "[$MESSAGE$]"},
@@ -316,12 +354,18 @@ public class WorkflowDefinitionDisplayContext {
 			_workflowDefinitionRequestHelper.getLocale(), className);
 	}
 
+	protected ResourceBundle getResourceBundle() {
+		return _resourceBundleLoader.loadResourceBundle(
+			_workflowDefinitionRequestHelper.getLocale());
+	}
+
 	protected PortletURL getWorkflowDefinitionLinkPortletURL() {
-		PortletURL portletURL =
-			_workflowDefinitionRequestHelper.getLiferayPortletResponse().
-				createLiferayPortletURL(
-					WorkflowPortletKeys.CONTROL_PANEL_WORKFLOW,
-					PortletRequest.RENDER_PHASE);
+		LiferayPortletResponse response =
+			_workflowDefinitionRequestHelper.getLiferayPortletResponse();
+
+		PortletURL portletURL = response.createLiferayPortletURL(
+			WorkflowPortletKeys.CONTROL_PANEL_WORKFLOW,
+			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("mvcPath", "/view.jsp");
 		portletURL.setParameter(

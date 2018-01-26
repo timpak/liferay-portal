@@ -44,6 +44,7 @@ import com.liferay.exportimport.kernel.service.StagingLocalService;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.kernel.staging.StagingConstants;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.exception.LayoutPrototypeException;
@@ -114,7 +115,6 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Tuple;
@@ -2937,6 +2937,8 @@ public class StagingImpl implements Staging {
 
 		Layout sourceLayout = _layoutLocalService.getLayout(plid);
 
+		Group scopeGroup = sourceLayout.getScopeGroup();
+
 		Group stagingGroup = null;
 		Group liveGroup = null;
 
@@ -2950,9 +2952,9 @@ public class StagingImpl implements Staging {
 			targetLayout = sourceLayout;
 		}
 		else if (sourceLayout.hasScopeGroup() &&
-				 (sourceLayout.getScopeGroup().getGroupId() == scopeGroupId)) {
+				 (scopeGroup.getGroupId() == scopeGroupId)) {
 
-			stagingGroup = sourceLayout.getScopeGroup();
+			stagingGroup = scopeGroup;
 
 			liveGroup = stagingGroup.getLiveGroup();
 

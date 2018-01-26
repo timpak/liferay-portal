@@ -22,19 +22,21 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(fragmentDisplayContext.getEditFragmentEntryRedirect());
 
-renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
+String title = fragmentDisplayContext.getFragmentEntryTitle();
+
+if (WorkflowConstants.STATUS_DRAFT == fragmentEntry.getStatus()) {
+	title = fragmentDisplayContext.getFragmentEntryTitle() + " (" + LanguageUtil.get(request, WorkflowConstants.getStatusLabel(fragmentEntry.getStatus())) + ")";
+}
+
+renderResponse.setTitle(title);
 %>
 
-<aui:nav-bar markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
+<clay:navigation-bar
+	items="<%= fragmentDisplayContext.getEditFragmentEntryNavigationItems() %>"
+/>
 
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="code" selected="<%= true %>" />
-	</aui:nav>
-</aui:nav-bar>
-
-<portlet:actionURL name="editFragmentEntry" var="editFragmentEntryURL">
-	<portlet:param name="mvcPath" value="/edit_fragment_entry.jsp" />
+<portlet:actionURL name="/fragment/edit_fragment_entry" var="editFragmentEntryURL">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/edit_fragment_entry" />
 </portlet:actionURL>
 
 <liferay-ui:error exception="<%= FragmentEntryContentException.class %>">
@@ -60,6 +62,7 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
 	<aui:input name="cssContent" type="hidden" value="" />
 	<aui:input name="htmlContent" type="hidden" value="" />
 	<aui:input name="jsContent" type="hidden" value="" />
+	<aui:input name="status" type="hidden" value="<%= fragmentEntry.getStatus() %>" />
 
 	<aui:model-context bean="<%= fragmentEntry %>" model="<%= FragmentEntry.class %>" />
 
@@ -68,11 +71,19 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
 	<div id="<portlet:namespace />fragmentEditor"></div>
 
 	<aui:button-row cssClass="fragment-submit-buttons">
-		<aui:button cssClass="btn btn-lg" type="submit" />
+		<c:if test="<%= WorkflowConstants.STATUS_DRAFT == fragmentEntry.getStatus() %>">
+			<aui:button primary="<%= false %>" type="submit" value="save-as-draft" />
+		</c:if>
+
+		<aui:button name="publishButton" type="submit" value="publish" />
 	</aui:button-row>
 </aui:form>
 
-<aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor">
+<portlet:actionURL name="/fragment/render_fragment_entry" var="renderFragmentEntryURL">
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+</portlet:actionURL>
+
+<aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor, metal-dom/src/all/dom as dom">
 	var cssInput = document.getElementById('<portlet:namespace />cssContent');
 	var htmlInput = document.getElementById('<portlet:namespace />htmlContent');
 	var jsInput = document.getElementById('<portlet:namespace />jsContent');
@@ -91,13 +102,28 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
 			namespace: '<portlet:namespace />',
+			renderFragmentEntryURL: '<%= renderFragmentEntryURL %>',
 			spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
 		},
 		wrapper
 	);
 
+	var publishButtonClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'#<portlet:namespace />publishButton',
+		function(event) {
+			event.preventDefault();
+
+			dom.toElement('#<portlet:namespace />status').value = '<%= WorkflowConstants.STATUS_APPROVED %>';
+
+			submitForm(document.querySelector('#<portlet:namespace />fm'));
+		}
+	);
+
 	function destroyFragmentEditor () {
 		fragmentEditor.dispose();
+		publishButtonClickHandler.removeListener();
 
 		Liferay.detach('destroyPortlet', destroyFragmentEditor);
 	}

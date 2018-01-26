@@ -393,9 +393,20 @@ public class ModulesStructureTest {
 					if (StringUtil.startsWith(fileName, ".lfrbuild-")) {
 						fileNames.add(fileName);
 
-						Assert.assertEquals(
-							"Marker file " + path + " must be empty", 0,
-							basicFileAttributes.size());
+						if (_nonEmptyMarkerFileNames.contains(fileName)) {
+							String content = ModulesStructureTestUtil.read(
+								path);
+
+							Assert.assertEquals(
+								"Forbidden leading or trailing whitespaces " +
+									"in " + path,
+								content.trim(), content);
+						}
+						else {
+							Assert.assertEquals(
+								"Marker file " + path + " must be empty", 0,
+								basicFileAttributes.size());
+						}
 					}
 
 					return FileVisitResult.CONTINUE;
@@ -1042,6 +1053,7 @@ public class ModulesStructureTest {
 		Assert.assertFalse(
 			"Plugins DSL forbidden in " + path +
 				", please use \"apply plugin:\" instead",
+			!content.contains("pluginBundle {") &&
 			content.contains("plugins {"));
 
 		List<GradleDependency> gradleDependencies =
@@ -1211,5 +1223,7 @@ public class ModulesStructureTest {
 		"compileOnly", "provided", "compile", "runtime", "testCompile",
 		"testRuntime", "testIntegrationCompile", "testIntegrationRuntime");
 	private static Path _modulesDirPath;
+	private static final Set<String> _nonEmptyMarkerFileNames =
+		Collections.singleton(".lfrbuild-poshi-runner-resources ");
 
 }

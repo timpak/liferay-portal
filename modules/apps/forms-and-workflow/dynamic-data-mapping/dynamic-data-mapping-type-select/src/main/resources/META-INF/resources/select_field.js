@@ -34,6 +34,13 @@ AUI.add(
 						value: 'manual'
 					},
 
+					fixedOptions: {
+						getter: '_getFixedOptions',
+						state: true,
+						validator: Array.isArray,
+						value: []
+					},
+
 					multiple: {
 						state: true,
 						value: false
@@ -151,10 +158,11 @@ AUI.add(
 							SelectField.superclass.getTemplateContext.apply(instance, arguments),
 							{
 								badgeCloseIcon: soyIncDom(Liferay.Util.getLexiconIconTpl('times', 'icon-monospaced')),
+								fixedOptions: instance.get('fixedOptions'),
 								open: instance._open,
 								options: instance.get('options'),
 								predefinedValue: instance.get('readOnly') ? instance.get('predefinedValue') : instance.getValue(),
-								selectCaretDoubleIcon: soyIncDom(Liferay.Util.getLexiconIconTpl('caret-double-l', 'icon-monospaced')),
+								selectCaretDoubleIcon: soyIncDom(Liferay.Util.getLexiconIconTpl('caret-double')),
 								selectSearchIcon: soyIncDom(Liferay.Util.getLexiconIconTpl('search', 'icon-monospaced')),
 								strings: instance.get('strings'),
 								value: instance.getValue()
@@ -261,6 +269,10 @@ AUI.add(
 						);
 					},
 
+					_getFixedOptions: function(fixedOptions) {
+						return fixedOptions || [];
+					},
+
 					_getOptions: function(options) {
 						return options || [];
 					},
@@ -286,7 +298,11 @@ AUI.add(
 
 						var target = event.target;
 
+						var addRepeatebleButton = target.hasClass('lfr-ddm-form-field-repeatable-add-button');
+
 						var closeIconNode = target.ancestor('.' + CSS_SELECT_BADGE_ITEM_CLOSE, true);
+
+						var deleteRepeatebleButton = target.hasClass('lfr-ddm-form-field-repeatable-delete-button');
 
 						var optionNode = target.ancestor('.' + CSS_SELECT_OPTION_ITEM, true);
 
@@ -296,7 +312,7 @@ AUI.add(
 						else if (optionNode) {
 							instance._handleItemClick(optionNode);
 						}
-						else {
+						else if (!addRepeatebleButton && !deleteRepeatebleButton) {
 							instance._handleSelectTriggerClick(event);
 						}
 

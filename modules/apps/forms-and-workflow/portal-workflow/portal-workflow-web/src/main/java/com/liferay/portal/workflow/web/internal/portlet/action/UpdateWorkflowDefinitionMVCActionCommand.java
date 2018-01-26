@@ -92,10 +92,7 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 	protected void addSuccessMessage(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
-			portal.getLocale(actionRequest));
-
-		String successMessage = getSuccessMessage(resourceBundle);
+		String successMessage = getSuccessMessage(actionRequest);
 
 		SessionMessages.add(actionRequest, "requestProcessed", successMessage);
 	}
@@ -117,6 +114,8 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 			throw new WorkflowDefinitionTitleException();
 		}
 
+		String name = ParamUtil.getString(actionRequest, "name");
+
 		String content = ParamUtil.getString(actionRequest, "content");
 
 		if (Validator.isNull(content)) {
@@ -128,7 +127,7 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 		WorkflowDefinition workflowDefinition =
 			workflowDefinitionManager.deployWorkflowDefinition(
 				themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-				getTitle(titleMap), content.getBytes());
+				getTitle(titleMap), name, content.getBytes());
 
 		addSuccessMessage(actionRequest, actionResponse);
 
@@ -137,7 +136,18 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 		sendRedirect(actionRequest, actionResponse);
 	}
 
-	protected String getSuccessMessage(ResourceBundle resourceBundle) {
+	protected ResourceBundle getResourceBundle(ActionRequest actionRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Locale locale = themeDisplay.getLocale();
+
+		return resourceBundleLoader.loadResourceBundle(locale);
+	}
+
+	protected String getSuccessMessage(ActionRequest actionRequest) {
+		ResourceBundle resourceBundle = getResourceBundle(actionRequest);
+
 		return LanguageUtil.get(
 			resourceBundle, "workflow-updated-successfully");
 	}

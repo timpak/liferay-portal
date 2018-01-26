@@ -14,20 +14,23 @@
 
 package com.liferay.fragment.entry.processor.editable;
 
+import com.liferay.fragment.entry.processor.editable.parser.EditableElementParser;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
+import com.liferay.fragment.util.HtmlParserUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -35,6 +38,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * @author Pavel Savinov
@@ -47,21 +53,62 @@ import org.osgi.service.component.annotations.Component;
 public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Override
+	public String processFragmentEntryHTML(String html, JSONObject jsonObject)
+		throws PortalException {
+
+		Document document = _htmlParserUtil.parse(html);
+
+		XPath editableXPath = SAXReaderUtil.createXPath("//lfr-editable");
+
+		for (Node editableNode : editableXPath.selectNodes(document)) {
+			Element element = (Element)editableNode;
+
+			EditableElementParser editableElementParser =
+				_editableElementParsers.get(element.attributeValue("type"));
+
+			if (editableElementParser == null) {
+				continue;
+			}
+
+			String id = element.attributeValue("id");
+
+			editableElementParser.replace(element, jsonObject.getString(id));
+		}
+
+		Element rootElement = document.getRootElement();
+
+		return rootElement.asXML();
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		unbind = "unregisterEditableElementParser"
+	)
+	public void registerEditableElementParser(
+		EditableElementParser editableElementParser,
+		Map<String, Object> properties) {
+
+		String editableTagName = (String)properties.get("type");
+
+		_editableElementParsers.put(editableTagName, editableElementParser);
+	}
+
+	public void unregisterEditableElementParser(
+		EditableElementParser editableElementParser,
+		Map<String, Object> properties) {
+
+		String editableTagName = (String)properties.get("type");
+
+		_editableElementParsers.remove(editableTagName);
+	}
+
+	@Override
 	public void validateFragmentEntryHTML(String html) throws PortalException {
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 			"content.Language", getClass());
 
-		Document document = null;
-
-		try {
-			document = SAXReaderUtil.read(html);
-		}
-		catch (DocumentException de) {
-			throw new FragmentEntryContentException(
-				LanguageUtil.get(
-					resourceBundle, "fragment-entry-html-is-invalid"),
-				de);
-		}
+		Document document = _htmlParserUtil.parse(html);
 
 		XPath uniqueXPath = SAXReaderUtil.createXPath("//*[@id]");
 
@@ -97,23 +144,28 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 		Stream<Node> editableNodesStream = editableNodes.stream();
 
-		boolean match = editableNodesStream.allMatch(
-			node -> {
-				Element element = (Element)node;
+		if (!editableNodesStream.allMatch(
+				node -> {
+					Element element = (Element)node;
 
-				if (Validator.isNotNull(element.attributeValue("id"))) {
-					return true;
-				}
+					if (Validator.isNotNull(element.attributeValue("id"))) {
+						return true;
+					}
 
-				return false;
-			});
+					return false;
+				})) {
 
-		if (!match) {
 			throw new FragmentEntryContentException(
 				LanguageUtil.get(
 					resourceBundle,
 					"you-must-define-an-unique-id-for-each-editable-element"));
 		}
 	}
+
+	private final Map<String, EditableElementParser> _editableElementParsers =
+		new HashMap<>();
+
+	@Reference
+	private HtmlParserUtil _htmlParserUtil;
 
 }

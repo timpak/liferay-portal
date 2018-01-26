@@ -19,8 +19,9 @@ import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
-import com.liferay.fragment.service.permission.FragmentPermission;
+import com.liferay.fragment.web.internal.security.permission.resource.FragmentPermission;
 import com.liferay.fragment.web.util.FragmentPortletUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletURL;
@@ -97,10 +99,29 @@ public class FragmentDisplayContext {
 		return redirect;
 	}
 
+	public List<NavigationItem> getEditFragmentEntryNavigationItems() {
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+
+		PortletURL mainURL = _renderResponse.createRenderURL();
+
+		entriesNavigationItem.setHref(mainURL.toString());
+
+		entriesNavigationItem.setLabel(LanguageUtil.get(_request, "code"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
+	}
+
 	public String getEditFragmentEntryRedirect() throws PortalException {
 		PortletURL portletURL = _renderResponse.createRenderURL();
 
-		portletURL.setParameter("mvcPath", "/view_fragment_entries.jsp");
+		portletURL.setParameter(
+			"mvcRenderCommandName", "/fragment/view_fragment_entries");
 
 		if (getFragmentCollectionId() > 0) {
 			portletURL.setParameter(
@@ -134,13 +155,32 @@ public class FragmentDisplayContext {
 		return _fragmentCollectionId;
 	}
 
+	public List<NavigationItem> getFragmentCollectionNavigationItems() {
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+
+		PortletURL mainURL = _renderResponse.createRenderURL();
+
+		entriesNavigationItem.setHref(mainURL.toString());
+
+		entriesNavigationItem.setLabel(
+			LanguageUtil.get(_request, "collections"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
+	}
+
 	public String getFragmentCollectionsRedirect() throws PortalException {
 		String redirect = ParamUtil.getString(_request, "redirect");
 
 		if (Validator.isNull(redirect)) {
 			PortletURL backURL = _renderResponse.createRenderURL();
 
-			backURL.setParameter("mvcPath", "/view.jsp");
+			backURL.setParameter("mvcRenderCommandName", "/fragment/view");
 
 			redirect = backURL.toString();
 		}
@@ -326,6 +366,23 @@ public class FragmentDisplayContext {
 		return _fragmentEntryId;
 	}
 
+	public List<NavigationItem> getFragmentEntryNavigationItems() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+		entriesNavigationItem.setHref(themeDisplay.getURLCurrent());
+		entriesNavigationItem.setLabel(LanguageUtil.get(_request, "fragments"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
+	}
+
 	public String getFragmentEntryTitle() throws PortalException {
 		FragmentEntry fragmentEntry = getFragmentEntry();
 
@@ -445,7 +502,6 @@ public class FragmentDisplayContext {
 
 		if (FragmentPermission.contains(
 				themeDisplay.getPermissionChecker(),
-				FragmentPermission.RESOURCE_NAME, FragmentPortletKeys.FRAGMENT,
 				themeDisplay.getSiteGroupId(), actionId)) {
 
 			return true;

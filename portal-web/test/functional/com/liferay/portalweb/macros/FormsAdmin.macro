@@ -90,15 +90,7 @@
 	</command>
 
 	<command name="saveDataProvider">
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
-	</command>
-
-	<command name="searchFormEntry">
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${searchTerm}" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="teardownForms">

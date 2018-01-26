@@ -300,11 +300,11 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 		</div>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" id="addButton" onClick='<%= renderResponse.getNamespace() + "schedulePublishEvent();" %>' value="add-event" />
+			<aui:button id="addButton" onClick='<%= renderResponse.getNamespace() + "schedulePublishEvent();" %>' value="add-event" />
 
-			<aui:button cssClass="btn-lg" id="publishButton" type="submit" value="<%= LanguageUtil.get(request, publishMessageKey) %>" />
+			<aui:button id="publishButton" type="submit" value="<%= LanguageUtil.get(request, publishMessageKey) %>" />
 
-			<aui:button cssClass="btn-lg" href="<%= basePortletURL %>" type="cancel" />
+			<aui:button href="<%= basePortletURL %>" type="cancel" />
 		</aui:button-row>
 	</div>
 </aui:form>
@@ -319,12 +319,6 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 
 		if (dateChecker.validRange) {
 			var form = AUI.$(document.<portlet:namespace />exportPagesFm);
-
-			var allContentSelected = AUI.$('#<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>').val();
-
-			if (allContentSelected === 'true') {
-				form.fm('<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>').val(true);
-			}
 
 			if (deletePortletDataBeforeImportingCheckbox.length && deletePortletDataBeforeImportingCheckbox[0].checked) {
 				confirm('<%= UnicodeLanguageUtil.get(request, "delete-portlet-data-before-importing-confirmation") %>') && submitForm(form);

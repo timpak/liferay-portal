@@ -27,6 +27,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -36,7 +37,7 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 
@@ -173,13 +174,15 @@ public class LayoutPageTemplateEntryServiceTest {
 			FragmentEntryServiceUtil.addFragmentEntry(
 				_group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(),
-				"Fragment Entry 1", serviceContext);
+				"Fragment Entry 1", WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		FragmentEntry fragmentEntry2 =
 			FragmentEntryServiceUtil.addFragmentEntry(
 				_group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(),
-				"Fragment Entry 2", serviceContext);
+				"Fragment Entry 2", WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		List<FragmentEntry> fragmentEntries = new ArrayList<>();
 
@@ -298,13 +301,15 @@ public class LayoutPageTemplateEntryServiceTest {
 			FragmentEntryServiceUtil.addFragmentEntry(
 				_group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(),
-				"Fragment Entry 1", serviceContext);
+				"Fragment Entry 1", WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		FragmentEntry fragmentEntry2 =
 			FragmentEntryServiceUtil.addFragmentEntry(
 				_group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(),
-				"Fragment Entry 2", serviceContext);
+				"Fragment Entry 2", WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		List<FragmentEntry> fragmentEntries = new ArrayList<>();
 

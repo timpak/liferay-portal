@@ -540,13 +540,15 @@ public class UserImpl extends UserBaseImpl {
 		Company company = CompanyLocalServiceUtil.getCompanyById(
 			getCompanyId());
 
-		if (company.getAuthType().equals(CompanyConstants.AUTH_TYPE_EA)) {
+		String authType = company.getAuthType();
+
+		if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
 			login = getEmailAddress();
 		}
-		else if (company.getAuthType().equals(CompanyConstants.AUTH_TYPE_SN)) {
+		else if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
 			login = getScreenName();
 		}
-		else if (company.getAuthType().equals(CompanyConstants.AUTH_TYPE_ID)) {
+		else if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
 			login = String.valueOf(getUserId());
 		}
 
@@ -976,7 +978,9 @@ public class UserImpl extends UserBaseImpl {
 	@Override
 	public void setTimeZoneId(String timeZoneId) {
 		if (Validator.isNull(timeZoneId)) {
-			timeZoneId = TimeZoneUtil.getDefault().getID();
+			TimeZone defaultTimeZone = TimeZoneUtil.getDefault();
+
+			timeZoneId = defaultTimeZone.getID();
 		}
 
 		_timeZone = TimeZoneUtil.getTimeZone(timeZoneId);
@@ -985,7 +989,7 @@ public class UserImpl extends UserBaseImpl {
 	}
 
 	protected String getProfileFriendlyURL() {
-		if (!_hasUsersProfileFriendlyURL) {
+		if (!_HAS_USERS_PROFILE_FRIENDLY_URL) {
 			return null;
 		}
 
@@ -1001,12 +1005,12 @@ public class UserImpl extends UserBaseImpl {
 			});
 	}
 
+	private static final boolean _HAS_USERS_PROFILE_FRIENDLY_URL =
+		Validator.isNotNull(PropsValues.USERS_PROFILE_FRIENDLY_URL);
+
 	private static final Contact _NULL_CONTACT = new ContactImpl();
 
 	private static final Log _log = LogFactoryUtil.getLog(UserImpl.class);
-
-	private static final boolean _hasUsersProfileFriendlyURL =
-		Validator.isNotNull(PropsValues.USERS_PROFILE_FRIENDLY_URL);
 
 	private Contact _contact;
 	private Locale _locale;

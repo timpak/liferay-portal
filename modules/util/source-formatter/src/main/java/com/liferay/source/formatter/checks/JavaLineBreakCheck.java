@@ -144,14 +144,6 @@ public class JavaLineBreakCheck extends LineBreakCheck {
 
 		_checkLambdaLineBreaks(trimmedLine, fileName, lineCount);
 
-		if (trimmedLine.startsWith("}") && !trimmedLine.equals("}") &&
-			(!trimmedLine.startsWith("},") || trimmedLine.equals("},")) &&
-			!trimmedLine.matches("\\}\\)*( \\{|[;,]|\\..*)")) {
-
-			addMessage(
-				fileName, "There should be a line break after '}'", lineCount);
-		}
-
 		if (trimmedLine.endsWith("( {")) {
 			addMessage(
 				fileName, "There should be a line before ' {'", lineCount);
@@ -369,9 +361,9 @@ public class JavaLineBreakCheck extends LineBreakCheck {
 					matcher.start(8));
 			}
 
-			String firstTrailingNonWhitespace = matcher.group(12);
+			String firstTrailingNonWhitespace = matcher.group(13);
 
-			String trailingWhitespace = matcher.group(11);
+			String trailingWhitespace = matcher.group(12);
 
 			if (!trailingWhitespace.contains("\n") &&
 				!firstTrailingNonWhitespace.equals("}")) {
@@ -874,7 +866,7 @@ public class JavaLineBreakCheck extends LineBreakCheck {
 	private final Pattern _classOrEnumPattern = Pattern.compile(
 		"(\n(\t*)(private|protected|public) ((abstract|static) )*" +
 			"(class|enum|interface) ([\\s\\S]*?)\\{)((.*)\\})?" +
-				"(\\Z|\n(\\s*)(\\S))");
+				"([ \t]*(\\Z|\n)(\\s*)(\\S))");
 	private final Pattern _incorrectLineBreakInsideChainPattern1 =
 		Pattern.compile("\n(\t*)\\).*?\\((.+)");
 	private final Pattern _incorrectLineBreakInsideChainPattern2 =

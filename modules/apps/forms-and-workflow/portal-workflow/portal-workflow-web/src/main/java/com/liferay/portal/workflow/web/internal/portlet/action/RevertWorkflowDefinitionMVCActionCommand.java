@@ -16,7 +16,6 @@ package com.liferay.portal.workflow.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.DateUtil;
@@ -53,47 +52,6 @@ public class RevertWorkflowDefinitionMVCActionCommand
 	extends UpdateWorkflowDefinitionMVCActionCommand {
 
 	/**
-	 * Adds a success message to the workflow definition reversion action
-	 *
-	 * @param  actionRequest The actionRequest object of the action
-	 * @review
-	 */
-	@Override
-	protected void addSuccessMessage(
-		ActionRequest actionRequest, ActionResponse actionResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		Locale locale = themeDisplay.getLocale();
-
-		DateFormat dateTimeFormat = null;
-
-		if (DateUtil.isFormatAmPm(locale)) {
-			dateTimeFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-				"MMM d, yyyy, hh:mm a", locale);
-		}
-		else {
-			dateTimeFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-				"MMM d, yyyy, HH:mm", locale);
-		}
-
-		Date workflowDefinitionModifiedDate = ParamUtil.getDate(
-			actionRequest, WorkflowWebKeys.WORKFLOW_DEFINITION_MODIFIED_DATE,
-			dateTimeFormat);
-
-		String dateTime = dateTimeFormat.format(workflowDefinitionModifiedDate);
-
-		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
-			locale);
-
-		SessionMessages.add(
-			actionRequest, "requestProcessed",
-			LanguageUtil.format(
-				resourceBundle, "restored-to-revision-from-x", dateTime));
-	}
-
-	/**
 	 * Reverts a workflow definition to the published state, creating a new
 	 * version of it.
 	 *
@@ -125,11 +83,49 @@ public class RevertWorkflowDefinitionMVCActionCommand
 		WorkflowDefinition workflowDefinition =
 			workflowDefinitionManager.deployWorkflowDefinition(
 				themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-				previousWorkflowDefinition.getTitle(), content.getBytes());
+				previousWorkflowDefinition.getTitle(), name,
+				content.getBytes());
 
 		setRedirectAttribute(actionRequest, workflowDefinition);
 
 		sendRedirect(actionRequest, actionResponse);
+	}
+
+	/**
+	 * Return a success message to the workflow definition reversion action
+	 *
+	 * @param  actionRequest The actionRequest object of the action
+	 * @return the success message
+	 * @review
+	 */
+	@Override
+	protected String getSuccessMessage(ActionRequest actionRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Locale locale = themeDisplay.getLocale();
+
+		DateFormat dateTimeFormat = null;
+
+		if (DateUtil.isFormatAmPm(locale)) {
+			dateTimeFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+				"MMM d, yyyy, hh:mm a", locale);
+		}
+		else {
+			dateTimeFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+				"MMM d, yyyy, HH:mm", locale);
+		}
+
+		Date workflowDefinitionModifiedDate = ParamUtil.getDate(
+			actionRequest, WorkflowWebKeys.WORKFLOW_DEFINITION_MODIFIED_DATE,
+			dateTimeFormat);
+
+		String dateTime = dateTimeFormat.format(workflowDefinitionModifiedDate);
+
+		ResourceBundle resourceBundle = getResourceBundle(actionRequest);
+
+		return LanguageUtil.format(
+			resourceBundle, "restored-to-revision-from-x", dateTime);
 	}
 
 }

@@ -72,8 +72,7 @@ public class WorkflowDefinitionLinkDisplayContext {
 
 	public WorkflowDefinitionLinkDisplayContext(
 		RenderRequest renderRequest, RenderResponse renderResponse,
-		WorkflowDefinitionLinkLocalService
-			workflowDefinitionLinkLocalService) {
+		WorkflowDefinitionLinkLocalService workflowDefinitionLinkLocalService) {
 
 		_workflowDefinitionLinkLocalService =
 			workflowDefinitionLinkLocalService;
@@ -261,7 +260,9 @@ public class WorkflowDefinitionLinkDisplayContext {
 		WorkflowDefinition workflowDefinition) {
 
 		String workflowDefinitionName = HtmlUtil.escape(
-			workflowDefinition.getName());
+			workflowDefinition.getTitle(
+				LanguageUtil.getLanguageId(
+					_workflowDefinitionLinkRequestHelper.getRequest())));
 
 		String workflowDefinitionVersion = LanguageUtil.format(
 			_workflowDefinitionLinkRequestHelper.getLocale(), "version-x",
@@ -298,8 +299,10 @@ public class WorkflowDefinitionLinkDisplayContext {
 			return false;
 		}
 
-		if (workflowDefinitionLink.getWorkflowDefinitionName().equals(
-				workflowDefinition.getName()) &&
+		String workflowDefinitionName =
+			workflowDefinitionLink.getWorkflowDefinitionName();
+
+		if (workflowDefinitionName.equals(workflowDefinition.getName()) &&
 			(workflowDefinitionLink.getWorkflowDefinitionVersion() ==
 				workflowDefinition.getVersion())) {
 

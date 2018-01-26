@@ -522,7 +522,11 @@ public class TopLevelBuild extends BaseBuild {
 		String baseRepositoryName = getBaseRepositoryName();
 		String branchName = getBranchName();
 
-		String companionRepositoryName = baseRepositoryName + "-ee";
+		String companionRepositoryName = baseRepositoryName;
+
+		if (branchName.equals("master")) {
+			companionRepositoryName = companionRepositoryName + "-ee";
+		}
 
 		if (branchName.endsWith("-private")) {
 			companionRepositoryName = baseRepositoryName.substring(
@@ -798,7 +802,26 @@ public class TopLevelBuild extends BaseBuild {
 				JenkinsResultsParserUtil.toDurationString(getTotalDuration())),
 			Dom4JUtil.getNewElement(
 				"p", null, "Total number of Jenkins slaves used: ",
-				Integer.toString(getTotalSlavesUsedCount())));
+				Integer.toString(getTotalSlavesUsedCount())),
+			Dom4JUtil.getNewElement(
+				"p", null, "Average delay time for invoked build to start: ",
+				JenkinsResultsParserUtil.toDurationString(
+					getAverageDelayTime())));
+
+		Build longestDelayedDownstreamBuild =
+			getLongestDelayedDownstreamBuild();
+
+		if (longestDelayedDownstreamBuild != null) {
+			Dom4JUtil.getNewElement(
+				"p", summaryElement,
+				"Longest delay time for invoked build to start: ",
+				Dom4JUtil.getNewAnchorElement(
+					longestDelayedDownstreamBuild.getBuildURL(),
+					longestDelayedDownstreamBuild.getDisplayName()),
+				" in: ",
+				JenkinsResultsParserUtil.toDurationString(
+					longestDelayedDownstreamBuild.getDelayTime()));
+		}
 
 		Build longestRunningDownstreamBuild =
 			getLongestRunningDownstreamBuild();
@@ -814,17 +837,30 @@ public class TopLevelBuild extends BaseBuild {
 					longestRunningDownstreamBuild.getDuration()));
 		}
 
-		TestResult longestRunningTest = getLongestRunningTest();
+		try {
+			Properties buildProperties =
+				JenkinsResultsParserUtil.getBuildProperties();
 
-		if (longestRunningTest != null) {
-			Dom4JUtil.getNewElement(
-				"p", null, "Longest Running Test: ",
-				Dom4JUtil.getNewAnchorElement(
-					longestRunningTest.getTestReportURL(),
-					longestRunningTest.getDisplayName()),
-				" in: ",
-				JenkinsResultsParserUtil.toDurationString(
-					longestRunningTest.getDuration()));
+			String longestRunningTestEnabled = buildProperties.getProperty(
+				"jenkins.report.longest.running.test.enabled", "false");
+
+			if (longestRunningTestEnabled.equals("true")) {
+				TestResult longestRunningTest = getLongestRunningTest();
+
+				if (longestRunningTest != null) {
+					Dom4JUtil.getNewElement(
+						"p", summaryElement, "Longest Running Test: ",
+						Dom4JUtil.getNewAnchorElement(
+							longestRunningTest.getTestReportURL(),
+							longestRunningTest.getDisplayName()),
+						" in: ",
+						JenkinsResultsParserUtil.toDurationString(
+							longestRunningTest.getDuration()));
+				}
+			}
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException("Unable to get build properties", ioe);
 		}
 
 		return summaryElement;
@@ -1104,15 +1140,6 @@ public class TopLevelBuild extends BaseBuild {
 		Dom4JUtil.addToElement(rootElement, getMoreDetailsElement());
 
 		if (!result.equals("SUCCESS")) {
-			if (isCompareToUpstream()) {
-				UpstreamFailureUtil.loadUpstreamJobFailuresJSONObject(this);
-			}
-
-			Dom4JUtil.addToElement(
-				rootElement, Dom4JUtil.getNewElement("hr"),
-				Dom4JUtil.getNewElement(
-					"h4", null, "Failures unique to this pull:"));
-
 			Map<Build, Element> downstreamBuildFailureMessages =
 				getDownstreamBuildMessages("ABORTED", "FAILURE", "UNSTABLE");
 
@@ -1155,10 +1182,29 @@ public class TopLevelBuild extends BaseBuild {
 				}
 			}
 
-			failureElements.add(0, super.getGitHubMessageElement());
+			if (failureElements.isEmpty()) {
+				failureElements.add(0, super.getGitHubMessageElement());
+			}
 
-			Dom4JUtil.getOrderedListElement(
-				failureElements, rootElement, maxFailureCount);
+			Dom4JUtil.addToElement(rootElement, Dom4JUtil.getNewElement("hr"));
+
+			if ((failureElements.size() == 1) &&
+				!upstreamJobFailureElements.isEmpty()) {
+
+				Dom4JUtil.addToElement(
+					rootElement,
+					Dom4JUtil.getNewElement(
+						"h4", null, "This pull contains no unique failures."));
+			}
+			else {
+				Dom4JUtil.addToElement(
+					rootElement,
+					Dom4JUtil.getNewElement(
+						"h4", null, "Failures unique to this pull:"));
+
+				Dom4JUtil.getOrderedListElement(
+					failureElements, rootElement, maxFailureCount);
+			}
 
 			String acceptanceUpstreamJobURL = getAcceptanceUpstreamURL();
 
@@ -1177,7 +1223,7 @@ public class TopLevelBuild extends BaseBuild {
 						Dom4JUtil.getNewElement(
 							"strong", null, "Failures in common with ",
 							acceptanceUpstreamJobLinkElement, " at ",
-							UpstreamFailureUtil.getUpstreamJobFailuresSHA(),
+							UpstreamFailureUtil.getUpstreamJobFailuresSHA(this),
 							":")));
 
 				int remainingFailureCount =

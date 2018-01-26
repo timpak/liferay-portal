@@ -170,6 +170,21 @@ public abstract class BaseBuild implements Build {
 	}
 
 	@Override
+	public long getAverageDelayTime() {
+		if (getDownstreamBuildCount(null) == 0) {
+			return 0;
+		}
+
+		long totalDelayTime = 0;
+
+		for (Build downstreamBuild : getDownstreamBuilds(null)) {
+			totalDelayTime += downstreamBuild.getDelayTime();
+		}
+
+		return totalDelayTime / getDownstreamBuildCount(null);
+	}
+
+	@Override
 	public List<String> getBadBuildURLs() {
 		List<String> badBuildURLs = new ArrayList<>();
 
@@ -351,6 +366,11 @@ public abstract class BaseBuild implements Build {
 	@Override
 	public String getDatabase() {
 		return null;
+	}
+
+	@Override
+	public Long getDelayTime() {
+		return getStartTime() - getInvokedTime();
 	}
 
 	@Override
@@ -557,6 +577,17 @@ public abstract class BaseBuild implements Build {
 	}
 
 	@Override
+	public Long getInvokedTime() {
+		if (invokedTime != null) {
+			return invokedTime;
+		}
+
+		invokedTime = getStartTime();
+
+		return invokedTime;
+	}
+
+	@Override
 	public String getJDK() {
 		return null;
 	}
@@ -681,6 +712,22 @@ public abstract class BaseBuild implements Build {
 		}
 
 		return latestStartTimestamp;
+	}
+
+	@Override
+	public Build getLongestDelayedDownstreamBuild() {
+		Build longestDelayedDownstreamBuild = null;
+
+		for (Build downstreamBuild : getDownstreamBuilds(null)) {
+			if ((longestDelayedDownstreamBuild == null) ||
+				(downstreamBuild.getDelayTime() >
+					longestDelayedDownstreamBuild.getDelayTime())) {
+
+				longestDelayedDownstreamBuild = downstreamBuild;
+			}
+		}
+
+		return longestDelayedDownstreamBuild;
 	}
 
 	@Override
@@ -1779,7 +1826,7 @@ public abstract class BaseBuild implements Build {
 	}
 
 	protected String getJenkinsReportTimeZoneName() {
-		return _jenkinsReportTimeZoneName;
+		return _JENKINS_REPORT_TIME_ZONE_NAME;
 	}
 
 	protected Set<String> getJobParameterNames() {
@@ -2301,6 +2348,7 @@ public abstract class BaseBuild implements Build {
 	protected int consoleReadCursor;
 	protected List<Build> downstreamBuilds = new ArrayList<>();
 	protected boolean fromArchive;
+	protected Long invokedTime;
 	protected String jobName;
 	protected List<ReinvokeRule> reinvokeRules =
 		ReinvokeRule.getReinvokeRules();
@@ -2336,6 +2384,14 @@ public abstract class BaseBuild implements Build {
 		}
 
 		protected void addTimelineData(BaseBuild build) {
+			Long buildInvokedTime = build.getInvokedTime();
+
+			if (buildInvokedTime == null) {
+				return;
+			}
+
+			_timeline[_getIndex(buildInvokedTime)]._invocationsCount++;
+
 			Long buildStartTime = build.getStartTime();
 
 			if (buildStartTime == null) {
@@ -2344,8 +2400,6 @@ public abstract class BaseBuild implements Build {
 
 			int endIndex = _getIndex(buildStartTime + build.getDuration());
 			int startIndex = _getIndex(buildStartTime);
-
-			_timeline[startIndex]._invocationsCount++;
 
 			for (int i = startIndex; i <= endIndex; i++) {
 				_timeline[i]._slaveUsageCount++;
@@ -2439,7 +2493,7 @@ public abstract class BaseBuild implements Build {
 	private static final String[] _HIGH_PRIORITY_CONTENT_FLAGS =
 		{"compileJSP", "SourceFormatter.format", "Unable to compile JSPs"};
 
-	private static final String _jenkinsReportTimeZoneName;
+	private static final String _JENKINS_REPORT_TIME_ZONE_NAME;
 
 	static {
 		Properties properties = null;
@@ -2451,7 +2505,7 @@ public abstract class BaseBuild implements Build {
 			throw new RuntimeException("Unable to get build properties", ioe);
 		}
 
-		_jenkinsReportTimeZoneName = properties.getProperty(
+		_JENKINS_REPORT_TIME_ZONE_NAME = properties.getProperty(
 			"jenkins.report.time.zone");
 	};
 

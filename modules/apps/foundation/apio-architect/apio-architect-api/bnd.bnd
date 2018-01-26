@@ -9,6 +9,7 @@ Export-Package:\
 	com.liferay.apio.architect.alias.routes,\
 	com.liferay.apio.architect.consumer,\
 	com.liferay.apio.architect.converter,\
+	com.liferay.apio.architect.date,\
 	com.liferay.apio.architect.documentation,\
 	com.liferay.apio.architect.endpoint,\
 	com.liferay.apio.architect.error,\
@@ -20,6 +21,7 @@ Export-Package:\
 	com.liferay.apio.architect.list,\
 	com.liferay.apio.architect.logger,\
 	com.liferay.apio.architect.message.json,\
+	com.liferay.apio.architect.operation,\
 	com.liferay.apio.architect.pagination,\
 	com.liferay.apio.architect.provider,\
 	com.liferay.apio.architect.related,\

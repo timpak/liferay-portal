@@ -81,7 +81,7 @@ public class JSONLDPageMessageMapperTest {
 	public void testMediaTypeIsCorrect() {
 		String mediaType = _pageMessageMapper.getMediaType();
 
-		assertThat(mediaType, is(equalTo("application/ld+json")));
+		assertThat(mediaType, is("application/ld+json"));
 	}
 
 	private static final Matcher<Iterable<? extends JsonElement>>
@@ -119,11 +119,10 @@ public class JSONLDPageMessageMapperTest {
 
 		_isAJsonObjectWithTheContext = is(aJsonObjectWith(contextConditions));
 
-		//noinspection unchecked
 		_containsTheMembers = contains(
-			aRootElementJsonObjectWithId("1", false),
-			aRootElementJsonObjectWithId("2", false),
-			aRootElementJsonObjectWithId("3", false));
+			aRootElementJsonObjectWithId("1", false, true),
+			aRootElementJsonObjectWithId("2", false, true),
+			aRootElementJsonObjectWithId("3", false, true));
 	}
 
 	private final PageMessageMapper<RootModel> _pageMessageMapper =

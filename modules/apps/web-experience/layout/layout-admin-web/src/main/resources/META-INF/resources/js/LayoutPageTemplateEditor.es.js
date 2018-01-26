@@ -3,8 +3,10 @@ import debounce from 'metal-debounce';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
+import './contextual_sidebar/ContextualSidebar.es';
 import './LayoutPageTemplateFragment.es';
 import './LayoutPageTemplateFragmentCollection.es';
+import './LayoutPageTemplateSidebarAddedFragment.es';
 import templates from './LayoutPageTemplateEditor.soy';
 
 /**
@@ -66,6 +68,31 @@ class LayoutPageTemplateEditor extends Component {
 	}
 
 	/**
+	 * Callback executed when the sidebar should be hidden
+	 * @private
+	 */
+	_handleHideContextualSidebar() {
+		this._contextualSidebarVisible = false;
+	}
+
+	/**
+	 * Updates _sidebarSelectedTab according to the clicked element
+	 * @param {Event} event
+	 * @private
+	 */
+	_handleSidebarTabClick(event) {
+		this._sidebarSelectedTab = event.delegateTarget.dataset.tabName;
+	}
+
+	/**
+	 * Callback executed when the sidebar visible state should be toggled
+	 * @private
+	 */
+	_handleToggleContextualSidebarButtonClick() {
+		this._contextualSidebarVisible = !this._contextualSidebarVisible;
+	}
+
+	/**
 	 * Sends the page template accumulated changes to the server and, if
 	 * success, sets the _dirty property to false.
 	 * @private
@@ -97,6 +124,23 @@ class LayoutPageTemplateEditor extends Component {
 		});
 	}
 }
+
+/**
+ * Tabs that can appear inside the sidebar
+ * @see LayoutPageTemplateEditor._sidebarTabs
+ */
+const SIDEBAR_TABS = [
+	{
+		id: 'fragments',
+		name: Liferay.Language.get('fragments'),
+		visible: true,
+	},
+	{
+		id: 'added',
+		name: Liferay.Language.get('added'),
+		visible: true,
+	},
+];
 
 /**
  * State definition.
@@ -151,19 +195,10 @@ LayoutPageTemplateEditor.STATE = {
 	).value([]),
 
 	/**
-	 * URL for getting a fragment entry information.
-	 * @default undefined
-	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
-	 * @type {!string}
-	 */
-	fragmentEntryURL: Config.string().required(),
-
-	/**
 	 * Layout page template entry id used for storing changes.
 	 * @default undefined
 	 * @instance
-	 * @memberOf PageTemplateEditor
+	 * @memberOf LayoutPageTemplateEditor
 	 * @type {!string}
 	 */
 	layoutPageTemplateEntryId: Config.string().required(),
@@ -176,6 +211,15 @@ LayoutPageTemplateEditor.STATE = {
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
+
+	/**
+	 * URL for getting a fragment content.
+	 * @default undefined
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @type {!string}
+	 */
+	renderFragmentEntryURL: Config.string().required(),
 
 	/**
 	 * Path of the available icons.
@@ -196,10 +240,22 @@ LayoutPageTemplateEditor.STATE = {
 	updatePageTemplateURL: Config.string().required(),
 
 	/**
+	 * Allow opening/closing contextual sidebar
+	 * @default true
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @private
+	 * @type {boolean}
+	 */
+	_contextualSidebarVisible: Config.bool()
+		.internal()
+		.value(true),
+
+	/**
 	 * When true, it indicates that are changes pending to save.
 	 * @default false
 	 * @instance
-	 * @memberOf PageTemplateEditor
+	 * @memberOf LayoutPageTemplateEditor
 	 * @private
 	 * @type {bool}
 	 */
@@ -211,13 +267,47 @@ LayoutPageTemplateEditor.STATE = {
 	 * Last data when the autosave has been executed.
 	 * @default ''
 	 * @instance
-	 * @memberOf PageTemplateEditor
+	 * @memberOf LayoutPageTemplateEditor
 	 * @private
 	 * @type {string}
 	 */
 	_lastSaveDate: Config.string()
 		.internal()
 		.value(''),
+
+	/**
+	 * Tabs being shown in sidebar
+	 * @default SIDEBAR_TABS
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @private
+	 * @type {Array<{
+	 * 	 id:string,
+	 * 	 name:string,
+	 * 	 visible:boolean
+	 * }>}
+	 */
+	_sidebarTabs: Config.arrayOf(
+		Config.shapeOf({
+			id: Config.string(),
+			name: Config.string(),
+			visible: Config.bool(),
+		})
+	)
+		.internal()
+		.value(SIDEBAR_TABS),
+
+	/**
+	 * Tab selected inside sidebar
+	 * @default SIDEBAR_TABS[0].id
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @private
+	 * @type {string}
+	 */
+	_sidebarSelectedTab: Config.oneOf(SIDEBAR_TABS.map(tab => tab.id))
+		.internal()
+		.value(SIDEBAR_TABS[0].id),
 };
 
 Soy.register(LayoutPageTemplateEditor, templates);

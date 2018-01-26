@@ -649,12 +649,11 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 		while (itr.hasNext()) {
 			Portlet portlet = itr.next();
 
-			if (showPortal &&
-				portlet.getPortletId().equals(PortletKeys.PORTAL)) {
-			}
-			else if (!showPortal &&
-					 portlet.getPortletId().equals(PortletKeys.PORTAL)) {
+			String portletId = portlet.getPortletId();
 
+			if (showPortal && portletId.equals(PortletKeys.PORTAL)) {
+			}
+			else if (!showPortal && portletId.equals(PortletKeys.PORTAL)) {
 				itr.remove();
 			}
 			else if (!showSystem && portlet.isSystem()) {
@@ -806,8 +805,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 			// Remove portlets that should not be included
 
+			Set<Entry<String, Portlet>> entrySet = _portletsMap.entrySet();
+
 			Iterator<Map.Entry<String, Portlet>> portletPoolsItr =
-				_portletsMap.entrySet().iterator();
+				entrySet.iterator();
 
 			while (portletPoolsItr.hasNext()) {
 				Map.Entry<String, Portlet> entry = portletPoolsItr.next();
@@ -1454,7 +1455,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 			portletCategory.addCategory(undefinedCategory);
 
-			undefinedCategory.getPortletIds().addAll(undefinedPortletIds);
+			Set<String> undefinedCategoryPortletIds =
+				undefinedCategory.getPortletIds();
+
+			undefinedCategoryPortletIds.addAll(undefinedPortletIds);
 		}
 
 		return portletCategory;
@@ -2039,7 +2043,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			portletModel.setRenderWeight(1);
 		}
 
-		portletModel.getRoleMappers().putAll(roleMappers);
+		Map<String, String> roleMappersMap = portletModel.getRoleMappers();
+
+		roleMappersMap.putAll(roleMappers);
+
 		portletModel.linkRoles();
 	}
 
@@ -2101,7 +2108,8 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 	protected void readPortletXML(
 			String servletContextName, PluginPackage pluginPackage,
 			PortletApp portletApp, Element portletElement,
-			Map<String, Portlet> portletsMap)
+			Map<String, Portlet> portletsMap,
+			Set<String> validCustomPortletModes)
 		throws PortletIdException {
 
 		String portletName = portletElement.elementText("portlet-name");
@@ -2181,8 +2189,16 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			for (Element portletModeElement :
 					supportsElement.elements("portlet-mode")) {
 
-				mimeTypePortletModes.add(
-					StringUtil.toLowerCase(portletModeElement.getTextTrim()));
+				String portletMode = StringUtil.toLowerCase(
+					portletModeElement.getTextTrim());
+
+				if (_isCustomPortletMode(portletMode) &&
+					!validCustomPortletModes.contains(portletMode)) {
+
+					continue;
+				}
+
+				mimeTypePortletModes.add(portletMode);
 			}
 
 			portletModes.put(mimeType, mimeTypePortletModes);
@@ -2520,10 +2536,28 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 			}
 		}
 
+		Set<String> validCustomPortletModes = new HashSet<>();
+
+		for (Element customPortletModeElement :
+				rootElement.elements("custom-portlet-mode")) {
+
+			String portletMode = StringUtil.toLowerCase(
+				customPortletModeElement.elementTextTrim("portlet-mode"));
+
+			boolean portalManaged = Boolean.valueOf(
+				customPortletModeElement.elementText("portal-managed"));
+
+			if (_isCustomPortletMode(portletMode) && portalManaged) {
+				continue;
+			}
+
+			validCustomPortletModes.add(portletMode);
+		}
+
 		for (Element portletElement : rootElement.elements("portlet")) {
 			readPortletXML(
 				servletContextName, pluginPackage, portletApp, portletElement,
-				portletsMap);
+				portletsMap, validCustomPortletModes);
 		}
 
 		for (Element filterElement : rootElement.elements("filter")) {
@@ -2586,8 +2620,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 				}
 
 				for (Portlet portletModel : portletModels) {
-					portletModel.getPortletFilters().put(
-						filterName, portletFilter);
+					Map<String, PortletFilter> portletFiltersMap =
+						portletModel.getPortletFilters();
+
+					portletFiltersMap.put(filterName, portletFilter);
 				}
 			}
 		}
@@ -2725,6 +2761,10 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 
 			throw new PrincipalException("Invalid portlet ID " + portletId);
 		}
+	}
+
+	private boolean _isCustomPortletMode(String portletModeName) {
+		return PortalUtil.isCustomPortletMode(new PortletMode(portletModeName));
 	}
 
 	private void _readWebXML(String xml, String servletContextName)

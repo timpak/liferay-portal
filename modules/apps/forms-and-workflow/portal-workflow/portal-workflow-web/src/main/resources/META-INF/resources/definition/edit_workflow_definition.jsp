@@ -17,6 +17,8 @@
 <%@ include file="/definition/init.jsp" %>
 
 <%
+String randomNamespace = StringUtil.randomId() + StringPool.UNDERLINE;
+
 String redirect = ParamUtil.getString(request, "redirect");
 
 WorkflowDefinition workflowDefinition = (WorkflowDefinition)request.getAttribute(WebKeys.WORKFLOW_DEFINITION);
@@ -26,10 +28,12 @@ int version = BeanParamUtil.getInteger(workflowDefinition, request, "version");
 String content = BeanParamUtil.getString(workflowDefinition, request, "content");
 boolean active = BeanParamUtil.getBoolean(workflowDefinition, request, "active");
 
+String duplicationTitle = workflowDefinitionDisplayContext.getDuplicateTitle(workflowDefinition);
+
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
-renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request, "new-workflow") : workflowDefinition.getName());
+renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request, "new-workflow") : workflowDefinition.getTitle(LanguageUtil.getLanguageId(request)));
 %>
 
 <liferay-ui:error exception="<%= RequiredWorkflowDefinitionException.class %>">
@@ -37,11 +41,9 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 	<%
 	RequiredWorkflowDefinitionException requiredWorkflowDefinitionException = (RequiredWorkflowDefinitionException)errorException;
 
-	Object[] messageArguments = workflowDefinitionDisplayContext.getMessageArguments(
-			requiredWorkflowDefinitionException.getWorkflowDefinitionLinks());
+	Object[] messageArguments = workflowDefinitionDisplayContext.getMessageArguments(requiredWorkflowDefinitionException.getWorkflowDefinitionLinks());
 
-	String messageKey = workflowDefinitionDisplayContext.getMessageKey(
-			requiredWorkflowDefinitionException.getWorkflowDefinitionLinks());
+	String messageKey = workflowDefinitionDisplayContext.getMessageKey(requiredWorkflowDefinitionException.getWorkflowDefinitionLinks());
 	%>
 
 	<liferay-ui:message arguments="<%= messageArguments %>" key="<%= messageKey %>" translateArguments="<%= false %>" />
@@ -49,6 +51,11 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 
 <liferay-portlet:actionURL name='<%= (workflowDefinition == null) ? "addWorkflowDefinition" : "updateWorkflowDefinition" %>' var="editWorkflowDefinitionURL">
 	<portlet:param name="mvcPath" value="/definition/edit_workflow_definition.jsp" />
+</liferay-portlet:actionURL>
+
+<liferay-portlet:actionURL name="duplicateWorkflowDefinition" var="duplicateWorkflowDefinition">
+	<portlet:param name="mvcPath" value="/definition/edit_workflow_definition.jsp" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
 </liferay-portlet:actionURL>
 
 <c:if test="<%= workflowDefinition != null %>">
@@ -102,16 +109,16 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 					<aui:icon cssClass="icon-monospaced sidenav-close text-default visible-xs-inline-block" image="times" markupView="lexicon" url="javascript:;" />
 
 					<h4>
-						<%= workflowDefinition.getName() %>
+						<%= workflowDefinition.getTitle(LanguageUtil.getLanguageId(request)) %>
 					</h4>
 				</div>
 
-				<liferay-ui:tabs cssClass="navbar-no-collapse panel panel-default" names="details,revision-history" refresh="<%= false %>" type="nav-tabs-default tabs">
+				<liferay-ui:tabs cssClass="navbar-no-collapse panel panel-default" names="details,revision-history" refresh="<%= false %>" type="tabs nav-tabs-default ">
 					<liferay-ui:section>
 						<div class="sidebar-list">
 
 							<%
-							String userName = workflowDefinitionDisplayContext.getUserName(workflowDefinition);
+							String creatorUserName = workflowDefinitionDisplayContext.getCreatorUserName(workflowDefinition);
 							%>
 
 							<div class="card-row-padded created-date">
@@ -122,9 +129,20 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 								</div>
 
 								<span class="info-content lfr-card-modified-by-text">
-									<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinitionDisplayContext.getCreatedDate(workflowDefinition)), userName} %>" key="x-by-x" translateArguments="<%= false %>" />
+									<c:choose>
+										<c:when test="<%= creatorUserName == null %>">
+											<%= dateFormatTime.format(workflowDefinitionDisplayContext.getCreatedDate(workflowDefinition)) %>
+										</c:when>
+										<c:otherwise>
+											<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinitionDisplayContext.getCreatedDate(workflowDefinition)), creatorUserName} %>" key="x-by-x" translateArguments="<%= false %>" />
+										</c:otherwise>
+									</c:choose>
 								</span>
 							</div>
+
+							<%
+							String userName = workflowDefinitionDisplayContext.getUserName(workflowDefinition);
+							%>
 
 							<div class="card-row-padded last-modified">
 								<div>
@@ -134,7 +152,14 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 								</div>
 
 								<span class="info-content lfr-card-modified-by-text">
-									<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinition.getModifiedDate()), userName} %>" key="x-by-x" translateArguments="<%= false %>" />
+									<c:choose>
+										<c:when test="<%= userName == null %>">
+											<%= dateFormatTime.format(workflowDefinition.getModifiedDate()) %>
+										</c:when>
+										<c:otherwise>
+											<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinition.getModifiedDate()), userName} %>" key="x-by-x" translateArguments="<%= false %>" />
+										</c:otherwise>
+									</c:choose>
 								</span>
 							</div>
 
@@ -209,14 +234,36 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 				String taglibOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "publishDefinition');";
 				%>
 
-				<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" primary="<%= true %>" value='<%= (workflowDefinition == null || !active) ? "publish" : "update" %>' />
+				<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value='<%= (workflowDefinition == null || !active) ? "publish" : "update" %>' />
 			</aui:button-row>
 		</aui:form>
 	</div>
 </div>
 
+<c:if test="<%= workflowDefinition != null %>">
+	<div class="hide" id="<%= randomNamespace %>titleInputLocalized">
+		<aui:col>
+			<aui:field-wrapper label="title">
+				<liferay-ui:input-localized name="title" xml="<%= duplicationTitle %>" />
+			</aui:field-wrapper>
+		</aui:col>
+
+		<aui:col>
+			<liferay-ui:message key="copy-does-not-include-revisions" />
+		</aui:col>
+	</div>
+
+	<div class="hide" id="<%= randomNamespace %>contentInput">
+		<aui:input name="content" type="hidden" value="<%= workflowDefinition.getContent() %>" />
+		<aui:input name="duplicatedDefinitionTitle" type="hidden" value="<%= workflowDefinition.getTitle(LanguageUtil.getLanguageId(request)) %>" />
+		<aui:input name="name" type="hidden" value="<%= PortalUUIDUtil.generate() %>" />
+	</div>
+</c:if>
+
 <aui:script use="aui-ace-editor,liferay-xml-formatter,liferay-workflow-web">
 	var STR_VALUE = 'value';
+
+	var title = '<liferay-ui:message key="duplicate-workflow" />';
 
 	var contentEditor = new A.AceEditor(
 		{
@@ -297,6 +344,13 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 
 				Liferay.WorkflowWeb.showActionUndoneSuccessMessage();
 			}
+		}
+	);
+
+	Liferay.on(
+		'<portlet:namespace />duplicateDefinition',
+		function(event) {
+			Liferay.WorkflowWeb.confirmBeforeDuplicateDialog(this,'<%= duplicateWorkflowDefinition %>', title, '<%= randomNamespace %>');
 		}
 	);
 </aui:script>

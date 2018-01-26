@@ -14,6 +14,7 @@
 
 package com.liferay.wsrp.internal.bind;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
@@ -317,8 +317,10 @@ public class V2MarkupServiceImpl
 		String contentType = response.getContentType();
 
 		if (itemBinary != null) {
-			if (Validator.isNotNull(contentType) &&
-				StringUtil.toLowerCase(contentType).startsWith("text")) {
+			String lowerCaseContentType = StringUtil.toLowerCase(contentType);
+
+			if (Validator.isNotNull(lowerCaseContentType) &&
+				lowerCaseContentType.startsWith("text")) {
 
 				String content = new String(itemBinary);
 

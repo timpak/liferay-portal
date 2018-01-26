@@ -105,6 +105,13 @@
 		</if>
 
 		<if>
+			<isset var="recycleBinNotification" />
+			<then>
+				<execute function="AssertTextEquals" locator1="Message#ERROR_3_ALT" value1="The recycle bin of this site will be automatically emptied before turning on local staging. Make sure to manually restore anything you don't want to delete permanently before you continue." />
+			</then>
+		</if>
+
+		<if>
 			<equals arg1="${editActivateStaging}" arg2="true" />
 			<then>
 				<execute macro="Button#clickSave" />
@@ -203,10 +210,12 @@
 
 		<execute function="Pause" locator1="3000" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="Type" locator1="StagingPublishToLive#PUBLISH_TEMPLATES_NAME_FIELD" value1="${publishTemplateName}" />
-		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${publishTemplateDescription}" />
+		<execute macro="PortletEntry#inputDescription">
+			<var name="description" value="${publishTemplateDescription}" />
+		</execute>
 	</command>
 
 	<command name="addSitePagesVariationPG">
@@ -539,6 +548,10 @@
 
 		<execute function="ClickNoError" locator1="Staging#COPY_FROM_LIVE" />
 
+		<execute function="Pause" locator1="2000" />
+
+		<execute function="AssertClickNoError#assertPartialTextClickAt" locator1="Button#SUBMIT" value1="Copy from Live" />
+
 		<execute function="Confirm" value1="Are you sure you want to copy from live and update the existing staging portlet information?" />
 
 		<execute function="AssertTextEquals" locator1="Staging#STAGING_STATUS_PORTLET" value1="Successful" />
@@ -670,7 +683,9 @@
 		<execute function="AssertClick" locator1="StagingPublishToLive#PUBLISH_TEMPLATES_TABLE_NAME" value1="${publishTemplateName}" />
 
 		<execute function="Type" locator1="StagingPublishToLive#PUBLISH_TEMPLATES_NAME_FIELD" value1="${publishTemplateNameEdit}" />
-		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${publishTemplateDescriptionEdit}" />
+		<execute macro="PortletEntry#inputDescription">
+			<var name="description" value="${publishTemplateDescriptionEdit}" />
+		</execute>
 	</command>
 
 	<command name="editSitePageVariationPG">
@@ -871,7 +886,7 @@
 	</command>
 
 	<command name="publishCustomPublication">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClickNoError" locator1="Staging#STAGING_PUBLISH_TO_LIVE_BUTTON" value1="Publish to Live" />
 
@@ -1146,7 +1161,7 @@
 
 		<execute function="Pause" locator1="3000" />
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="${searchTerm}" />
 		</execute>
 
@@ -1216,6 +1231,10 @@
 		<execute function="ClickNoError" locator1="Staging#STAGING_MENU_UNDO_BUTTON" />
 
 		<execute function="Confirm" value1="Are you sure you want to undo your last changes?" />
+	</command>
+
+	<command name="viewAddButtonDoesNotExist">
+		<execute function="IsElementNotPresent" locator1="Button#PLUS" />
 	</command>
 
 	<command name="viewAddButtonExists">

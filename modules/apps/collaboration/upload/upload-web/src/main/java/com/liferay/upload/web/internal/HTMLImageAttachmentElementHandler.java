@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Alejandro Tardín
@@ -48,7 +49,7 @@ public class HTMLImageAttachmentElementHandler
 				saveTempFileUnsafeFunction)
 		throws PortalException {
 
-		Matcher matcher = _TEMP_ATTACHMENT_PATTERN.matcher(content);
+		Matcher matcher = _tempAttachmentPattern.matcher(content);
 
 		StringBuffer sb = new StringBuffer(content.length());
 
@@ -79,7 +80,7 @@ public class HTMLImageAttachmentElementHandler
 	private static final String _ATTRIBUTE_LIST_REGEXP =
 		"(?:\\s*?\\w+\\s*?=\\s*?\"[^\"]*\")*?\\s*?";
 
-	private static final Pattern _TEMP_ATTACHMENT_PATTERN;
+	private static final Pattern _tempAttachmentPattern;
 
 	static {
 		StringBundler sb = new StringBundler(8);
@@ -93,10 +94,13 @@ public class HTMLImageAttachmentElementHandler
 		sb.append(_ATTRIBUTE_LIST_REGEXP);
 		sb.append("/>");
 
-		_TEMP_ATTACHMENT_PATTERN = Pattern.compile(sb.toString());
+		_tempAttachmentPattern = Pattern.compile(sb.toString());
 	}
 
-	@Reference(target = "(&(format=html)(html.tag.name=img))")
+	@Reference(
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(&(format=html)(html.tag.name=img))"
+	)
 	private AttachmentElementReplacer _attachmentElementReplacer;
 
 }

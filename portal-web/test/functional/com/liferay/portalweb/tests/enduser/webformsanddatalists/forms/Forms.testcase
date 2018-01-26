@@ -44,6 +44,8 @@
 		<for list="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" param="number">
 			<execute macro="FormsAdminNavigator#gotoAddForm" />
 
+			<execute function="Refresh" />
+
 			<execute macro="Form#editName">
 				<var name="formName" value="Form${number}" />
 			</execute>
@@ -98,8 +100,224 @@
 		<execute macro="Form#save" />
 	</command>
 
+	<command name="AddElementSetsWithTranslation" priority="5">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Element Sets" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName">
+			<var name="formName" value="Element Set 1" />
+		</execute>
+
+		<execute macro="Form#editDescription">
+			<var name="formDescription" value="Element Set Description" />
+		</execute>
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Text Field" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Text Field Required" />
+		</execute>
+
+		<execute macro="FormFields#enableSwitcher">
+			<var name="fieldName" value="required" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Select from List" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Select Repeatable" />
+		</execute>
+
+		<for list="1,2,3" param="number">
+			<execute macro="FormFields#editOptionsRow">
+				<var name="optionName" value="Select${number}" />
+				<var name="optionValue" value="Select ${number}" />
+				<var name="rowNumber" value="${number}" />
+			</execute>
+		</for>
+
+		<execute macro="Form#gotoAdvancedTab" />
+
+		<execute macro="FormFields#enableSwitcher">
+			<var name="fieldName" value="repeatable" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="DDLRecord#addTranslation">
+			<var name="localizedLanguage" value="Chinese (China)" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="TextFieldRequired" />
+		</execute>
+
+		<execute macro="FormFields#editText">
+			<var name="fieldName" value="label" />
+			<var name="fieldValue" value="表格文本" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="SelectRepeatable" />
+		</execute>
+
+		<execute macro="FormFields#editText">
+			<var name="fieldName" value="label" />
+			<var name="fieldValue" value="表单选择" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#saveElementSet" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName" />
+
+		<execute macro="Form#gotoAddElementSet">
+			<var name="elementSetTitle" value="Element Set 1" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Date" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Date Field" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="DDLRecord#addTranslation">
+			<var name="localizedLanguage" value="Chinese (China)" />
+		</execute>
+
+		<execute macro="FormFields#viewTextLabel">
+			<var name="fieldLabel" value="表格文本" />
+			<var name="fieldName" value="TextFieldRequired" />
+		</execute>
+
+		<execute macro="FormFields#viewRequiredAsterisk" />
+
+		<execute macro="FormFields#viewSelectLabel">
+			<var name="fieldLabel" value="表单选择" />
+			<var name="fieldName" value="SelectRepeatable" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="SelectRepeatable" />
+		</execute>
+
+		<execute macro="Form#gotoAdvancedTab" />
+
+		<execute macro="FormFields#viewSwitcherChecked">
+			<var name="fieldName" value="repeatable" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#gotoAddElementSet">
+			<var name="elementSetTitle" value="Element Set 1" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#save" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Element Sets" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName">
+			<var name="formName" value="Element Set 2" />
+		</execute>
+
+		<execute macro="Form#gotoAddElementSet">
+			<var name="elementSetTitle" value="Element Set 1" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="DDLRecord#addTranslation">
+			<var name="localizedLanguage" value="Chinese (China)" />
+		</execute>
+
+		<execute macro="FormFields#viewTextLabel">
+			<var name="fieldLabel" value="表格文本" />
+			<var name="fieldName" value="TextFieldRequired" />
+		</execute>
+
+		<execute macro="FormFields#viewRequiredAsterisk" />
+
+		<execute macro="FormFields#viewSelectLabel">
+			<var name="fieldLabel" value="表单选择" />
+			<var name="fieldName" value="SelectRepeatable" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="SelectRepeatable" />
+		</execute>
+
+		<execute macro="Form#gotoAdvancedTab" />
+
+		<execute macro="FormFields#viewSwitcherChecked">
+			<var name="fieldName" value="repeatable" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="DDLRecord#selectTranslation">
+			<var name="localizedLanguage" value="English (United States)" />
+		</execute>
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Text" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Text Field New" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#saveElementSet" />
+	</command>
+
 	<command name="AddFormInGlobal" priority="5">
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#openURL" />
@@ -162,7 +380,7 @@
 		</execute>
 
 		<execute macro="Role#definePermissionPG">
-			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_ADD_RECORD_CHECKBOX" />
+			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_ADD_FORM_INSTANCE_RECORD_CHECKBOX" />
 			<var name="roleTitle" value="Power User" />
 		</execute>
 
@@ -258,10 +476,10 @@
 			<var name="roleTitle" value="Forms Site Role Name" />
 		</execute>
 
-		<for list="ADD_RECORD_SET,PERMISSIONS,ADD_TEMPLATE,ADD_STRUCTURE" param="resourceActionIndex">
+		<for list="ADD_DATA_PROVIDER_INSTANCE,ADD_FORM_INSTANCE,ADD_STRUCTURE,PERMISSIONS" param="resourceActionIndex">
 			<execute macro="Permissions#definePermissionViaJSONAPI">
 				<var name="resourceAction" value="${resourceActionIndex}" />
-				<var name="resourceName" value="com.liferay.dynamic.data.lists" />
+				<var name="resourceName" value="com.liferay.dynamic.data.mapping" />
 				<var name="roleTitle" value="Forms Site Role Name" />
 				<var name="roleType" value="site" />
 			</execute>
@@ -276,7 +494,7 @@
 
 		<execute macro="Permissions#definePermissionViaJSONAPI">
 			<var name="resourceAction" value="ACCESS_IN_CONTROL_PANEL" />
-			<var name="resourceName" value="com_liferay_dynamic_data_lists_form_web_portlet_DDLFormAdminPortlet" />
+			<var name="resourceName" value="com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet" />
 			<var name="roleTitle" value="Forms Site Role Name" />
 			<var name="roleType" value="site" />
 		</execute>
@@ -487,8 +705,8 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Forms and Workflow" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1198,8 +1416,8 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Forms and Workflow" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1256,8 +1474,8 @@
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
 		<execute macro="SystemSettings#resetConfiguration">
-			<var name="category" value="Forms and Workflow" />
 			<var name="configurationName" value="Dynamic Data Lists" />
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1332,12 +1550,12 @@
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
 		<execute macro="SystemSettings#resetConfiguration">
-			<var name="category" value="Forms and Workflow" />
 			<var name="configurationName" value="Dynamic Data Mapping Service" />
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Other" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Other" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1363,8 +1581,8 @@
 
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Foundation" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Foundation" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1415,8 +1633,8 @@
 		<execute macro="SystemSettings#exitEditConfiguration" />
 
 		<execute macro="SystemSettings#resetConfiguration">
-			<var name="category" value="Foundation" />
 			<var name="configurationName" value="JavaScript Loader" />
+			<var name="navItem" value="Foundation" />
 		</execute>
 	</command>
 
@@ -1440,8 +1658,8 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Forms and Workflow" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
 		<execute macro="SystemSettings#editConfiguration">
@@ -1477,8 +1695,8 @@
 		</execute>
 
 		<execute macro="SystemSettings#resetConfiguration">
-			<var name="category" value="Forms and Workflow" />
 			<var name="configurationName" value="Forms" />
+			<var name="navItem" value="Forms and Workflow" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -1625,6 +1843,8 @@
 		<execute macro="FormsAdminNavigator#gotoBack" />
 
 		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute function="Refresh" />
 
 		<execute macro="Form#editName">
 			<var name="formName" value="Checkbox" />
@@ -1964,7 +2184,7 @@
 		</execute>
 
 		<for list="${fieldValueList}" param="fieldValue">
-			<execute macro="FormsAdmin#searchFormEntry">
+			<execute macro="Search#searchCP">
 				<var name="searchTerm" value="${fieldValue}" />
 			</execute>
 
@@ -1988,7 +2208,7 @@
 			</for>
 		</for>
 
-		<execute macro="FormsAdmin#searchFormEntry">
+		<execute macro="Search#searchCP">
 			<var name="searchTerm" value="otherEntry" />
 		</execute>
 
@@ -2083,6 +2303,7 @@
 	</command>
 
 	<command name="SubmitForm3x3Layout" priority="4">
+		<property name="portal.subrepo" value="false" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -2238,7 +2459,7 @@
 	</command>
 
 	<command name="SubmitFormAfterEditingFields" priority="5">
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#openURL" />
@@ -2575,7 +2796,7 @@
 			<var name="fieldName" value="Checkbox" />
 		</execute>
 
-		<execute macro="FormPortlet#submit" />
+		<execute macro="FormPortlet#submitSuccessfully" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2823,7 +3044,7 @@
 		<description message="This is a use case for LPS-60818." />
 		<property name="osgi.module.configuration.file.names" value="com.liferay.captcha.configuration.CaptchaConfiguration.config" />
 		<property name="osgi.module.configurations" value="maxChallenges=&quot;0&quot;" />
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2939,7 +3160,7 @@
 	<command name="SubmitFormWithAllFieldTypesAndThreePages" priority="5">
 		<description message="This is a use case for LPS-64798." />
 
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#openURL" />

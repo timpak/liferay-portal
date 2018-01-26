@@ -79,6 +79,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.portlet.PortletPreferences;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Berentey Zsolt
@@ -1439,7 +1441,7 @@ public class LayoutTypePortletImpl
 				PortletPreferencesFactoryUtil.getPortletPreferencesIds(
 					layout.getGroupId(), 0, layout, sourcePortletId, false);
 
-			javax.portlet.PortletPreferences sourcePortletPreferences =
+			PortletPreferences sourcePortletPreferences =
 				PortletPreferencesLocalServiceUtil.getStrictPreferences(
 					portletPreferencesIds);
 
@@ -1827,9 +1829,11 @@ public class LayoutTypePortletImpl
 		String[] columnValues = StringUtil.split(columnValue);
 
 		for (String nonstaticPortletId : columnValues) {
+			String decodedNonStaticPortletName =
+				PortletIdCodec.decodePortletName(nonstaticPortletId);
+
 			if (nonstaticPortletId.equals(portletId) ||
-				PortletIdCodec.decodePortletName(
-					nonstaticPortletId).equals(portletId)) {
+				decodedNonStaticPortletName.equals(portletId)) {
 
 				return true;
 			}
@@ -1846,18 +1850,22 @@ public class LayoutTypePortletImpl
 			PropsKeys.LAYOUT_STATIC_PORTLETS_END + columnId);
 
 		for (String staticPortletId : staticPortletIdsStart) {
+			String decodedStaticPortletName = PortletIdCodec.decodePortletName(
+				staticPortletId);
+
 			if (staticPortletId.equals(portletId) ||
-				PortletIdCodec.decodePortletName(
-					staticPortletId).equals(portletId)) {
+				decodedStaticPortletName.equals(portletId)) {
 
 				return true;
 			}
 		}
 
 		for (String staticPortletId : staticPortletIdsEnd) {
+			String decodedStaticPortletName = PortletIdCodec.decodePortletName(
+				staticPortletId);
+
 			if (staticPortletId.equals(portletId) ||
-				PortletIdCodec.decodePortletName(
-					staticPortletId).equals(portletId)) {
+				decodedStaticPortletName.equals(portletId)) {
 
 				return true;
 			}

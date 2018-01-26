@@ -1369,7 +1369,7 @@ fix for all tasks of type `FindBugs` related to source sets.
 ## 3.6.0 - 2017-04-14
 
 ### Added
-- [LPS-71901]: Add task `updateFileSnapshotVersions` to update the project
+- [LPS-71901]: Add the task `updateFileSnapshotVersions` to update the project
 version in external files to the latest snapshot.
 
 ### Changed
@@ -2652,7 +2652,7 @@ sub-repositories.
 ### Added
 - [LRDOCS-4111]: Apply and preconfigure [Liferay Gradle Plugins JSDoc] for OSGi
 projects.
-- [LRDOCS-4111]: Publish the Javascript API documentation JAR of an OSGi project
+- [LRDOCS-4111]: Publish the JavaScript API documentation JAR of an OSGi project
 with the `install` and `uploadArchives` tasks.
 
 ### Changed
@@ -2698,6 +2698,79 @@ when applied.
 
 ### Changed
 - [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.83.
+
+## 5.2.39 - 2018-01-09
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.84.
+
+## 5.2.40 - 2018-01-10
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.85.
+
+## 5.2.41 - 2018-01-11
+
+### Changed
+- [LPS-76954]: Update the [Liferay Gradle Plugins] dependency to version 3.5.86.
+
+## 5.2.42 - 2018-01-11
+
+### Changed
+- [LPS-76957]: Update the [Liferay Gradle Plugins] dependency to version 3.5.87.
+
+## 5.2.43 - 2018-01-11
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.88.
+
+## 5.2.44 - 2018-01-14
+
+### Changed
+- [LPS-77111]: Update the [Liferay Gradle Plugins] dependency to version 3.5.89.
+
+## 5.2.45 - 2018-01-17
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.90.
+
+## 5.2.46 - 2018-01-17
+
+### Changed
+- [LPS-76644]: Update the [Liferay Gradle Plugins JSDoc] dependency to version
+1.0.2.
+- [LPS-77250]: Update the [Liferay Gradle Plugins] dependency to version 3.5.91.
+
+## 5.2.47 - 2018-01-22
+
+### Changed
+- [LPS-77305]: Update the [Liferay Gradle Plugins] dependency to version 3.5.92.
+
+## 5.2.48 - 2018-01-23
+
+### Changed
+- [LPS-77402]: Update the [Liferay Gradle Plugins] dependency to version 3.5.93.
+
+## 5.2.49 - 2018-01-23
+
+### Changed
+- [LPS-77400]: Update the [Liferay Gradle Plugins] dependency to version 3.5.94.
+
+## 5.2.50 - 2018-01-23
+
+### Changed
+- [LPS-77186]: Update the [Liferay Gradle Plugins] dependency to version 3.5.95.
+
+## 5.2.51 - 2018-01-24
+
+### Changed
+- [LPS-77423]: Update the [Liferay Gradle Plugins] dependency to version 3.5.96.
+
+### Removed
+- [LPS-77423]: Remove `--no-package-lock` default argument in the `npmInstall`
+task.
+- [LPS-77423]: Remove exclusion of the `fsevents` dependency from the generated
+`npm-shrinkwrap.json` files.
 
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -3002,6 +3075,15 @@ when applied.
 [LPS-76644]: https://issues.liferay.com/browse/LPS-76644
 [LPS-76747]: https://issues.liferay.com/browse/LPS-76747
 [LPS-76840]: https://issues.liferay.com/browse/LPS-76840
+[LPS-76954]: https://issues.liferay.com/browse/LPS-76954
+[LPS-76957]: https://issues.liferay.com/browse/LPS-76957
+[LPS-77111]: https://issues.liferay.com/browse/LPS-77111
+[LPS-77186]: https://issues.liferay.com/browse/LPS-77186
+[LPS-77250]: https://issues.liferay.com/browse/LPS-77250
+[LPS-77305]: https://issues.liferay.com/browse/LPS-77305
+[LPS-77400]: https://issues.liferay.com/browse/LPS-77400
+[LPS-77402]: https://issues.liferay.com/browse/LPS-77402
+[LPS-77423]: https://issues.liferay.com/browse/LPS-77423
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

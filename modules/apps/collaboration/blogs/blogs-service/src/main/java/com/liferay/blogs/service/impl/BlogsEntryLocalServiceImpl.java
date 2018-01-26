@@ -37,6 +37,8 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -82,10 +84,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 import com.liferay.portal.kernel.util.Time;
@@ -1871,8 +1871,16 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		String entryURL = (String)workflowContext.get(
 			WorkflowConstants.CONTEXT_URL);
 
-		if (!entry.isApproved() || Validator.isNull(entryURL)) {
+		if (!entry.isApproved()) {
 			return;
+		}
+
+		if (Validator.isNull(entryURL)) {
+			String layoutFullURL = serviceContext.getLayoutFullURL();
+
+			entryURL = StringBundler.concat(
+				layoutFullURL, Portal.FRIENDLY_URL_SEPARATOR, "blogs",
+				StringPool.SLASH, String.valueOf(entry.getEntryId()));
 		}
 
 		BlogsGroupServiceSettings blogsGroupServiceSettings =

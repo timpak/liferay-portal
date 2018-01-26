@@ -1739,7 +1739,7 @@ AUI.add(
 								toolbars: {
 									footer: [
 										{
-											cssClass: 'btn-lg btn-primary',
+											cssClass: 'btn-primary',
 											disabled: !instance.get('selectedLayout'),
 											label: Liferay.Language.get('select'),
 											on: {
@@ -1747,7 +1747,7 @@ AUI.add(
 											}
 										},
 										{
-											cssClass: 'btn-lg btn-link',
+											cssClass: 'btn-link',
 											label: Liferay.Language.get('cancel'),
 											on: {
 												click: A.bind(instance._handleCancelButtonClick, instance)
@@ -1962,7 +1962,9 @@ AUI.add(
 								start = end;
 								end = start + delta;
 
-								if (start <= cache.total) {
+								if (start <= cache.total && start != cache.oldStart) {
+									cache.oldStart = start;
+
 									listNode.append(instance._loadingAnimationNode);
 
 									instance._requestLayouts(parentLayoutId, groupId, privateLayout, start, end, A.rbind('_renderLayoutsFragment', instance, key));
@@ -2406,6 +2408,7 @@ AUI.add(
 							cache = {
 								end: end,
 								layouts: layouts,
+								oldStart: 0,
 								path: path.slice(),
 								start: start,
 								total: total

@@ -192,8 +192,8 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 		StringBundler sb1 = new StringBundler(3);
 
 		sb1.append("select * from KaleoDefinition kd where not exists ");
-		sb1.append("(select 1 from KaleoDefinitionVersion kdv where ");
-		sb1.append("kdv.name = kd.name and kdv.companyId = kd.companyId)");
+		sb1.append("(select 1 from KaleoDefinitionVersion kdv where kdv.name ");
+		sb1.append("= kd.name and kdv.companyId = kd.companyId)");
 
 		StringBundler sb2 = new StringBundler(6);
 
@@ -213,14 +213,14 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 					connection, sb2.toString());
 			ResultSet rs = ps1.executeQuery()) {
 
-			for (String tableName : _tableNames) {
+			for (String tableName : _TABLE_NAMES) {
 				if (hasColumn(tableName, "kaleoDefinitionId")) {
 					StringBundler sb3 = new StringBundler(4);
 
 					sb3.append("update ");
 					sb3.append(tableName);
-					sb3.append(" set kaleoDefinitionVersionId = ? ");
-					sb3.append("where kaleoDefinitionId = ? ");
+					sb3.append(" set kaleoDefinitionVersionId = ? where ");
+					sb3.append("kaleoDefinitionId = ? ");
 
 					preparedStatements.add(
 						AutoBatchPreparedStatementUtil.concurrentAutoBatch(
@@ -286,7 +286,7 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 		}
 	}
 
-	private static final String[] _tableNames = {
+	private static final String[] _TABLE_NAMES = {
 		"KaleoAction", "KaleoCondition", "KaleoInstance", "KaleoInstanceToken",
 		"KaleoLog", "KaleoNode", "KaleoNotification",
 		"KaleoNotificationRecipient", "KaleoTask", "KaleoTaskAssignment",

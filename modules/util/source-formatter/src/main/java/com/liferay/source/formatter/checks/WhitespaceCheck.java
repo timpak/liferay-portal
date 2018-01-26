@@ -128,6 +128,7 @@ public class WhitespaceCheck extends BaseFileCheck {
 			linePart = formatIncorrectSyntax(linePart, "( ", "(", false);
 			linePart = formatIncorrectSyntax(linePart, "){", ") {", false);
 			linePart = formatIncorrectSyntax(linePart, "]{", "] {", false);
+			linePart = formatIncorrectSyntax(linePart, "(\\.\\.\\.( ?))\\w");
 			linePart = formatIncorrectSyntax(linePart, "\\w(( ?)=)");
 			linePart = formatIncorrectSyntax(linePart, "(=( ?))\\w");
 			linePart = formatIncorrectSyntax(linePart, "for \\(.*(( ?):)");
@@ -258,7 +259,9 @@ public class WhitespaceCheck extends BaseFileCheck {
 	}
 
 	protected String trimLine(String fileName, String line) {
-		if (line.trim().length() == 0) {
+		String trimmedLine = StringUtil.trim(line);
+
+		if (trimmedLine.length() == 0) {
 			return StringPool.BLANK;
 		}
 

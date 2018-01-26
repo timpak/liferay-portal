@@ -17,9 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
-User selUser = (User)request.getAttribute("user.selUser");
-List<Group> groups = (List<Group>)request.getAttribute("user.groups");
-List<Group> inheritedSites = (List<Group>)request.getAttribute("user.inheritedSites");
+UserDisplayContext userDisplayContext = new UserDisplayContext(request, initDisplayContext);
+
+User selUser = userDisplayContext.getSelectedUser();
+List<Group> groups = userDisplayContext.getGroups();
+List<Group> inheritedSites = userDisplayContext.getInheritedSites();
 
 currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites");
 %>
@@ -99,7 +101,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		cssClass="modify-link"
 		id="selectSiteLink"
 		label="<%= true %>"
-		linkCssClass="btn btn-default btn-lg"
+		linkCssClass="btn btn-primary"
 		message="select"
 		url="javascript:;"
 	/>

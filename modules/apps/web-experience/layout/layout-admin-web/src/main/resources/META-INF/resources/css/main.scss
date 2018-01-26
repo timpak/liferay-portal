@@ -1,5 +1,6 @@
+@import "./LayoutPageTemplateFragment.scss";
+@import "./contextual_sidebar/ContextualSidebar";
 @import "mixins";
-@import './LayoutPageTemplateFragment.scss';
 
 .layout-columns {
 	overflow-x: auto;
@@ -10,6 +11,10 @@
 	.layout-column {
 		height: calc(100vh - 384px);
 		overflow-y: scroll;
+
+		.active-item {
+			background-color: #F0F5FF;
+		}
 	}
 }
 

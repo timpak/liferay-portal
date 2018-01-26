@@ -30,10 +30,4 @@ public abstract class BaseUADEntityAggregator implements UADEntityAggregator {
 		return userIdUADEntities.size();
 	}
 
-	@Override
-	public abstract List<UADEntity> getUADEntities(long userId);
-
-	@Override
-	public abstract UADEntity getUADEntity(String uadEntityId);
-
 }

@@ -25,25 +25,10 @@ portletDisplay.setURLBack(layoutPageTemplateDisplayContext.getLayoutPageTemplate
 renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionTitle());
 %>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<liferay-util:include page="/navigation_tabs.jsp" servletContext="<%= application %>" />
-
-	<c:if test="<%= layoutPageTemplateDisplayContext.isShowLayoutPageTemplateEntriesSearch() %>">
-		<portlet:renderURL var="portletURL">
-			<portlet:param name="mvcPath" value="/view_layout_page_template_entries.jsp" />
-			<portlet:param name="tabs1" value="page-templates" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionId()) %>" />
-			<portlet:param name="displayStyle" value="<%= layoutPageTemplateDisplayContext.getDisplayStyle() %>" />
-		</portlet:renderURL>
-
-		<aui:nav-bar-search>
-			<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
-				<liferay-ui:input-search markupView="lexicon" />
-			</aui:form>
-		</aui:nav-bar-search>
-	</c:if>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= layoutsAdminDisplayContext.getNavigationItems() %>"
+/>
 
 <liferay-frontend:management-bar
 	disabled="<%= layoutPageTemplateDisplayContext.isDisabledLayoutPageTemplateEntriesManagementBar() %>"
@@ -70,6 +55,22 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 			orderColumns="<%= layoutPageTemplateDisplayContext.getOrderColumns() %>"
 			portletURL="<%= currentURLObj %>"
 		/>
+
+		<c:if test="<%= layoutPageTemplateDisplayContext.isShowLayoutPageTemplateEntriesSearch() %>">
+			<portlet:renderURL var="portletURL">
+				<portlet:param name="mvcPath" value="/view_layout_page_template_entries.jsp" />
+				<portlet:param name="tabs1" value="page-templates" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionId()) %>" />
+				<portlet:param name="displayStyle" value="<%= layoutPageTemplateDisplayContext.getDisplayStyle() %>" />
+			</portlet:renderURL>
+
+			<li>
+				<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
+					<liferay-ui:input-search markupView="lexicon" />
+				</aui:form>
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -198,20 +199,7 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 		}
 	);
 
-	function handleDestroyPortlet() {
-		addLayoutPageTemplateEntryMenuItem.removeEventListener('click', handleAddLayoutPageTemplateEntryMenuItemClick);
-		updateLayoutPageTemplateEntryMenuItemClickHandler.removeListener();
-
-		Liferay.detach('destroyPortlet', handleDestroyPortlet);
-	}
-
-	var addLayoutPageTemplateEntryMenuItem = document.getElementById('<portlet:namespace />addLayoutPageTemplateEntryMenuItem');
-
-	addLayoutPageTemplateEntryMenuItem.addEventListener('click', handleAddLayoutPageTemplateEntryMenuItemClick);
-
-	Liferay.on('destroyPortlet', handleDestroyPortlet);
-
-	dom.on(
+	var deleteSelectedLayoutPageTemplateEntriesClickHandler = dom.on(
 		'#<portlet:namespace />deleteSelectedLayoutPageTemplateEntries',
 		'click',
 		function() {
@@ -220,4 +208,18 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 			}
 		}
 	);
+
+	var addLayoutPageTemplateEntryMenuItem = document.getElementById('<portlet:namespace />addLayoutPageTemplateEntryMenuItem');
+
+	addLayoutPageTemplateEntryMenuItem.addEventListener('click', handleAddLayoutPageTemplateEntryMenuItemClick);
+
+	function handleDestroyPortlet() {
+		addLayoutPageTemplateEntryMenuItem.removeEventListener('click', handleAddLayoutPageTemplateEntryMenuItemClick);
+		deleteSelectedLayoutPageTemplateEntriesClickHandler.removeListener();
+		updateLayoutPageTemplateEntryMenuItemClickHandler.removeListener();
+
+		Liferay.detach('destroyPortlet', handleDestroyPortlet);
+	}
+
+	Liferay.on('destroyPortlet', handleDestroyPortlet);
 </aui:script>
