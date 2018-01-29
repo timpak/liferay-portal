@@ -19,7 +19,6 @@
 <%
 String redirect = renderRequest.getParameter("redirect");
 
-List<String> configurationCategories = (List<String>)request.getAttribute(ConfigurationAdminWebKeys.CONFIGURATION_CATEGORIES);
 String configurationCategory = (String)request.getAttribute(ConfigurationAdminWebKeys.CONFIGURATION_CATEGORY);
 ConfigurationModelIterator configurationModelIterator = (ConfigurationModelIterator)request.getAttribute(ConfigurationAdminWebKeys.CONFIGURATION_MODEL_ITERATOR);
 ResourceBundleLoaderProvider resourceBundleLoaderProvider = (ResourceBundleLoaderProvider)request.getAttribute(ConfigurationAdminWebKeys.RESOURCE_BUNDLE_LOADER_PROVIDER);
@@ -36,31 +35,28 @@ if (keywords != null) {
 
 	renderResponse.setTitle(LanguageUtil.get(request, "search-results"));
 }
-
-List<NavigationItem> navigationItems = new ArrayList<>();
-
-if (configurationCategories != null) {
-	for (String curConfigurationCategory : configurationCategories) {
-		NavigationItem navigationItem = new NavigationItem();
-
-		navigationItem.setActive(curConfigurationCategory.equals(configurationCategory));
-
-		PortletURL configurationCategoryURL = renderResponse.createRenderURL();
-
-		configurationCategoryURL.setParameter("configurationCategory", curConfigurationCategory);
-
-		navigationItem.setHref(configurationCategoryURL.toString());
-
-		navigationItem.setLabel(LanguageUtil.get(request, curConfigurationCategory));
-
-		navigationItems.add(navigationItem);
-	}
-}
 %>
 
 <clay:navigation-bar
 	inverted="<%= true %>"
-	items="<%= navigationItems %>"
+	items="<%= 
+		new JSPNavigationItemList(pageContext) {
+			{
+				List<String> configurationCategories = (List<String>)request.getAttribute(ConfigurationAdminWebKeys.CONFIGURATION_CATEGORIES);
+
+				if (configurationCategories != null) {
+					for (String curConfigurationCategory : configurationCategories) {
+						add(
+							navigationItem -> {
+								navigationItem.setActive(curConfigurationCategory.equals(configurationCategory));
+								navigationItem.setHref(renderResponse.createRenderURL(), "configurationCategory", "curConfigurationCategory");
+								navigationItem.setLabel(LanguageUtil.get(request, curConfigurationCategory));
+							});
+					}
+				}
+			}
+		}
+	%>"
 />
 
 <liferay-frontend:management-bar>

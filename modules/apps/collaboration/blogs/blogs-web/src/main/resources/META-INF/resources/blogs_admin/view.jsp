@@ -17,45 +17,35 @@
 <%@ include file="/blogs_admin/init.jsp" %>
 
 <%
-String navigation = ParamUtil.getString(request, "navigation", "entries");
+final String navigation = ParamUtil.getString(request, "navigation", "entries");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", "/blogs/view");
 portletURL.setParameter("navigation", navigation);
-
-List<NavigationItem> navigationItems = new ArrayList<>();
-
-NavigationItem entriesNavigationItem = new NavigationItem();
-
-entriesNavigationItem.setActive(navigation.equals("entries"));
-
-PortletURL viewEntriesURL = renderResponse.createRenderURL();
-
-entriesNavigationItem.setHref(viewEntriesURL.toString());
-
-entriesNavigationItem.setLabel(LanguageUtil.get(request, "entries"));
-
-navigationItems.add(entriesNavigationItem);
-
-NavigationItem imagesNavigationItem = new NavigationItem();
-
-imagesNavigationItem.setActive(navigation.equals("images"));
-
-PortletURL viewImagesURL = renderResponse.createRenderURL();
-
-viewImagesURL.setParameter("navigation", "images");
-
-imagesNavigationItem.setHref(viewImagesURL.toString());
-
-imagesNavigationItem.setLabel(LanguageUtil.get(request, "images"));
-
-navigationItems.add(imagesNavigationItem);
 %>
 
 <clay:navigation-bar
 	inverted="<%= true %>"
-	items="<%= navigationItems %>"
+	items="<%= 
+	new JSPNavigationItemList(pageContext) {
+		{
+			add(
+			navigationItem -> {
+				navigationItem.setActive(navigation.equals("entries"));
+				navigationItem.setHref(renderResponse.createRenderURL());
+				navigationItem.setLabel(LanguageUtil.get(request, "entries"));
+			});
+
+			add(
+			navigationItem -> {
+				navigationItem.setActive(navigation.equals("images"));
+				navigationItem.setHref(renderResponse.createRenderURL(), "navigation", "images");
+				navigationItem.setLabel(LanguageUtil.get(request, "images"));
+			});
+		}
+	}
+	%>"
 />
 
 <c:choose>

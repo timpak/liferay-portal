@@ -18,6 +18,8 @@ import java.io.Serializable;
 
 import java.util.List;
 
+import javax.portlet.PortletURL;
+
 /**
  * @author Chema Balsas
  */
@@ -75,6 +77,24 @@ public class NavigationItem implements Serializable {
 
 	public void setDisabled(boolean disabled) {
 		_disabled = disabled;
+	}
+
+	public void setHref(PortletURL portletURL, Object... parameters) {
+		if (parameters != null) {
+			if ((parameters.length % 2) != 0) {
+				throw new IllegalArgumentException(
+					"Parameters length is not an even number");
+			}
+
+			for (int i = 0; i < parameters.length; i += 2) {
+				String parameterName = String.valueOf(parameters[i]);
+				String parameterValue = String.valueOf(parameters[i + 1]);
+
+				portletURL.setParameter(parameterName, parameterValue);
+			}
+		}
+
+		_href = portletURL.toString();
 	}
 
 	public void setHref(String href) {
