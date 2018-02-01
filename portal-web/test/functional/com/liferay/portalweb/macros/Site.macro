@@ -408,7 +408,7 @@
 
 		<execute function="AssertClick" locator1="UsersAndOrganizations#USER_TABLE_SCREEN_NAME" value1="${userScreenName}" />
 
-		<execute macro="UserNavigator#gotoMemberships"/>
+		<execute macro="UserNavigator#gotoMemberships" />
 
 		<execute function="AssertClick" locator1="UsersAndOrganizationsEditUser#SITES_SELECT_LINK" value1="Select" />
 
