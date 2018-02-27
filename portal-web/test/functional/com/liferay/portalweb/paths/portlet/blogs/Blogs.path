@@ -34,6 +34,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>NEW_BLOGS_ENTRY</td>
+	<td>//a[contains(.,'New Blog Entry')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>PERMISSIONS</td>
 	<td>//a[@data-title='Permissions']</td>
 	<td></td>
