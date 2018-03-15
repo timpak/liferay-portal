@@ -4653,6 +4653,7 @@
 
 	<command name="UserSegmentViewAnyContentWithCategorizationViaContentListPortletAndExportImportLAR" priority="4">
 		<description message="This is a use case for WCM-1347." />
+		<property name="portal.acceptance" value="kyle.miho" />
 
 		<property name="content.targeting.release" value="true" />
 
