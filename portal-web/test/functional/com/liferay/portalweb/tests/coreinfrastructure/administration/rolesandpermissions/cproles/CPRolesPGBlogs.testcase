@@ -733,6 +733,7 @@
 	</command>
 
 	<command name="DeleteBlogsEntryOrgRoleDefinePermission" priority="5">
+		<property name="portal.acceptance" value="tim.pak" />
 		<property name="portal.acceptance" value="false" />
 
 		<execute macro="Permissions#setUpOrgRoleLoginUserPG">
@@ -1850,6 +1851,7 @@
 	</command>
 
 	<command name="ViewBlogsEntryPermissionsOwnerRoleInline" priority="5">
+		<property name="portal.acceptance" value="tim.pak" />
 		<execute macro="Permissions#setUpRegRoleLoginUserPG">
 			<var name="pageName" value="Blogs Page" />
 			<var name="portletName" value="Blogs" />
