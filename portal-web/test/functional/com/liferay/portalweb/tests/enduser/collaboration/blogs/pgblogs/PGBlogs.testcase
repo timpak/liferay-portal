@@ -689,6 +689,7 @@
 	</command>
 
 	<command name="AssertDuplicateAutomaticURLNormalizes" priority="4">
+		<property name="portal.acceptance" value="tim.pak" />
 		<description message="This is usecase 2 for LPS-69240" />
 
 		<var name="entryContent" value="Blogs Entry Content" />
@@ -813,6 +814,7 @@
 	</command>
 
 	<command name="DeleteBlogsEntries" priority="5">
+		<property name="portal.acceptance" value="tim.pak" />
 		<property name="portal.acceptance" value="true" />
 
 		<for list="1,2,3" param="entryCount" >
@@ -900,6 +902,7 @@
 	</command>
 
 	<command name="EditBlogsEntry" priority="5">
+		<property name="portal.acceptance" value="tim.pak" />
 		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#gotoPage">
@@ -1067,6 +1070,7 @@
 	</command>
 
 	<command name="MoveToRecycleBinBlogsEntry" priority="5">
+		<property name="portal.acceptance" value="tim.pak" />
 		<property name="portal.acceptance" value="false" />
 
 		<execute macro="Navigator#gotoPage">
@@ -1628,6 +1632,7 @@
 	</command>
 
 	<command name="ViewBlogEntryViaEditedCustomURL">
+		<property name="portal.acceptance" value="tim.pak" />
 		<description message="This is a usecase for LPS-66970" />
 
 		<execute macro="Navigator#gotoPage">
@@ -1688,6 +1693,7 @@
 	</command>
 
 	<command name="ViewBlogsEntryCommentAsGuest" priority="4">
+		<property name="portal.acceptance" value="tim.pak" />
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
@@ -2084,6 +2090,7 @@
 	</command>
 
 	<command name="ViewBlogsEntryWithGuestPermissionsRemoved" priority="4">
+		<property name="portal.acceptance" value="tim.pak" />
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
