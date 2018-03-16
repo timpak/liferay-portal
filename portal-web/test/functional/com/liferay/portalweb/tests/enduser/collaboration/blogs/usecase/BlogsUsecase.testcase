@@ -1372,6 +1372,7 @@
 	</command>
 
 	<command name="ViewBlogsEntriesAsGuestViaAP" priority="4">
+		<property name="portal.acceptance" value="tim-pak" />
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
@@ -1607,6 +1608,7 @@
 	</command>
 
 	<command name="ViewBlogsEntryAsPublishedViaAP" priority="3">
+		<property name="portal.acceptance" value="tim-pak" />
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
 			<var name="panel" value="Site Administration" />
@@ -2455,6 +2457,7 @@
 	</command>
 
 	<command name="ViewNoBlogsDraftDisplaysInAP" priority="4">
+		<property name="portal.acceptance" value="tim-pak" />
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
 			<var name="panel" value="Site Administration" />
