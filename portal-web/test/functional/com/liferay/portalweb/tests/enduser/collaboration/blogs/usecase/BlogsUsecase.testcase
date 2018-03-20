@@ -281,6 +281,7 @@
 	</command>
 
 	<command name="ChangeBlogsEntryCoverImage" priority="3">
+		<property name="portal.acceptance" value="tim-pak" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoPortlet">
