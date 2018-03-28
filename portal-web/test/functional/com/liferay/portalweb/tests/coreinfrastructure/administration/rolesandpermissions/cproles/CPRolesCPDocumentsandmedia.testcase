@@ -36,7 +36,7 @@
 	</tear-down>
 
 	<command name="ViewDocumentsAndMediaPortletRegRole" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="tim-pak" />
 		<property name="test.name.skip.portal.instance" value="CPRolesCPDocumentsandmedia#ViewDocumentsAndMediaPortletRegRole" />
 
 		<execute macro="Permissions#setUpRegRoleLoginUserCP">
