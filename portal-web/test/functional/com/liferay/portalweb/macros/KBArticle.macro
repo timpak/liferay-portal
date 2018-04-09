@@ -1069,12 +1069,12 @@
 		<if>
 			<equals arg1="${rateUp}" arg2="true" />
 			<then>
-				<execute function="Click" locator1="KnowledgeBase#DISPLAY_VOTE_UP" />
+				<execute function="Click" locator1="Ratings#THUMBS_UP" />
 			</then>
 			<elseif>
 				<equals arg1="${rateUp}" arg2="false" />
 				<then>
-					<execute function="Click" locator1="KnowledgeBase#DISPLAY_VOTE_DOWN" />
+					<execute function="Click" locator1="Ratings#THUMBS_DOWN" />
 				</then>
 			</elseif>
 		</if>
