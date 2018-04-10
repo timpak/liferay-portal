@@ -1079,7 +1079,7 @@
 			</elseif>
 		</if>
 
-		<execute function="AssertTextEquals" locator1="KnowledgeBase#DISPLAY_VOTES" value1="${articleVoteCount}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="KnowledgeBase#DISPLAY_VOTES" value1="${articleVoteCount}" />
 	</command>
 
 	<command name="selectAllCP">
