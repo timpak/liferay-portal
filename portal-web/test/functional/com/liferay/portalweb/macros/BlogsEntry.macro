@@ -1203,7 +1203,7 @@
 
 		<execute function="AssertTextEquals" locator1="BlogsEntry#TITLE" value1="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="Ratings#THUMBS_DOWN" value1="${voteCount}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Ratings#THUMBS_DOWN" value1="${voteCount}" />
 	</command>
 
 	<command name="viewThumbsUp">
@@ -1211,7 +1211,7 @@
 
 		<execute function="AssertTextEquals" locator1="BlogsEntry#TITLE" value1="${entryTitle}" />
 
-		<execute function="AssertTextEquals" locator1="Ratings#THUMBS_UP" value1="${voteCount}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Ratings#THUMBS_UP" value1="${voteCount}" />
 	</command>
 
 	<command name="viewTitle">
