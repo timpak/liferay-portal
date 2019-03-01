@@ -46,6 +46,17 @@ definition {
 
 		Portlet.addPG(portletName = "Search Insights");
 
+		Portlet.gotoPortletOptions(
+			portletName = "Search Insights",
+			portletOption = "Configuration"
+		);
+
+		SelectFrame(locator1 = "IFrame#CONFIGURATION");
+
+		AssertChecked(locator1 = "Checkbox#ANY_CHECKBOX", checkboxName = "Enable Score Explanation");
+
+		IFrame.closeFrame();
+
 		SearchPortlets.searchEmbedded(searchTerm = "test");
 
 		AssertTextPresent(locator1 = "SearchResults#SEARCH_INSIGHTS_PORTLET_STRING_QUERY", value1 = "&quot;explain&quot;:true");
