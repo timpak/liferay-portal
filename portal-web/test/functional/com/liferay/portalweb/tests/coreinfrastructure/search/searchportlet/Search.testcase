@@ -64,6 +64,21 @@ definition {
 		AssertTextPresent(locator1 = "SearchResults#SEARCH_INSIGHTS_PORTLET_STRING_QUERY", value1 = "bucket");
 
 		AssertTextPresent(locator1 = "SearchResults#SEARCH_INSIGHTS_PORTLET_STRING_QUERY", value1 = "_explanation");
+
+		Portlet.gotoPortletOptions(
+			portletName = "Search Insights",
+			portletOption = "Configuration"
+		);
+
+		SelectFrame(locator1 = "IFrame#CONFIGURATION");
+
+		SearchFacetPortlet.uncheckFacet(
+			facetValueName = "Enable Score Explanation"
+		);
+
+		PortletEntry.save();
+
+		IFrame.closeFrame();	
 	}
 
 	@description = "This is a use case for LPS-90078."
