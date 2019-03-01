@@ -78,7 +78,11 @@ definition {
 
 		PortletEntry.save();
 
-		IFrame.closeFrame();	
+		IFrame.closeFrame();
+
+		SearchPortlets.searchEmbedded(searchTerm = "test");
+
+		AssertTextNotPresent(locator1 = "SearchResults#SEARCH_INSIGHTS_PORTLET_STRING_QUERY", value1 = "_explanation");
 	}
 
 	@description = "This is a use case for LPS-90078."
