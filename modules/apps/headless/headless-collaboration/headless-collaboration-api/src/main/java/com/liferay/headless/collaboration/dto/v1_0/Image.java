@@ -95,19 +95,27 @@ public class Image {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("contentUrl=");
+		sb.append("\"contentUrl\": ");
 
+		sb.append("\"");
 		sb.append(contentUrl);
-		sb.append(", imageId=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"imageId\": ");
 
 		sb.append(imageId);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
+		sb.append("\"");
 
 		sb.append("}");
 

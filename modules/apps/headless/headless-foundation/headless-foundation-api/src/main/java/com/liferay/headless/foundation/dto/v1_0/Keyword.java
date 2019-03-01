@@ -175,31 +175,49 @@ public class Keyword {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("{");
 
-		sb.append("contentSpace=");
+		sb.append("\"contentSpace\": ");
 
 		sb.append(contentSpace);
-		sb.append(", creator=");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", keywordUsageCount=");
+		sb.append(", ");
+
+		sb.append("\"keywordUsageCount\": ");
 
 		sb.append(keywordUsageCount);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
+		sb.append("\"");
 
 		sb.append("}");
 

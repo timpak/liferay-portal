@@ -195,34 +195,60 @@ public class Role {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(18);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("{");
 
-		sb.append("availableLanguages=");
+		sb.append("\"availableLanguages\": ");
 
+		sb.append("\"");
 		sb.append(availableLanguages);
-		sb.append(", creator=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", roleType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"roleType\": ");
+
+		sb.append("\"");
 		sb.append(roleType);
+		sb.append("\"");
 
 		sb.append("}");
 

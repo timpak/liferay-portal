@@ -381,61 +381,117 @@ public class StructuredContent {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(36);
+		StringBundler sb = new StringBundler(76);
 
 		sb.append("{");
 
-		sb.append("aggregateRating=");
+		sb.append("\"aggregateRating\": ");
 
 		sb.append(aggregateRating);
-		sb.append(", availableLanguages=");
+		sb.append(", ");
 
+		sb.append("\"availableLanguages\": ");
+
+		sb.append("\"");
 		sb.append(availableLanguages);
-		sb.append(", categories=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"categories\": ");
+
+		sb.append("\"");
 		sb.append(categories);
-		sb.append(", categoryIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"categoryIds\": ");
+
+		sb.append("\"");
 		sb.append(categoryIds);
-		sb.append(", contentFields=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"contentFields\": ");
+
+		sb.append("\"");
 		sb.append(contentFields);
-		sb.append(", contentSpace=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contentSpace\": ");
 
 		sb.append(contentSpace);
-		sb.append(", contentStructureId=");
+		sb.append(", ");
+
+		sb.append("\"contentStructureId\": ");
 
 		sb.append(contentStructureId);
-		sb.append(", creator=");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", datePublished=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"datePublished\": ");
+
+		sb.append("\"");
 		sb.append(datePublished);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", keywords=");
+		sb.append(", ");
 
+		sb.append("\"keywords\": ");
+
+		sb.append("\"");
 		sb.append(keywords);
-		sb.append(", lastReviewed=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"lastReviewed\": ");
+
+		sb.append("\"");
 		sb.append(lastReviewed);
-		sb.append(", renderedContentsURL=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"renderedContentsURL\": ");
+
+		sb.append("\"");
 		sb.append(renderedContentsURL);
-		sb.append(", title=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"title\": ");
+
+		sb.append("\"");
 		sb.append(title);
+		sb.append("\"");
 
 		sb.append("}");
 

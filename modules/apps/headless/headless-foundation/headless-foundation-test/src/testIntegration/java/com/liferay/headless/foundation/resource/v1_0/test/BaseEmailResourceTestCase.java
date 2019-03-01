@@ -115,6 +115,8 @@ public abstract class BaseEmailResourceTestCase {
 		Page<Email> page = invokeGetGenericParentEmailsPage(
 			genericParentId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(email1, email2), (List<Email>)page.getItems());
 		assertValid(page);
@@ -143,6 +145,8 @@ public abstract class BaseEmailResourceTestCase {
 
 		Page<Email> page2 = invokeGetGenericParentEmailsPage(
 			genericParentId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Email> emails2 = (List<Email>)page2.getItems();
 

@@ -215,37 +215,63 @@ public class Vocabulary {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(20);
+		StringBundler sb = new StringBundler(38);
 
 		sb.append("{");
 
-		sb.append("availableLanguages=");
+		sb.append("\"availableLanguages\": ");
 
+		sb.append("\"");
 		sb.append(availableLanguages);
-		sb.append(", contentSpace=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contentSpace\": ");
 
 		sb.append(contentSpace);
-		sb.append(", creator=");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", hasCategories=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"hasCategories\": ");
 
 		sb.append(hasCategories);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
+		sb.append("\"");
 
 		sb.append("}");
 

@@ -195,34 +195,56 @@ public class Folder {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(18);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{");
 
-		sb.append("contentSpaceId=");
+		sb.append("\"contentSpaceId\": ");
 
 		sb.append(contentSpaceId);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", hasDocuments=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"hasDocuments\": ");
 
 		sb.append(hasDocuments);
-		sb.append(", hasFolders=");
+		sb.append(", ");
+
+		sb.append("\"hasFolders\": ");
 
 		sb.append(hasFolders);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
+		sb.append("\"");
 
 		sb.append("}");
 

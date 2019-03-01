@@ -314,52 +314,104 @@ public class ContactInformation {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(30);
+		StringBundler sb = new StringBundler(69);
 
 		sb.append("{");
 
-		sb.append("email=");
+		sb.append("\"email\": ");
 
+		sb.append("\"");
 		sb.append(email);
-		sb.append(", emailIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"emailIds\": ");
+
+		sb.append("\"");
 		sb.append(emailIds);
-		sb.append(", facebook=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"facebook\": ");
+
+		sb.append("\"");
 		sb.append(facebook);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", jabber=");
+		sb.append(", ");
 
+		sb.append("\"jabber\": ");
+
+		sb.append("\"");
 		sb.append(jabber);
-		sb.append(", postalAddress=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"postalAddress\": ");
+
+		sb.append("\"");
 		sb.append(postalAddress);
-		sb.append(", postalAddressIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"postalAddressIds\": ");
+
+		sb.append("\"");
 		sb.append(postalAddressIds);
-		sb.append(", skype=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"skype\": ");
+
+		sb.append("\"");
 		sb.append(skype);
-		sb.append(", sms=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"sms\": ");
+
+		sb.append("\"");
 		sb.append(sms);
-		sb.append(", telephone=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"telephone\": ");
+
+		sb.append("\"");
 		sb.append(telephone);
-		sb.append(", telephoneIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"telephoneIds\": ");
+
+		sb.append("\"");
 		sb.append(telephoneIds);
-		sb.append(", twitter=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"twitter\": ");
+
+		sb.append("\"");
 		sb.append(twitter);
-		sb.append(", webUrl=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"webUrl\": ");
+
+		sb.append("\"");
 		sb.append(webUrl);
-		sb.append(", webUrlIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"webUrlIds\": ");
+
+		sb.append("\"");
 		sb.append(webUrlIds);
+		sb.append("\"");
 
 		sb.append("}");
 

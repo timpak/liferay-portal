@@ -215,35 +215,59 @@ public class FormRecord {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(20);
+		StringBundler sb = new StringBundler(36);
 
 		sb.append("{");
 
-		sb.append("creator=");
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", datePublished=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"datePublished\": ");
+
+		sb.append("\"");
 		sb.append(datePublished);
-		sb.append(", draft=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"draft\": ");
 
 		sb.append(draft);
-		sb.append(", fieldValues=");
+		sb.append(", ");
 
+		sb.append("\"fieldValues\": ");
+
+		sb.append("\"");
 		sb.append(fieldValues);
-		sb.append(", form=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"form\": ");
 
 		sb.append(form);
-		sb.append(", formId=");
+		sb.append(", ");
+
+		sb.append("\"formId\": ");
 
 		sb.append(formId);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
 

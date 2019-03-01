@@ -276,46 +276,86 @@ public class WorkflowTask {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(26);
+		StringBundler sb = new StringBundler(55);
 
 		sb.append("{");
 
-		sb.append("completed=");
+		sb.append("\"completed\": ");
 
 		sb.append(completed);
-		sb.append(", dateCompleted=");
+		sb.append(", ");
 
+		sb.append("\"dateCompleted\": ");
+
+		sb.append("\"");
 		sb.append(dateCompleted);
-		sb.append(", dateCreated=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", definitionName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"definitionName\": ");
+
+		sb.append("\"");
 		sb.append(definitionName);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", dueDate=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dueDate\": ");
+
+		sb.append("\"");
 		sb.append(dueDate);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", logs=");
+		sb.append(", ");
 
+		sb.append("\"logs\": ");
+
+		sb.append("\"");
 		sb.append(logs);
-		sb.append(", logsIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"logsIds\": ");
+
+		sb.append("\"");
 		sb.append(logsIds);
-		sb.append(", name=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", objectReviewed=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"objectReviewed\": ");
 
 		sb.append(objectReviewed);
-		sb.append(", transitions=");
+		sb.append(", ");
 
+		sb.append("\"transitions\": ");
+
+		sb.append("\"");
 		sb.append(transitions);
+		sb.append("\"");
 
 		sb.append("}");
 

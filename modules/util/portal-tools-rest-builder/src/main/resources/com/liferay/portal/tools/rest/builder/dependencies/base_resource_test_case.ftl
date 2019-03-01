@@ -54,6 +54,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -141,6 +142,8 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 					);
 
+					Assert.assertEquals(2, page.getTotalCount());
+
 					assertEqualsIgnoringOrder(Arrays.asList(${schemaVarName}1, ${schemaVarName}2), (List<${schemaName}>)page.getItems());
 					assertValid(page);
 				}
@@ -156,11 +159,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 						${firstJavaParameter.parameterType} ${firstJavaParameter.parameterName} = test${javaMethodSignature.methodName?cap_first}_get${firstJavaParameter.parameterName?cap_first}();
 
-						${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, random${schemaName}());
+						${schemaName} ${schemaVarName}1 = random${schemaName}();
+						${schemaName} ${schemaVarName}2 = random${schemaName}();
+
+						for (EntityField entityField : entityFields) {
+							BeanUtils.setProperty(${schemaVarName}1, entityField.getName(), DateUtils.addMinutes(new Date(), -2));
+						}
+
+						${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, ${schemaVarName}1);
 
 						Thread.sleep(1000);
 
-						${schemaName} ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, random${schemaName}());
+						${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, ${schemaVarName}2);
 
 						for (EntityField entityField : entityFields) {
 							Page<${schemaName}> page = invoke${javaMethodSignature.methodName?cap_first}(${firstJavaParameter.parameterName}
@@ -255,6 +265,8 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 						);
 
+						Assert.assertEquals(3, page2.getTotalCount());
+
 						List<${schemaName}> ${schemaVarNames}2 = (List<${schemaName}>)page2.getItems();
 
 						Assert.assertEquals(${schemaVarNames}2.toString(), 1, ${schemaVarNames}2.size());
@@ -281,8 +293,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 						${firstJavaParameter.parameterType} ${firstJavaParameter.parameterName} = test${javaMethodSignature.methodName?cap_first}_get${firstJavaParameter.parameterName?cap_first}();
 
-						${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, random${schemaName}());
-						${schemaName} ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, random${schemaName}());
+						${schemaName} ${schemaVarName}1 = random${schemaName}();
+						${schemaName} ${schemaVarName}2 = random${schemaName}();
+
+						for (EntityField entityField : entityFields) {
+							BeanUtils.setProperty(${schemaVarName}1, entityField.getName(), DateUtils.addMinutes(new Date(), -2));
+						}
+
+						${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, ${schemaVarName}1);
+
+						Thread.sleep(1000);
+
+						${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${firstJavaParameter.parameterName}, ${schemaVarName}2);
 
 						for (EntityField entityField : entityFields) {
 							Page<${schemaName}> ascPage = invoke${javaMethodSignature.methodName?cap_first}(${firstJavaParameter.parameterName}

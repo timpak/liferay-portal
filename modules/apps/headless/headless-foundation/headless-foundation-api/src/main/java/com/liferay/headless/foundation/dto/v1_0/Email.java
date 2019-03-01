@@ -93,19 +93,27 @@ public class Email {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("email=");
+		sb.append("\"email\": ");
 
+		sb.append("\"");
 		sb.append(email);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", type=");
+		sb.append(", ");
 
+		sb.append("\"type\": ");
+
+		sb.append("\"");
 		sb.append(type);
+		sb.append("\"");
 
 		sb.append("}");
 

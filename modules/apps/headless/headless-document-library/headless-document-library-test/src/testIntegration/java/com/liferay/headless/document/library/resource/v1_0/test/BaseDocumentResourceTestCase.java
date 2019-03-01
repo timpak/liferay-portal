@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +58,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -119,6 +121,8 @@ public abstract class BaseDocumentResourceTestCase {
 		Page<Document> page = invokeGetContentSpaceDocumentsPage(
 			contentSpaceId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(document1, document2),
 			(List<Document>)page.getItems());
@@ -139,13 +143,22 @@ public abstract class BaseDocumentResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceDocumentsPage_getContentSpaceId();
 
-		Document document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetContentSpaceDocumentsPage_addDocument(
+			contentSpaceId, document1);
 
 		Thread.sleep(1000);
 
-		Document document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
+		document2 = testGetContentSpaceDocumentsPage_addDocument(
+			contentSpaceId, document2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Document> page = invokeGetContentSpaceDocumentsPage(
@@ -212,6 +225,8 @@ public abstract class BaseDocumentResourceTestCase {
 		Page<Document> page2 = invokeGetContentSpaceDocumentsPage(
 			contentSpaceId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Document> documents2 = (List<Document>)page2.getItems();
 
 		Assert.assertEquals(documents2.toString(), 1, documents2.size());
@@ -240,10 +255,22 @@ public abstract class BaseDocumentResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceDocumentsPage_getContentSpaceId();
 
-		Document document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-		Document document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetContentSpaceDocumentsPage_addDocument(
+			contentSpaceId, document1);
+
+		Thread.sleep(1000);
+
+		document2 = testGetContentSpaceDocumentsPage_addDocument(
+			contentSpaceId, document2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Document> ascPage = invokeGetContentSpaceDocumentsPage(
@@ -332,6 +359,8 @@ public abstract class BaseDocumentResourceTestCase {
 		Page<Document> page = invokeGetFolderDocumentsPage(
 			folderId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(document1, document2),
 			(List<Document>)page.getItems());
@@ -351,13 +380,20 @@ public abstract class BaseDocumentResourceTestCase {
 
 		Long folderId = testGetFolderDocumentsPage_getFolderId();
 
-		Document document1 = testGetFolderDocumentsPage_addDocument(
-			folderId, randomDocument());
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetFolderDocumentsPage_addDocument(folderId, document1);
 
 		Thread.sleep(1000);
 
-		Document document2 = testGetFolderDocumentsPage_addDocument(
-			folderId, randomDocument());
+		document2 = testGetFolderDocumentsPage_addDocument(folderId, document2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Document> page = invokeGetFolderDocumentsPage(
@@ -420,6 +456,8 @@ public abstract class BaseDocumentResourceTestCase {
 		Page<Document> page2 = invokeGetFolderDocumentsPage(
 			folderId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Document> documents2 = (List<Document>)page2.getItems();
 
 		Assert.assertEquals(documents2.toString(), 1, documents2.size());
@@ -445,10 +483,20 @@ public abstract class BaseDocumentResourceTestCase {
 
 		Long folderId = testGetFolderDocumentsPage_getFolderId();
 
-		Document document1 = testGetFolderDocumentsPage_addDocument(
-			folderId, randomDocument());
-		Document document2 = testGetFolderDocumentsPage_addDocument(
-			folderId, randomDocument());
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetFolderDocumentsPage_addDocument(folderId, document1);
+
+		Thread.sleep(1000);
+
+		document2 = testGetFolderDocumentsPage_addDocument(folderId, document2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Document> ascPage = invokeGetFolderDocumentsPage(

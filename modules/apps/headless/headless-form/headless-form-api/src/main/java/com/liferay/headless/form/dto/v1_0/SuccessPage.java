@@ -95,17 +95,25 @@ public class SuccessPage {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("description=");
+		sb.append("\"description\": ");
 
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", headline=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"headline\": ");
+
+		sb.append("\"");
 		sb.append(headline);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
 

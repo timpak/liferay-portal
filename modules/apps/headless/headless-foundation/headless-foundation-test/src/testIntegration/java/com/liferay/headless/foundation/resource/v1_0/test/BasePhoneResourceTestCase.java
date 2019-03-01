@@ -105,6 +105,8 @@ public abstract class BasePhoneResourceTestCase {
 		Page<Phone> page = invokeGetGenericParentPhonesPage(
 			genericParentId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(phone1, phone2), (List<Phone>)page.getItems());
 		assertValid(page);
@@ -133,6 +135,8 @@ public abstract class BasePhoneResourceTestCase {
 
 		Page<Phone> page2 = invokeGetGenericParentPhonesPage(
 			genericParentId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Phone> phones2 = (List<Phone>)page2.getItems();
 

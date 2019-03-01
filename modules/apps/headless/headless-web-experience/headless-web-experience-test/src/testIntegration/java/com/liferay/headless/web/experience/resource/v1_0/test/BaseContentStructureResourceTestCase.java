@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +58,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -114,6 +116,8 @@ public abstract class BaseContentStructureResourceTestCase {
 				contentSpaceId, (String)null, Pagination.of(2, 1),
 				(String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(contentStructure1, contentStructure2),
 			(List<ContentStructure>)page.getItems());
@@ -134,15 +138,24 @@ public abstract class BaseContentStructureResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceContentStructuresPage_getContentSpaceId();
 
-		ContentStructure contentStructure1 =
+		ContentStructure contentStructure1 = randomContentStructure();
+		ContentStructure contentStructure2 = randomContentStructure();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				contentStructure1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		contentStructure1 =
 			testGetContentSpaceContentStructuresPage_addContentStructure(
-				contentSpaceId, randomContentStructure());
+				contentSpaceId, contentStructure1);
 
 		Thread.sleep(1000);
 
-		ContentStructure contentStructure2 =
+		contentStructure2 =
 			testGetContentSpaceContentStructuresPage_addContentStructure(
-				contentSpaceId, randomContentStructure());
+				contentSpaceId, contentStructure2);
 
 		for (EntityField entityField : entityFields) {
 			Page<ContentStructure> page =
@@ -224,6 +237,8 @@ public abstract class BaseContentStructureResourceTestCase {
 				contentSpaceId, (String)null, Pagination.of(2, 2),
 				(String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<ContentStructure> contentStructures2 =
 			(List<ContentStructure>)page2.getItems();
 
@@ -255,12 +270,24 @@ public abstract class BaseContentStructureResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceContentStructuresPage_getContentSpaceId();
 
-		ContentStructure contentStructure1 =
+		ContentStructure contentStructure1 = randomContentStructure();
+		ContentStructure contentStructure2 = randomContentStructure();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				contentStructure1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		contentStructure1 =
 			testGetContentSpaceContentStructuresPage_addContentStructure(
-				contentSpaceId, randomContentStructure());
-		ContentStructure contentStructure2 =
+				contentSpaceId, contentStructure1);
+
+		Thread.sleep(1000);
+
+		contentStructure2 =
 			testGetContentSpaceContentStructuresPage_addContentStructure(
-				contentSpaceId, randomContentStructure());
+				contentSpaceId, contentStructure2);
 
 		for (EntityField entityField : entityFields) {
 			Page<ContentStructure> ascPage =

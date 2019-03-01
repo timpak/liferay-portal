@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -129,6 +131,8 @@ public abstract class BaseCategoryResourceTestCase {
 		Page<Category> page = invokeGetCategoryCategoriesPage(
 			categoryId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(category1, category2),
 			(List<Category>)page.getItems());
@@ -148,13 +152,22 @@ public abstract class BaseCategoryResourceTestCase {
 
 		Long categoryId = testGetCategoryCategoriesPage_getCategoryId();
 
-		Category category1 = testGetCategoryCategoriesPage_addCategory(
-			categoryId, randomCategory());
+		Category category1 = randomCategory();
+		Category category2 = randomCategory();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				category1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		category1 = testGetCategoryCategoriesPage_addCategory(
+			categoryId, category1);
 
 		Thread.sleep(1000);
 
-		Category category2 = testGetCategoryCategoriesPage_addCategory(
-			categoryId, randomCategory());
+		category2 = testGetCategoryCategoriesPage_addCategory(
+			categoryId, category2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Category> page = invokeGetCategoryCategoriesPage(
@@ -217,6 +230,8 @@ public abstract class BaseCategoryResourceTestCase {
 		Page<Category> page2 = invokeGetCategoryCategoriesPage(
 			categoryId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Category> categories2 = (List<Category>)page2.getItems();
 
 		Assert.assertEquals(categories2.toString(), 1, categories2.size());
@@ -244,10 +259,22 @@ public abstract class BaseCategoryResourceTestCase {
 
 		Long categoryId = testGetCategoryCategoriesPage_getCategoryId();
 
-		Category category1 = testGetCategoryCategoriesPage_addCategory(
-			categoryId, randomCategory());
-		Category category2 = testGetCategoryCategoriesPage_addCategory(
-			categoryId, randomCategory());
+		Category category1 = randomCategory();
+		Category category2 = randomCategory();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				category1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		category1 = testGetCategoryCategoriesPage_addCategory(
+			categoryId, category1);
+
+		Thread.sleep(1000);
+
+		category2 = testGetCategoryCategoriesPage_addCategory(
+			categoryId, category2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Category> ascPage = invokeGetCategoryCategoriesPage(
@@ -323,6 +350,8 @@ public abstract class BaseCategoryResourceTestCase {
 		Page<Category> page = invokeGetVocabularyCategoriesPage(
 			vocabularyId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(category1, category2),
 			(List<Category>)page.getItems());
@@ -342,13 +371,22 @@ public abstract class BaseCategoryResourceTestCase {
 
 		Long vocabularyId = testGetVocabularyCategoriesPage_getVocabularyId();
 
-		Category category1 = testGetVocabularyCategoriesPage_addCategory(
-			vocabularyId, randomCategory());
+		Category category1 = randomCategory();
+		Category category2 = randomCategory();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				category1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		category1 = testGetVocabularyCategoriesPage_addCategory(
+			vocabularyId, category1);
 
 		Thread.sleep(1000);
 
-		Category category2 = testGetVocabularyCategoriesPage_addCategory(
-			vocabularyId, randomCategory());
+		category2 = testGetVocabularyCategoriesPage_addCategory(
+			vocabularyId, category2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Category> page = invokeGetVocabularyCategoriesPage(
@@ -413,6 +451,8 @@ public abstract class BaseCategoryResourceTestCase {
 		Page<Category> page2 = invokeGetVocabularyCategoriesPage(
 			vocabularyId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Category> categories2 = (List<Category>)page2.getItems();
 
 		Assert.assertEquals(categories2.toString(), 1, categories2.size());
@@ -440,10 +480,22 @@ public abstract class BaseCategoryResourceTestCase {
 
 		Long vocabularyId = testGetVocabularyCategoriesPage_getVocabularyId();
 
-		Category category1 = testGetVocabularyCategoriesPage_addCategory(
-			vocabularyId, randomCategory());
-		Category category2 = testGetVocabularyCategoriesPage_addCategory(
-			vocabularyId, randomCategory());
+		Category category1 = randomCategory();
+		Category category2 = randomCategory();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				category1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		category1 = testGetVocabularyCategoriesPage_addCategory(
+			vocabularyId, category1);
+
+		Thread.sleep(1000);
+
+		category2 = testGetVocabularyCategoriesPage_addCategory(
+			vocabularyId, category2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Category> ascPage = invokeGetVocabularyCategoriesPage(

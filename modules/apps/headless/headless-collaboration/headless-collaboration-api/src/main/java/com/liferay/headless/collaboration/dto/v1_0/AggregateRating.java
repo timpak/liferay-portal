@@ -117,20 +117,26 @@ public class AggregateRating {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{");
 
-		sb.append("bestRating=");
+		sb.append("\"bestRating\": ");
 
 		sb.append(bestRating);
-		sb.append(", ratingCount=");
+		sb.append(", ");
+
+		sb.append("\"ratingCount\": ");
 
 		sb.append(ratingCount);
-		sb.append(", ratingValue=");
+		sb.append(", ");
+
+		sb.append("\"ratingValue\": ");
 
 		sb.append(ratingValue);
-		sb.append(", worstRating=");
+		sb.append(", ");
+
+		sb.append("\"worstRating\": ");
 
 		sb.append(worstRating);
 

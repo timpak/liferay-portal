@@ -95,17 +95,25 @@ public class Validation {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("errorMessage=");
+		sb.append("\"errorMessage\": ");
 
+		sb.append("\"");
 		sb.append(errorMessage);
-		sb.append(", expression=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"expression\": ");
+
+		sb.append("\"");
 		sb.append(expression);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
 

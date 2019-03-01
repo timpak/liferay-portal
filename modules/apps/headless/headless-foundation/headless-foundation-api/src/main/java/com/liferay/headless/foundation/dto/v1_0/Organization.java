@@ -294,49 +294,89 @@ public class Organization {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(28);
+		StringBundler sb = new StringBundler(56);
 
 		sb.append("{");
 
-		sb.append("comment=");
+		sb.append("\"comment\": ");
 
+		sb.append("\"");
 		sb.append(comment);
-		sb.append(", contactInformation=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contactInformation\": ");
 
 		sb.append(contactInformation);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", location=");
+		sb.append(", ");
+
+		sb.append("\"location\": ");
 
 		sb.append(location);
-		sb.append(", logo=");
+		sb.append(", ");
 
+		sb.append("\"logo\": ");
+
+		sb.append("\"");
 		sb.append(logo);
-		sb.append(", members=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"members\": ");
+
+		sb.append("\"");
 		sb.append(members);
-		sb.append(", membersIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"membersIds\": ");
+
+		sb.append("\"");
 		sb.append(membersIds);
-		sb.append(", name=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", parentOrganization=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"parentOrganization\": ");
 
 		sb.append(parentOrganization);
-		sb.append(", parentOrganizationId=");
+		sb.append(", ");
+
+		sb.append("\"parentOrganizationId\": ");
 
 		sb.append(parentOrganizationId);
-		sb.append(", services=");
+		sb.append(", ");
 
+		sb.append("\"services\": ");
+
+		sb.append("\"");
 		sb.append(services);
-		sb.append(", subOrganization=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"subOrganization\": ");
+
+		sb.append("\"");
 		sb.append(subOrganization);
-		sb.append(", subOrganizationIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"subOrganizationIds\": ");
+
+		sb.append("\"");
 		sb.append(subOrganizationIds);
+		sb.append("\"");
 
 		sb.append("}");
 

@@ -93,19 +93,27 @@ public class Grid {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("columns=");
+		sb.append("\"columns\": ");
 
+		sb.append("\"");
 		sb.append(columns);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", rows=");
+		sb.append(", ");
 
+		sb.append("\"rows\": ");
+
+		sb.append("\"");
 		sb.append(rows);
+		sb.append("\"");
 
 		sb.append("}");
 

@@ -95,17 +95,25 @@ public class Location {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("addressCountry=");
+		sb.append("\"addressCountry\": ");
 
+		sb.append("\"");
 		sb.append(addressCountry);
-		sb.append(", addressRegion=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"addressRegion\": ");
+
+		sb.append("\"");
 		sb.append(addressRegion);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
 

@@ -137,23 +137,35 @@ public class AdaptedImages {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(12);
+		StringBundler sb = new StringBundler(20);
 
 		sb.append("{");
 
-		sb.append("contentUrl=");
+		sb.append("\"contentUrl\": ");
 
+		sb.append("\"");
 		sb.append(contentUrl);
-		sb.append(", height=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"height\": ");
 
 		sb.append(height);
-		sb.append(", resolutionName=");
+		sb.append(", ");
 
+		sb.append("\"resolutionName\": ");
+
+		sb.append("\"");
 		sb.append(resolutionName);
-		sb.append(", sizeInBytes=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"sizeInBytes\": ");
 
 		sb.append(sizeInBytes);
-		sb.append(", width=");
+		sb.append(", ");
+
+		sb.append("\"width\": ");
 
 		sb.append(width);
 

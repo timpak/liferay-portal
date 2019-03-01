@@ -133,25 +133,37 @@ public class FieldValues {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(12);
+		StringBundler sb = new StringBundler(20);
 
 		sb.append("{");
 
-		sb.append("document=");
+		sb.append("\"document\": ");
 
 		sb.append(document);
-		sb.append(", documentId=");
+		sb.append(", ");
+
+		sb.append("\"documentId\": ");
 
 		sb.append(documentId);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", value=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"value\": ");
+
+		sb.append("\"");
 		sb.append(value);
+		sb.append("\"");
 
 		sb.append("}");
 

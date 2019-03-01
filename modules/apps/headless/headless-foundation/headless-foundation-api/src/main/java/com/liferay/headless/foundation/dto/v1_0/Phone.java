@@ -115,22 +115,34 @@ public class Phone {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{");
 
-		sb.append("extension=");
+		sb.append("\"extension\": ");
 
+		sb.append("\"");
 		sb.append(extension);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", phoneNumber=");
+		sb.append(", ");
 
+		sb.append("\"phoneNumber\": ");
+
+		sb.append("\"");
 		sb.append(phoneNumber);
-		sb.append(", phoneType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"phoneType\": ");
+
+		sb.append("\"");
 		sb.append(phoneType);
+		sb.append("\"");
 
 		sb.append("}");
 

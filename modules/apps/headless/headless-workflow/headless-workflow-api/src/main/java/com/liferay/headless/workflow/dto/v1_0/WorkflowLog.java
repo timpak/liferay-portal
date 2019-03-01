@@ -255,43 +255,79 @@ public class WorkflowLog {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(24);
+		StringBundler sb = new StringBundler(50);
 
 		sb.append("{");
 
-		sb.append("auditPerson=");
+		sb.append("\"auditPerson\": ");
 
+		sb.append("\"");
 		sb.append(auditPerson);
-		sb.append(", commentLog=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"commentLog\": ");
+
+		sb.append("\"");
 		sb.append(commentLog);
-		sb.append(", dateCreated=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", person=");
+		sb.append(", ");
 
+		sb.append("\"person\": ");
+
+		sb.append("\"");
 		sb.append(person);
-		sb.append(", previousPerson=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"previousPerson\": ");
+
+		sb.append("\"");
 		sb.append(previousPerson);
-		sb.append(", previousState=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"previousState\": ");
+
+		sb.append("\"");
 		sb.append(previousState);
-		sb.append(", state=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"state\": ");
+
+		sb.append("\"");
 		sb.append(state);
-		sb.append(", task=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"task\": ");
 
 		sb.append(task);
-		sb.append(", taskId=");
+		sb.append(", ");
+
+		sb.append("\"taskId\": ");
 
 		sb.append(taskId);
-		sb.append(", type=");
+		sb.append(", ");
 
+		sb.append("\"type\": ");
+
+		sb.append("\"");
 		sb.append(type);
+		sb.append("\"");
 
 		sb.append("}");
 

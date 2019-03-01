@@ -172,29 +172,45 @@ public class Value {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(26);
 
 		sb.append("{");
 
-		sb.append("data=");
+		sb.append("\"data\": ");
 
+		sb.append("\"");
 		sb.append(data);
-		sb.append(", document=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"document\": ");
 
 		sb.append(document);
-		sb.append(", documentId=");
+		sb.append(", ");
+
+		sb.append("\"documentId\": ");
 
 		sb.append(documentId);
-		sb.append(", geo=");
+		sb.append(", ");
+
+		sb.append("\"geo\": ");
 
 		sb.append(geo);
-		sb.append(", link=");
+		sb.append(", ");
 
+		sb.append("\"link\": ");
+
+		sb.append("\"");
 		sb.append(link);
-		sb.append(", structuredContent=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"structuredContent\": ");
 
 		sb.append(structuredContent);
-		sb.append(", structuredContentId=");
+		sb.append(", ");
+
+		sb.append("\"structuredContentId\": ");
 
 		sb.append(structuredContentId);
 

@@ -95,19 +95,27 @@ public class ObjectReviewed {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("id=");
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", identifier=");
+		sb.append(", ");
 
+		sb.append("\"identifier\": ");
+
+		sb.append("\"");
 		sb.append(identifier);
-		sb.append(", resourceType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"resourceType\": ");
+
+		sb.append("\"");
 		sb.append(resourceType);
+		sb.append("\"");
 
 		sb.append("}");
 

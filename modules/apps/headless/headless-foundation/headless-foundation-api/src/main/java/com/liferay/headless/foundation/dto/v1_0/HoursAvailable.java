@@ -115,22 +115,34 @@ public class HoursAvailable {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{");
 
-		sb.append("closes=");
+		sb.append("\"closes\": ");
 
+		sb.append("\"");
 		sb.append(closes);
-		sb.append(", dayOfWeek=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dayOfWeek\": ");
+
+		sb.append("\"");
 		sb.append(dayOfWeek);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", opens=");
+		sb.append(", ");
 
+		sb.append("\"opens\": ");
+
+		sb.append("\"");
 		sb.append(opens);
+		sb.append("\"");
 
 		sb.append("}");
 

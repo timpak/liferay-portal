@@ -104,6 +104,8 @@ public abstract class BaseSegmentResourceTestCase {
 		Page<Segment> page = invokeGetUserSegmentsPage(
 			userId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(segment1, segment2), (List<Segment>)page.getItems());
 		assertValid(page);
@@ -129,6 +131,8 @@ public abstract class BaseSegmentResourceTestCase {
 
 		Page<Segment> page2 = invokeGetUserSegmentsPage(
 			userId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Segment> segments2 = (List<Segment>)page2.getItems();
 

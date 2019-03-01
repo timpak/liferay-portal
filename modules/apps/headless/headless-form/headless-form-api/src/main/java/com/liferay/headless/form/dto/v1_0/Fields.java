@@ -549,86 +549,158 @@ public class Fields {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(54);
+		StringBundler sb = new StringBundler(101);
 
 		sb.append("{");
 
-		sb.append("autocomplete=");
+		sb.append("\"autocomplete\": ");
 
 		sb.append(autocomplete);
-		sb.append(", dataSourceType=");
+		sb.append(", ");
 
+		sb.append("\"dataSourceType\": ");
+
+		sb.append("\"");
 		sb.append(dataSourceType);
-		sb.append(", dataType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dataType\": ");
+
+		sb.append("\"");
 		sb.append(dataType);
-		sb.append(", displayStyle=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"displayStyle\": ");
+
+		sb.append("\"");
 		sb.append(displayStyle);
-		sb.append(", grid=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"grid\": ");
 
 		sb.append(grid);
-		sb.append(", hasFormRules=");
+		sb.append(", ");
+
+		sb.append("\"hasFormRules\": ");
 
 		sb.append(hasFormRules);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", immutable=");
+		sb.append(", ");
+
+		sb.append("\"immutable\": ");
 
 		sb.append(immutable);
-		sb.append(", inline=");
+		sb.append(", ");
+
+		sb.append("\"inline\": ");
 
 		sb.append(inline);
-		sb.append(", inputControl=");
+		sb.append(", ");
 
+		sb.append("\"inputControl\": ");
+
+		sb.append("\"");
 		sb.append(inputControl);
-		sb.append(", label=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"label\": ");
+
+		sb.append("\"");
 		sb.append(label);
-		sb.append(", localizable=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"localizable\": ");
 
 		sb.append(localizable);
-		sb.append(", multiple=");
+		sb.append(", ");
+
+		sb.append("\"multiple\": ");
 
 		sb.append(multiple);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", options=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"options\": ");
 
 		sb.append(options);
-		sb.append(", placeholder=");
+		sb.append(", ");
 
+		sb.append("\"placeholder\": ");
+
+		sb.append("\"");
 		sb.append(placeholder);
-		sb.append(", predefinedValue=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"predefinedValue\": ");
+
+		sb.append("\"");
 		sb.append(predefinedValue);
-		sb.append(", readOnly=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"readOnly\": ");
 
 		sb.append(readOnly);
-		sb.append(", repeatable=");
+		sb.append(", ");
+
+		sb.append("\"repeatable\": ");
 
 		sb.append(repeatable);
-		sb.append(", required=");
+		sb.append(", ");
+
+		sb.append("\"required\": ");
 
 		sb.append(required);
-		sb.append(", showAsSwitcher=");
+		sb.append(", ");
+
+		sb.append("\"showAsSwitcher\": ");
 
 		sb.append(showAsSwitcher);
-		sb.append(", showLabel=");
+		sb.append(", ");
+
+		sb.append("\"showLabel\": ");
 
 		sb.append(showLabel);
-		sb.append(", style=");
+		sb.append(", ");
 
+		sb.append("\"style\": ");
+
+		sb.append("\"");
 		sb.append(style);
-		sb.append(", text=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"text\": ");
+
+		sb.append("\"");
 		sb.append(text);
-		sb.append(", tooltip=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"tooltip\": ");
+
+		sb.append("\"");
 		sb.append(tooltip);
-		sb.append(", validation=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"validation\": ");
 
 		sb.append(validation);
 

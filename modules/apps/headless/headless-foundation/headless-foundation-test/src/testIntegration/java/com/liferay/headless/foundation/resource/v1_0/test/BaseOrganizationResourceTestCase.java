@@ -107,6 +107,8 @@ public abstract class BaseOrganizationResourceTestCase {
 		Page<Organization> page = invokeGetMyUserAccountOrganizationsPage(
 			myUserAccountId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(organization1, organization2),
 			(List<Organization>)page.getItems());
@@ -141,6 +143,8 @@ public abstract class BaseOrganizationResourceTestCase {
 
 		Page<Organization> page2 = invokeGetMyUserAccountOrganizationsPage(
 			myUserAccountId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Organization> organizations2 =
 			(List<Organization>)page2.getItems();
@@ -184,6 +188,8 @@ public abstract class BaseOrganizationResourceTestCase {
 		Page<Organization> page = invokeGetOrganizationOrganizationsPage(
 			organizationId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(organization1, organization2),
 			(List<Organization>)page.getItems());
@@ -218,6 +224,8 @@ public abstract class BaseOrganizationResourceTestCase {
 
 		Page<Organization> page2 = invokeGetOrganizationOrganizationsPage(
 			organizationId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Organization> organizations2 =
 			(List<Organization>)page2.getItems();
@@ -255,6 +263,8 @@ public abstract class BaseOrganizationResourceTestCase {
 		Page<Organization> page = invokeGetUserAccountOrganizationsPage(
 			userAccountId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(organization1, organization2),
 			(List<Organization>)page.getItems());
@@ -289,6 +299,8 @@ public abstract class BaseOrganizationResourceTestCase {
 
 		Page<Organization> page2 = invokeGetUserAccountOrganizationsPage(
 			userAccountId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Organization> organizations2 =
 			(List<Organization>)page2.getItems();

@@ -96,19 +96,27 @@ public class Services {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("hoursAvailable=");
+		sb.append("\"hoursAvailable\": ");
 
+		sb.append("\"");
 		sb.append(hoursAvailable);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", serviceType=");
+		sb.append(", ");
 
+		sb.append("\"serviceType\": ");
+
+		sb.append("\"");
 		sb.append(serviceType);
+		sb.append("\"");
 
 		sb.append("}");
 

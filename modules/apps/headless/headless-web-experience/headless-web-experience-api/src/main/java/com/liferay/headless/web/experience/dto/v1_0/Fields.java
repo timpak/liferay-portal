@@ -255,41 +255,73 @@ public class Fields {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(24);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("{");
 
-		sb.append("dataType=");
+		sb.append("\"dataType\": ");
 
+		sb.append("\"");
 		sb.append(dataType);
-		sb.append(", inputControl=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"inputControl\": ");
+
+		sb.append("\"");
 		sb.append(inputControl);
-		sb.append(", label=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"label\": ");
+
+		sb.append("\"");
 		sb.append(label);
-		sb.append(", localizable=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"localizable\": ");
 
 		sb.append(localizable);
-		sb.append(", multiple=");
+		sb.append(", ");
+
+		sb.append("\"multiple\": ");
 
 		sb.append(multiple);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", options=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"options\": ");
+
+		sb.append("\"");
 		sb.append(options);
-		sb.append(", predefinedValue=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"predefinedValue\": ");
+
+		sb.append("\"");
 		sb.append(predefinedValue);
-		sb.append(", repeatable=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"repeatable\": ");
 
 		sb.append(repeatable);
-		sb.append(", required=");
+		sb.append(", ");
+
+		sb.append("\"required\": ");
 
 		sb.append(required);
-		sb.append(", showLabel=");
+		sb.append(", ");
+
+		sb.append("\"showLabel\": ");
 
 		sb.append(showLabel);
 

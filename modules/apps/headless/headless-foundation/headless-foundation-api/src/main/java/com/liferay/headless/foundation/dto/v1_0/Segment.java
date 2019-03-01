@@ -175,31 +175,53 @@ public class Segment {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(32);
 
 		sb.append("{");
 
-		sb.append("active=");
+		sb.append("\"active\": ");
 
 		sb.append(active);
-		sb.append(", criteria=");
+		sb.append(", ");
 
+		sb.append("\"criteria\": ");
+
+		sb.append("\"");
 		sb.append(criteria);
-		sb.append(", dateCreated=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", source=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"source\": ");
+
+		sb.append("\"");
 		sb.append(source);
+		sb.append("\"");
 
 		sb.append("}");
 

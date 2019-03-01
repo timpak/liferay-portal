@@ -54,13 +54,19 @@ public class ${schemaName} {
 		sb.append("{");
 
 		<#list freeMarkerTool.getDTOJavaParameters(configYAML, openAPIYAML, schema, false) as javaParameter>
-			<#if javaParameter?is_first>
-				sb.append("${javaParameter.parameterName}=");
-			<#else>
-				sb.append(", ${javaParameter.parameterName}=");
+			<#if !javaParameter?is_first>
+				sb.append(", ");
 			</#if>
 
-			sb.append(${javaParameter.parameterName});
+			sb.append("\"${javaParameter.parameterName}\": ");
+
+			<#if stringUtil.equals(javaParameter.parameterType, "Date") || stringUtil.equals(javaParameter.parameterType, "String") || javaParameter.parameterType?contains("[]")>
+				sb.append("\"");
+				sb.append(${javaParameter.parameterName});
+				sb.append("\"");
+			<#else>
+				sb.append(${javaParameter.parameterName});
+			</#if>
 		</#list>
 
 		sb.append("}");

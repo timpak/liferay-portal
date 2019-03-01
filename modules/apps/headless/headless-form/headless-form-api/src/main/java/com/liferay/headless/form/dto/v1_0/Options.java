@@ -95,19 +95,27 @@ public class Options {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("id=");
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", label=");
+		sb.append(", ");
 
+		sb.append("\"label\": ");
+
+		sb.append("\"");
 		sb.append(label);
-		sb.append(", value=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"value\": ");
+
+		sb.append("\"");
 		sb.append(value);
+		sb.append("\"");
 
 		sb.append("}");
 

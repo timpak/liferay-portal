@@ -173,31 +173,55 @@ public class Creator {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("{");
 
-		sb.append("additionalName=");
+		sb.append("\"additionalName\": ");
 
+		sb.append("\"");
 		sb.append(additionalName);
-		sb.append(", familyName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"familyName\": ");
+
+		sb.append("\"");
 		sb.append(familyName);
-		sb.append(", givenName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"givenName\": ");
+
+		sb.append("\"");
 		sb.append(givenName);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", image=");
+		sb.append(", ");
 
+		sb.append("\"image\": ");
+
+		sb.append("\"");
 		sb.append(image);
-		sb.append(", name=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", profileURL=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"profileURL\": ");
+
+		sb.append("\"");
 		sb.append(profileURL);
+		sb.append("\"");
 
 		sb.append("}");
 

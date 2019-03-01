@@ -155,28 +155,46 @@ public class FormDocument {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(14);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{");
 
-		sb.append("contentUrl=");
+		sb.append("\"contentUrl\": ");
 
+		sb.append("\"");
 		sb.append(contentUrl);
-		sb.append(", encodingFormat=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"encodingFormat\": ");
+
+		sb.append("\"");
 		sb.append(encodingFormat);
-		sb.append(", fileExtension=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"fileExtension\": ");
+
+		sb.append("\"");
 		sb.append(fileExtension);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", sizeInBytes=");
+		sb.append(", ");
+
+		sb.append("\"sizeInBytes\": ");
 
 		sb.append(sizeInBytes);
-		sb.append(", title=");
+		sb.append(", ");
 
+		sb.append("\"title\": ");
+
+		sb.append("\"");
 		sb.append(title);
+		sb.append("\"");
 
 		sb.append("}");
 

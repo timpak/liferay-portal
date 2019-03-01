@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -129,6 +131,8 @@ public abstract class BaseCommentResourceTestCase {
 		Page<Comment> page = invokeGetCommentCommentsPage(
 			commentId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(comment1, comment2), (List<Comment>)page.getItems());
 		assertValid(page);
@@ -147,13 +151,20 @@ public abstract class BaseCommentResourceTestCase {
 
 		Long commentId = testGetCommentCommentsPage_getCommentId();
 
-		Comment comment1 = testGetCommentCommentsPage_addComment(
-			commentId, randomComment());
+		Comment comment1 = randomComment();
+		Comment comment2 = randomComment();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				comment1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		comment1 = testGetCommentCommentsPage_addComment(commentId, comment1);
 
 		Thread.sleep(1000);
 
-		Comment comment2 = testGetCommentCommentsPage_addComment(
-			commentId, randomComment());
+		comment2 = testGetCommentCommentsPage_addComment(commentId, comment2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Comment> page = invokeGetCommentCommentsPage(
@@ -216,6 +227,8 @@ public abstract class BaseCommentResourceTestCase {
 		Page<Comment> page2 = invokeGetCommentCommentsPage(
 			commentId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Comment> comments2 = (List<Comment>)page2.getItems();
 
 		Assert.assertEquals(comments2.toString(), 1, comments2.size());
@@ -241,10 +254,20 @@ public abstract class BaseCommentResourceTestCase {
 
 		Long commentId = testGetCommentCommentsPage_getCommentId();
 
-		Comment comment1 = testGetCommentCommentsPage_addComment(
-			commentId, randomComment());
-		Comment comment2 = testGetCommentCommentsPage_addComment(
-			commentId, randomComment());
+		Comment comment1 = randomComment();
+		Comment comment2 = randomComment();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				comment1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		comment1 = testGetCommentCommentsPage_addComment(commentId, comment1);
+
+		Thread.sleep(1000);
+
+		comment2 = testGetCommentCommentsPage_addComment(commentId, comment2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Comment> ascPage = invokeGetCommentCommentsPage(
@@ -318,6 +341,8 @@ public abstract class BaseCommentResourceTestCase {
 		Page<Comment> page = invokeGetDocumentCommentsPage(
 			documentId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(comment1, comment2), (List<Comment>)page.getItems());
 		assertValid(page);
@@ -336,13 +361,20 @@ public abstract class BaseCommentResourceTestCase {
 
 		Long documentId = testGetDocumentCommentsPage_getDocumentId();
 
-		Comment comment1 = testGetDocumentCommentsPage_addComment(
-			documentId, randomComment());
+		Comment comment1 = randomComment();
+		Comment comment2 = randomComment();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				comment1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		comment1 = testGetDocumentCommentsPage_addComment(documentId, comment1);
 
 		Thread.sleep(1000);
 
-		Comment comment2 = testGetDocumentCommentsPage_addComment(
-			documentId, randomComment());
+		comment2 = testGetDocumentCommentsPage_addComment(documentId, comment2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Comment> page = invokeGetDocumentCommentsPage(
@@ -405,6 +437,8 @@ public abstract class BaseCommentResourceTestCase {
 		Page<Comment> page2 = invokeGetDocumentCommentsPage(
 			documentId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Comment> comments2 = (List<Comment>)page2.getItems();
 
 		Assert.assertEquals(comments2.toString(), 1, comments2.size());
@@ -430,10 +464,20 @@ public abstract class BaseCommentResourceTestCase {
 
 		Long documentId = testGetDocumentCommentsPage_getDocumentId();
 
-		Comment comment1 = testGetDocumentCommentsPage_addComment(
-			documentId, randomComment());
-		Comment comment2 = testGetDocumentCommentsPage_addComment(
-			documentId, randomComment());
+		Comment comment1 = randomComment();
+		Comment comment2 = randomComment();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				comment1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		comment1 = testGetDocumentCommentsPage_addComment(documentId, comment1);
+
+		Thread.sleep(1000);
+
+		comment2 = testGetDocumentCommentsPage_addComment(documentId, comment2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Comment> ascPage = invokeGetDocumentCommentsPage(

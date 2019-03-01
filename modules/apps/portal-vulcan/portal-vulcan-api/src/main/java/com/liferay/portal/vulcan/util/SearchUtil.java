@@ -54,6 +54,14 @@ public class SearchUtil {
 			Sort[] sorts)
 		throws Exception {
 
+		// TODO
+
+		/*if (sorts == null) {
+			throw new IllegalArgumentException(
+				"A sort array is required to ensure search results are " +
+					"predictable");
+		}*/
+
 		List<T> items = new ArrayList<>();
 
 		Indexer<?> indexer = IndexerRegistryUtil.getIndexer(indexerClass);

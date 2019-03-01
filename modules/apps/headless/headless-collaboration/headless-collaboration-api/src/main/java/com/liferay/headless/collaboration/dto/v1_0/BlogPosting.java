@@ -436,70 +436,134 @@ public class BlogPosting {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(42);
+		StringBundler sb = new StringBundler(87);
 
 		sb.append("{");
 
-		sb.append("aggregateRating=");
+		sb.append("\"aggregateRating\": ");
 
 		sb.append(aggregateRating);
-		sb.append(", alternativeHeadline=");
+		sb.append(", ");
 
+		sb.append("\"alternativeHeadline\": ");
+
+		sb.append("\"");
 		sb.append(alternativeHeadline);
-		sb.append(", articleBody=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"articleBody\": ");
+
+		sb.append("\"");
 		sb.append(articleBody);
-		sb.append(", caption=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"caption\": ");
+
+		sb.append("\"");
 		sb.append(caption);
-		sb.append(", categories=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"categories\": ");
+
+		sb.append("\"");
 		sb.append(categories);
-		sb.append(", categoryIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"categoryIds\": ");
+
+		sb.append("\"");
 		sb.append(categoryIds);
-		sb.append(", contentSpace=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contentSpace\": ");
 
 		sb.append(contentSpace);
-		sb.append(", creator=");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", datePublished=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"datePublished\": ");
+
+		sb.append("\"");
 		sb.append(datePublished);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", encodingFormat=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"encodingFormat\": ");
+
+		sb.append("\"");
 		sb.append(encodingFormat);
-		sb.append(", friendlyUrlPath=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"friendlyUrlPath\": ");
+
+		sb.append("\"");
 		sb.append(friendlyUrlPath);
-		sb.append(", hasComments=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"hasComments\": ");
 
 		sb.append(hasComments);
-		sb.append(", headline=");
+		sb.append(", ");
 
+		sb.append("\"headline\": ");
+
+		sb.append("\"");
 		sb.append(headline);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", image=");
+		sb.append(", ");
+
+		sb.append("\"image\": ");
 
 		sb.append(image);
-		sb.append(", imageId=");
+		sb.append(", ");
+
+		sb.append("\"imageId\": ");
 
 		sb.append(imageId);
-		sb.append(", keywords=");
+		sb.append(", ");
 
+		sb.append("\"keywords\": ");
+
+		sb.append("\"");
 		sb.append(keywords);
+		sb.append("\"");
 
 		sb.append("}");
 

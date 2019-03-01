@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +58,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -139,6 +141,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				contentSpaceId, (String)null, Pagination.of(2, 1),
 				(String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(blogPostingImage1, blogPostingImage2),
 			(List<BlogPostingImage>)page.getItems());
@@ -159,15 +163,24 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
 
-		BlogPostingImage blogPostingImage1 =
+		BlogPostingImage blogPostingImage1 = randomBlogPostingImage();
+		BlogPostingImage blogPostingImage2 = randomBlogPostingImage();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				blogPostingImage1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		blogPostingImage1 =
 			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+				contentSpaceId, blogPostingImage1);
 
 		Thread.sleep(1000);
 
-		BlogPostingImage blogPostingImage2 =
+		blogPostingImage2 =
 			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+				contentSpaceId, blogPostingImage2);
 
 		for (EntityField entityField : entityFields) {
 			Page<BlogPostingImage> page =
@@ -249,6 +262,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				contentSpaceId, (String)null, Pagination.of(2, 2),
 				(String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<BlogPostingImage> blogPostingImages2 =
 			(List<BlogPostingImage>)page2.getItems();
 
@@ -280,12 +295,24 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
 
-		BlogPostingImage blogPostingImage1 =
+		BlogPostingImage blogPostingImage1 = randomBlogPostingImage();
+		BlogPostingImage blogPostingImage2 = randomBlogPostingImage();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				blogPostingImage1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		blogPostingImage1 =
 			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
-		BlogPostingImage blogPostingImage2 =
+				contentSpaceId, blogPostingImage1);
+
+		Thread.sleep(1000);
+
+		blogPostingImage2 =
 			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+				contentSpaceId, blogPostingImage2);
 
 		for (EntityField entityField : entityFields) {
 			Page<BlogPostingImage> ascPage =

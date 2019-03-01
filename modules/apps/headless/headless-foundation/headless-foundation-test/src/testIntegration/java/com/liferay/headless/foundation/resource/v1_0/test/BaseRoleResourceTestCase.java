@@ -105,6 +105,8 @@ public abstract class BaseRoleResourceTestCase {
 		Page<Role> page = invokeGetMyUserAccountRolesPage(
 			myUserAccountId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(role1, role2), (List<Role>)page.getItems());
 		assertValid(page);
@@ -131,6 +133,8 @@ public abstract class BaseRoleResourceTestCase {
 
 		Page<Role> page2 = invokeGetMyUserAccountRolesPage(
 			myUserAccountId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Role> roles2 = (List<Role>)page2.getItems();
 
@@ -173,6 +177,8 @@ public abstract class BaseRoleResourceTestCase {
 		Page<Role> page = invokeGetUserAccountRolesPage(
 			userAccountId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(role1, role2), (List<Role>)page.getItems());
 		assertValid(page);
@@ -198,6 +204,8 @@ public abstract class BaseRoleResourceTestCase {
 
 		Page<Role> page2 = invokeGetUserAccountRolesPage(
 			userAccountId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Role> roles2 = (List<Role>)page2.getItems();
 

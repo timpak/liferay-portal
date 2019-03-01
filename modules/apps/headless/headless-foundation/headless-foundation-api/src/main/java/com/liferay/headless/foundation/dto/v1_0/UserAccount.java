@@ -458,73 +458,151 @@ public class UserAccount {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(44);
+		StringBundler sb = new StringBundler(102);
 
 		sb.append("{");
 
-		sb.append("additionalName=");
+		sb.append("\"additionalName\": ");
 
+		sb.append("\"");
 		sb.append(additionalName);
-		sb.append(", alternateName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"alternateName\": ");
+
+		sb.append("\"");
 		sb.append(alternateName);
-		sb.append(", birthDate=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"birthDate\": ");
+
+		sb.append("\"");
 		sb.append(birthDate);
-		sb.append(", contactInformation=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contactInformation\": ");
 
 		sb.append(contactInformation);
-		sb.append(", dashboardURL=");
+		sb.append(", ");
 
+		sb.append("\"dashboardURL\": ");
+
+		sb.append("\"");
 		sb.append(dashboardURL);
-		sb.append(", email=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"email\": ");
+
+		sb.append("\"");
 		sb.append(email);
-		sb.append(", familyName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"familyName\": ");
+
+		sb.append("\"");
 		sb.append(familyName);
-		sb.append(", givenName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"givenName\": ");
+
+		sb.append("\"");
 		sb.append(givenName);
-		sb.append(", honorificPrefix=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"honorificPrefix\": ");
+
+		sb.append("\"");
 		sb.append(honorificPrefix);
-		sb.append(", honorificSuffix=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"honorificSuffix\": ");
+
+		sb.append("\"");
 		sb.append(honorificSuffix);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", image=");
+		sb.append(", ");
 
+		sb.append("\"image\": ");
+
+		sb.append("\"");
 		sb.append(image);
-		sb.append(", jobTitle=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"jobTitle\": ");
+
+		sb.append("\"");
 		sb.append(jobTitle);
-		sb.append(", myOrganizations=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"myOrganizations\": ");
+
+		sb.append("\"");
 		sb.append(myOrganizations);
-		sb.append(", myOrganizationsIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"myOrganizationsIds\": ");
+
+		sb.append("\"");
 		sb.append(myOrganizationsIds);
-		sb.append(", name=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", profileURL=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"profileURL\": ");
+
+		sb.append("\"");
 		sb.append(profileURL);
-		sb.append(", roles=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"roles\": ");
+
+		sb.append("\"");
 		sb.append(roles);
-		sb.append(", rolesIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"rolesIds\": ");
+
+		sb.append("\"");
 		sb.append(rolesIds);
-		sb.append(", tasksAssignedToMe=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"tasksAssignedToMe\": ");
+
+		sb.append("\"");
 		sb.append(tasksAssignedToMe);
-		sb.append(", tasksAssignedToMyRoles=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"tasksAssignedToMyRoles\": ");
+
+		sb.append("\"");
 		sb.append(tasksAssignedToMyRoles);
+		sb.append("\"");
 
 		sb.append("}");
 

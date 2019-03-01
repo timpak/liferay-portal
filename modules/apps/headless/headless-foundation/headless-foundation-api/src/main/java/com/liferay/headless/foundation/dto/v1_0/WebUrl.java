@@ -93,19 +93,27 @@ public class WebUrl {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("{");
 
-		sb.append("id=");
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", url=");
+		sb.append(", ");
 
+		sb.append("\"url\": ");
+
+		sb.append("\"");
 		sb.append(url);
-		sb.append(", urlType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"urlType\": ");
+
+		sb.append("\"");
 		sb.append(urlType);
+		sb.append("\"");
 
 		sb.append("}");
 

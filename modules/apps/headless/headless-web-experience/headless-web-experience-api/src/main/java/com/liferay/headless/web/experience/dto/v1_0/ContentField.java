@@ -171,29 +171,51 @@ public class ContentField {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(32);
 
 		sb.append("{");
 
-		sb.append("dataType=");
+		sb.append("\"dataType\": ");
 
+		sb.append("\"");
 		sb.append(dataType);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", inputControl=");
+		sb.append(", ");
 
+		sb.append("\"inputControl\": ");
+
+		sb.append("\"");
 		sb.append(inputControl);
-		sb.append(", label=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"label\": ");
+
+		sb.append("\"");
 		sb.append(label);
-		sb.append(", name=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", nestedFields=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"nestedFields\": ");
+
+		sb.append("\"");
 		sb.append(nestedFields);
-		sb.append(", value=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"value\": ");
 
 		sb.append(value);
 

@@ -77,16 +77,22 @@ public class RenderedContentsURL {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{");
 
-		sb.append("renderedContentURL=");
+		sb.append("\"renderedContentURL\": ");
 
+		sb.append("\"");
 		sb.append(renderedContentURL);
-		sb.append(", templateName=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"templateName\": ");
+
+		sb.append("\"");
 		sb.append(templateName);
+		sb.append("\"");
 
 		sb.append("}");
 

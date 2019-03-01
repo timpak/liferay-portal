@@ -107,6 +107,8 @@ public abstract class BasePostalAddressResourceTestCase {
 		Page<PostalAddress> page = invokeGetGenericParentPostalAddressesPage(
 			genericParentId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(postalAddress1, postalAddress2),
 			(List<PostalAddress>)page.getItems());
@@ -141,6 +143,8 @@ public abstract class BasePostalAddressResourceTestCase {
 
 		Page<PostalAddress> page2 = invokeGetGenericParentPostalAddressesPage(
 			genericParentId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<PostalAddress> postalAddresses2 =
 			(List<PostalAddress>)page2.getItems();

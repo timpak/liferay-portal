@@ -77,16 +77,20 @@ public class Categories {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{");
 
-		sb.append("categoryId=");
+		sb.append("\"categoryId\": ");
 
 		sb.append(categoryId);
-		sb.append(", categoryName=");
+		sb.append(", ");
 
+		sb.append("\"categoryName\": ");
+
+		sb.append("\"");
 		sb.append(categoryName);
+		sb.append("\"");
 
 		sb.append("}");
 

@@ -217,37 +217,65 @@ public class ContentDocument {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(20);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("{");
 
-		sb.append("contentUrl=");
+		sb.append("\"contentUrl\": ");
 
+		sb.append("\"");
 		sb.append(contentUrl);
-		sb.append(", creator=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", encodingFormat=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"encodingFormat\": ");
+
+		sb.append("\"");
 		sb.append(encodingFormat);
-		sb.append(", fileExtension=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"fileExtension\": ");
+
+		sb.append("\"");
 		sb.append(fileExtension);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", sizeInBytes=");
+		sb.append(", ");
+
+		sb.append("\"sizeInBytes\": ");
 
 		sb.append(sizeInBytes);
-		sb.append(", title=");
+		sb.append(", ");
 
+		sb.append("\"title\": ");
+
+		sb.append("\"");
 		sb.append(title);
+		sb.append("\"");
 
 		sb.append("}");
 

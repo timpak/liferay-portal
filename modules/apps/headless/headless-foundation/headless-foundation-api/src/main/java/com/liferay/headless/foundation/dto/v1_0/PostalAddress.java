@@ -215,37 +215,69 @@ public class PostalAddress {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(20);
+		StringBundler sb = new StringBundler(44);
 
 		sb.append("{");
 
-		sb.append("addressCountry=");
+		sb.append("\"addressCountry\": ");
 
+		sb.append("\"");
 		sb.append(addressCountry);
-		sb.append(", addressLocality=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"addressLocality\": ");
+
+		sb.append("\"");
 		sb.append(addressLocality);
-		sb.append(", addressRegion=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"addressRegion\": ");
+
+		sb.append("\"");
 		sb.append(addressRegion);
-		sb.append(", addressType=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"addressType\": ");
+
+		sb.append("\"");
 		sb.append(addressType);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", postalCode=");
+		sb.append(", ");
 
+		sb.append("\"postalCode\": ");
+
+		sb.append("\"");
 		sb.append(postalCode);
-		sb.append(", streetAddressLine1=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"streetAddressLine1\": ");
+
+		sb.append("\"");
 		sb.append(streetAddressLine1);
-		sb.append(", streetAddressLine2=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"streetAddressLine2\": ");
+
+		sb.append("\"");
 		sb.append(streetAddressLine2);
-		sb.append(", streetAddressLine3=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"streetAddressLine3\": ");
+
+		sb.append("\"");
 		sb.append(streetAddressLine3);
+		sb.append("\"");
 
 		sb.append("}");
 

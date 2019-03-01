@@ -116,6 +116,8 @@ public abstract class BaseFolderResourceTestCase {
 		Page<Folder> page = invokeGetContentSpaceFoldersPage(
 			contentSpaceId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(folder1, folder2), (List<Folder>)page.getItems());
 		assertValid(page);
@@ -144,6 +146,8 @@ public abstract class BaseFolderResourceTestCase {
 
 		Page<Folder> page2 = invokeGetContentSpaceFoldersPage(
 			contentSpaceId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Folder> folders2 = (List<Folder>)page2.getItems();
 
@@ -181,6 +185,8 @@ public abstract class BaseFolderResourceTestCase {
 		Page<Folder> page = invokeGetFolderFoldersPage(
 			folderId, Pagination.of(2, 1));
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(folder1, folder2), (List<Folder>)page.getItems());
 		assertValid(page);
@@ -206,6 +212,8 @@ public abstract class BaseFolderResourceTestCase {
 
 		Page<Folder> page2 = invokeGetFolderFoldersPage(
 			folderId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
 
 		List<Folder> folders2 = (List<Folder>)page2.getItems();
 

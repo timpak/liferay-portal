@@ -359,58 +359,110 @@ public class Document {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(71);
 
 		sb.append("{");
 
-		sb.append("adaptedImages=");
+		sb.append("\"adaptedImages\": ");
 
+		sb.append("\"");
 		sb.append(adaptedImages);
-		sb.append(", aggregateRating=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"aggregateRating\": ");
 
 		sb.append(aggregateRating);
-		sb.append(", categories=");
+		sb.append(", ");
 
+		sb.append("\"categories\": ");
+
+		sb.append("\"");
 		sb.append(categories);
-		sb.append(", categoryIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"categoryIds\": ");
+
+		sb.append("\"");
 		sb.append(categoryIds);
-		sb.append(", contentUrl=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"contentUrl\": ");
+
+		sb.append("\"");
 		sb.append(contentUrl);
-		sb.append(", creator=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", encodingFormat=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"encodingFormat\": ");
+
+		sb.append("\"");
 		sb.append(encodingFormat);
-		sb.append(", fileExtension=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"fileExtension\": ");
+
+		sb.append("\"");
 		sb.append(fileExtension);
-		sb.append(", folderId=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"folderId\": ");
 
 		sb.append(folderId);
-		sb.append(", id=");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", keywords=");
+		sb.append(", ");
 
+		sb.append("\"keywords\": ");
+
+		sb.append("\"");
 		sb.append(keywords);
-		sb.append(", sizeInBytes=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"sizeInBytes\": ");
 
 		sb.append(sizeInBytes);
-		sb.append(", title=");
+		sb.append(", ");
 
+		sb.append("\"title\": ");
+
+		sb.append("\"");
 		sb.append(title);
+		sb.append("\"");
 
 		sb.append("}");
 

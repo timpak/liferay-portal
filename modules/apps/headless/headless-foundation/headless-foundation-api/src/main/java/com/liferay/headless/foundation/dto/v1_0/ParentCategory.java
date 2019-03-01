@@ -73,16 +73,20 @@ public class ParentCategory {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{");
 
-		sb.append("id=");
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
+		sb.append("\"");
 
 		sb.append("}");
 

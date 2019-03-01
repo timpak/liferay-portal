@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -124,6 +126,8 @@ public abstract class BaseVocabularyResourceTestCase {
 		Page<Vocabulary> page = invokeGetContentSpaceVocabulariesPage(
 			contentSpaceId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(vocabulary1, vocabulary2),
 			(List<Vocabulary>)page.getItems());
@@ -144,15 +148,22 @@ public abstract class BaseVocabularyResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceVocabulariesPage_getContentSpaceId();
 
-		Vocabulary vocabulary1 =
-			testGetContentSpaceVocabulariesPage_addVocabulary(
-				contentSpaceId, randomVocabulary());
+		Vocabulary vocabulary1 = randomVocabulary();
+		Vocabulary vocabulary2 = randomVocabulary();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				vocabulary1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		vocabulary1 = testGetContentSpaceVocabulariesPage_addVocabulary(
+			contentSpaceId, vocabulary1);
 
 		Thread.sleep(1000);
 
-		Vocabulary vocabulary2 =
-			testGetContentSpaceVocabulariesPage_addVocabulary(
-				contentSpaceId, randomVocabulary());
+		vocabulary2 = testGetContentSpaceVocabulariesPage_addVocabulary(
+			contentSpaceId, vocabulary2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Vocabulary> page = invokeGetContentSpaceVocabulariesPage(
@@ -224,6 +235,8 @@ public abstract class BaseVocabularyResourceTestCase {
 		Page<Vocabulary> page2 = invokeGetContentSpaceVocabulariesPage(
 			contentSpaceId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Vocabulary> vocabularies2 = (List<Vocabulary>)page2.getItems();
 
 		Assert.assertEquals(vocabularies2.toString(), 1, vocabularies2.size());
@@ -252,12 +265,22 @@ public abstract class BaseVocabularyResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceVocabulariesPage_getContentSpaceId();
 
-		Vocabulary vocabulary1 =
-			testGetContentSpaceVocabulariesPage_addVocabulary(
-				contentSpaceId, randomVocabulary());
-		Vocabulary vocabulary2 =
-			testGetContentSpaceVocabulariesPage_addVocabulary(
-				contentSpaceId, randomVocabulary());
+		Vocabulary vocabulary1 = randomVocabulary();
+		Vocabulary vocabulary2 = randomVocabulary();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				vocabulary1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		vocabulary1 = testGetContentSpaceVocabulariesPage_addVocabulary(
+			contentSpaceId, vocabulary1);
+
+		Thread.sleep(1000);
+
+		vocabulary2 = testGetContentSpaceVocabulariesPage_addVocabulary(
+			contentSpaceId, vocabulary2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Vocabulary> ascPage = invokeGetContentSpaceVocabulariesPage(

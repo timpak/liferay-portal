@@ -138,6 +138,8 @@ public abstract class BaseStructuredContentImageResourceTestCase {
 			invokeGetStructuredContentStructuredContentImagesPage(
 				structuredContentId);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(structuredContentImage1, structuredContentImage2),
 			(List<StructuredContentImage>)page.getItems());

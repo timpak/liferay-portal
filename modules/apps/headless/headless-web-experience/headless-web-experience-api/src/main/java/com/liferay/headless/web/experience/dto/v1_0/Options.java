@@ -77,16 +77,22 @@ public class Options {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{");
 
-		sb.append("label=");
+		sb.append("\"label\": ");
 
+		sb.append("\"");
 		sb.append(label);
-		sb.append(", value=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"value\": ");
+
+		sb.append("\"");
 		sb.append(value);
+		sb.append("\"");
 
 		sb.append("}");
 

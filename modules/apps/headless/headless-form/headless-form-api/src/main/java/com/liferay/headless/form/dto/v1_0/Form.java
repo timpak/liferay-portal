@@ -315,50 +315,94 @@ public class Form {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(30);
+		StringBundler sb = new StringBundler(61);
 
 		sb.append("{");
 
-		sb.append("availableLanguages=");
+		sb.append("\"availableLanguages\": ");
 
+		sb.append("\"");
 		sb.append(availableLanguages);
-		sb.append(", contentSpace=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"contentSpace\": ");
 
 		sb.append(contentSpace);
-		sb.append(", creator=");
+		sb.append(", ");
+
+		sb.append("\"creator\": ");
 
 		sb.append(creator);
-		sb.append(", dateCreated=");
+		sb.append(", ");
 
+		sb.append("\"dateCreated\": ");
+
+		sb.append("\"");
 		sb.append(dateCreated);
-		sb.append(", dateModified=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"dateModified\": ");
+
+		sb.append("\"");
 		sb.append(dateModified);
-		sb.append(", datePublished=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"datePublished\": ");
+
+		sb.append("\"");
 		sb.append(datePublished);
-		sb.append(", defaultLanguage=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"defaultLanguage\": ");
+
+		sb.append("\"");
 		sb.append(defaultLanguage);
-		sb.append(", description=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"description\": ");
+
+		sb.append("\"");
 		sb.append(description);
-		sb.append(", formRecords=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"formRecords\": ");
+
+		sb.append("\"");
 		sb.append(formRecords);
-		sb.append(", formRecordsIds=");
+		sb.append("\"");
+		sb.append(", ");
 
+		sb.append("\"formRecordsIds\": ");
+
+		sb.append("\"");
 		sb.append(formRecordsIds);
-		sb.append(", id=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", name=");
+		sb.append(", ");
 
+		sb.append("\"name\": ");
+
+		sb.append("\"");
 		sb.append(name);
-		sb.append(", structure=");
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"structure\": ");
 
 		sb.append(structure);
-		sb.append(", structureId=");
+		sb.append(", ");
+
+		sb.append("\"structureId\": ");
 
 		sb.append(structureId);
 

@@ -95,17 +95,21 @@ public class Geo {
 	}
 
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(10);
 
 		sb.append("{");
 
-		sb.append("id=");
+		sb.append("\"id\": ");
 
 		sb.append(id);
-		sb.append(", latitude=");
+		sb.append(", ");
+
+		sb.append("\"latitude\": ");
 
 		sb.append(latitude);
-		sb.append(", longitude=");
+		sb.append(", ");
+
+		sb.append("\"longitude\": ");
 
 		sb.append(longitude);
 

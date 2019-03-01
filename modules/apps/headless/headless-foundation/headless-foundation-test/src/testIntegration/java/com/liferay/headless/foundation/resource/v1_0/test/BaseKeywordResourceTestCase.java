@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ import javax.annotation.Generated;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -120,6 +122,8 @@ public abstract class BaseKeywordResourceTestCase {
 		Page<Keyword> page = invokeGetContentSpaceKeywordsPage(
 			contentSpaceId, (String)null, Pagination.of(2, 1), (String)null);
 
+		Assert.assertEquals(2, page.getTotalCount());
+
 		assertEqualsIgnoringOrder(
 			Arrays.asList(keyword1, keyword2), (List<Keyword>)page.getItems());
 		assertValid(page);
@@ -139,13 +143,22 @@ public abstract class BaseKeywordResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceKeywordsPage_getContentSpaceId();
 
-		Keyword keyword1 = testGetContentSpaceKeywordsPage_addKeyword(
-			contentSpaceId, randomKeyword());
+		Keyword keyword1 = randomKeyword();
+		Keyword keyword2 = randomKeyword();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				keyword1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		keyword1 = testGetContentSpaceKeywordsPage_addKeyword(
+			contentSpaceId, keyword1);
 
 		Thread.sleep(1000);
 
-		Keyword keyword2 = testGetContentSpaceKeywordsPage_addKeyword(
-			contentSpaceId, randomKeyword());
+		keyword2 = testGetContentSpaceKeywordsPage_addKeyword(
+			contentSpaceId, keyword2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Keyword> page = invokeGetContentSpaceKeywordsPage(
@@ -212,6 +225,8 @@ public abstract class BaseKeywordResourceTestCase {
 		Page<Keyword> page2 = invokeGetContentSpaceKeywordsPage(
 			contentSpaceId, (String)null, Pagination.of(2, 2), (String)null);
 
+		Assert.assertEquals(3, page2.getTotalCount());
+
 		List<Keyword> keywords2 = (List<Keyword>)page2.getItems();
 
 		Assert.assertEquals(keywords2.toString(), 1, keywords2.size());
@@ -240,10 +255,22 @@ public abstract class BaseKeywordResourceTestCase {
 		Long contentSpaceId =
 			testGetContentSpaceKeywordsPage_getContentSpaceId();
 
-		Keyword keyword1 = testGetContentSpaceKeywordsPage_addKeyword(
-			contentSpaceId, randomKeyword());
-		Keyword keyword2 = testGetContentSpaceKeywordsPage_addKeyword(
-			contentSpaceId, randomKeyword());
+		Keyword keyword1 = randomKeyword();
+		Keyword keyword2 = randomKeyword();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				keyword1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		keyword1 = testGetContentSpaceKeywordsPage_addKeyword(
+			contentSpaceId, keyword1);
+
+		Thread.sleep(1000);
+
+		keyword2 = testGetContentSpaceKeywordsPage_addKeyword(
+			contentSpaceId, keyword2);
 
 		for (EntityField entityField : entityFields) {
 			Page<Keyword> ascPage = invokeGetContentSpaceKeywordsPage(
