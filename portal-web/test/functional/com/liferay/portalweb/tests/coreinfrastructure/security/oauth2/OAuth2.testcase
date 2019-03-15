@@ -261,12 +261,14 @@ definition {
 			value1 = "${clientId}"
 		);
 
-		Button.click(
-			button = "Authorize My Application"
+		Click(
+			locator1 = "Button#ANY",
+			value1 = "Authorize My Application"
 		);
 
-		Button.click(
-			button = "Authorize"
+		Click(
+			locator1 = "Button#ANY",
+			value1 = "Authorize"
 		);
 
 		Type(
@@ -274,12 +276,14 @@ definition {
 			value1 = "${clientSecret}"
 		);
 
-		Button.click(
-			button = "Obtain OAuth2 Access"
+		Click(
+			locator1 = "Button#ANY",
+			value1 = "Obtain OAuth2 Access"
 		);
 
-		Button.click(
-			button = "Launch Request"
+		Click(
+			locator1 = "Button#ANY",
+			value1 = "Launch Results"
 		);
 
 		AssertTextEquals.assertPartialText(
