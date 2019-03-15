@@ -116,7 +116,6 @@ definition {
 	}
 
 	test EditApplicationScopes {
-		property portal.acceptance = "tim-pak";
 		property prepare.oauth2.global.scopes = "true";
 
 		ProductMenu.gotoPortlet(
@@ -258,7 +257,7 @@ definition {
 
 		Type(
 			locator1 = "OAuth2#ADMIN_INPUT_FORM_CLIENT_ID",
-			value1 = "${clientId}"
+			value1 = "123456"
 		);
 
 		Click(
