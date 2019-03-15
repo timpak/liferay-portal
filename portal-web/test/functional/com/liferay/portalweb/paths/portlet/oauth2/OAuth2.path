@@ -104,9 +104,10 @@
 	<td>//tr[td[@class=' lfr-name-column' and contains(.,'${key_tableName}')]]/td[@class=' lfr-scopes-column']</td>
 	<td></td>
 </tr>
+<!--OAUTH2 TESTER-->
 <tr>
-	<td></td>
-	<td></td>
+	<td>REQUEST_RESULTS</td>
+	<td>//div[contains(@id,'result')]</td>
 	<td></td>
 </tr>
 <!--USER-->
