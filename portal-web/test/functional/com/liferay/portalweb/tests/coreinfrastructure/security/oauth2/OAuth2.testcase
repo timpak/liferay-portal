@@ -116,6 +116,7 @@ definition {
 	}
 
 	test EditApplicationScopes {
+		property portal.acceptance = "tim-pak";
 		property prepare.oauth2.global.scopes = "true";
 
 		ProductMenu.gotoPortlet(
@@ -213,6 +214,7 @@ definition {
 	}
 
 	test OAuth2TesterSmokeTest {
+		property portal.acceptance = "tim-pak";
 		var clientId = "abc123";
 		var clientSecret = "abc123";
 
