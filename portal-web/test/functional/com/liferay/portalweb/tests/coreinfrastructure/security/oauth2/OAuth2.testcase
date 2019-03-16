@@ -257,17 +257,17 @@ definition {
 
 		Type(
 			locator1 = "OAuth2#ADMIN_INPUT_FORM_CLIENT_ID",
-			value1 = "123456"
+			value1 = "${clientId}"
 		);
 
 		Click(
 			locator1 = "Button#ANY",
-			value1 = "Authorize My Application"
+			key_text = "Authorize My Application"
 		);
 
 		Click(
 			locator1 = "Button#ANY",
-			value1 = "Authorize"
+			key_text = "Authorize"
 		);
 
 		Type(
@@ -277,12 +277,12 @@ definition {
 
 		Click(
 			locator1 = "Button#ANY",
-			value1 = "Obtain OAuth2 Access"
+			key_text = "Obtain OAuth2 Access"
 		);
 
 		Click(
 			locator1 = "Button#ANY",
-			value1 = "Launch Results"
+			key_text = "Launch Results"
 		);
 
 		AssertTextEquals.assertPartialText(
