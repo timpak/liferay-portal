@@ -265,7 +265,7 @@ definition {
 		);
 
 		Navigator.openSpecificURL(
-			url = "http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code"
+			url = '''http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code'''
 		);
 
 		Button.click(
@@ -344,7 +344,7 @@ definition {
 		);
 
 		Navigator.openSpecificURL(
-			url = "http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code"
+			url = '''http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code'''
 		);
 
 		Button.click(
