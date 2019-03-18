@@ -264,6 +264,10 @@ definition {
 			button = "Authorize My Application"
 		);
 
+		Navigator.openSpecificURL(
+			url = "http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code"
+		);
+
 		Button.click(
 			button = "Authorize"
 		);
@@ -337,6 +341,10 @@ definition {
 
 		Button.click(
 			button = "Authorize My Application"
+		);
+
+		Navigator.openSpecificURL(
+			url = "http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code"
 		);
 
 		Button.click(
