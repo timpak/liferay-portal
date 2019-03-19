@@ -216,6 +216,7 @@ definition {
 		property portal.acceptance = "tim-pak";
 		var clientId = "abc123";
 		var clientSecret = "abc123";
+		var portalURL = PropsUtil.get("portal.url");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
@@ -225,7 +226,7 @@ definition {
 
 		OAuth2.addApplication(
 			applicationName = "OAuth Application",
-			callbackURI = '''http://martamedio.com/oauth2-tester/?url=http://localhost:8080&client_id=${clientId}''',
+			callbackURI = '''http://martamedio.com/oauth2-tester/?url=${portalURL}&client_id=${clientId}''',
 			clientProfile = "Web Application"
 		);
 
@@ -244,7 +245,7 @@ definition {
 
 		OAuth2.viewApplication(
 			applicationName = "OAuth Application",
-			callbackURI = '''http://martamedio.com/oauth2-tester/?url=http://localhost:8080&client_id=${clientId}''',
+			callbackURI = '''http://martamedio.com/oauth2-tester/?url=${portalURL}&client_id=${clientId}''',
 			checkboxCheckList = "Authorization Code,Client Credentials,Refresh Token,Resource Owner Password Credentials",
 			clientId = "${clientId}",
 			clientProfile = "Web Application",
@@ -264,9 +265,13 @@ definition {
 			button = "Authorize My Application"
 		);
 
+		selenium.pause("5000");
+
 		Navigator.openSpecificURL(
-			url = '''http://localhost:8080/o/oauth2/authorize?client_id=abc123&response_type=code'''
+			url = '''${portalURL}/o/oauth2/authorize?client_id=abc123&response_type=code'''
 		);
+
+		selenium.pause("5000");
 
 		SignIn._signIn();
 
