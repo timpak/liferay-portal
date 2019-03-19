@@ -213,6 +213,7 @@ definition {
 	}
 
 	test OAuth2TesterSmokeTest {
+		property portal.acceptance = "tim-pak";
 		var clientId = "abc123";
 		var clientSecret = "abc123";
 		var portalURL = PropsUtil.get("portal.url");
