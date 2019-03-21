@@ -364,9 +364,11 @@ definition {
 
 		SelectFrame(locator1 = "IFrame#DIALOG");
 
-		LexiconEntry.changeDisplayStyle(displayStyle = "cards");
+		Search.searchCP(
+			searchTerm = "${roleName}"
+		);
 
-		Check(locator1 = "Card#SPECIFIC_CHECKBOX", key_cardText = "${roleName}");
+		ManagementBar.clickSelectAllCheckbox();
 
 		SelectFrameTop();
 
