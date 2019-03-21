@@ -20,7 +20,9 @@ definition {
 	test AddUserInheritedRolesAsSAMLAttributeStatements {
 		property test.name.skip.portal.instance = "SAML#AddUserInheritedRolesAsSAMLAttributeStatements";
 
-		SAML.configureLiferaySAMLAsIdP(samlEntityID = "samlidp");
+		SAML.configureLiferaySAMLAsIdP(
+			samlEntityID = "samlidp"
+		);
 
 		SAML.configureLiferaySAMLAsSP(
 			attributes = "siteRoles",
@@ -41,7 +43,10 @@ definition {
 			categoryPriority = "DEBUG"
 		);
 
-		JSONRole.addSiteRole(roleKey = "TestSiteRole", roleTitle = "TestSiteRole");
+		JSONRole.addSiteRole(
+			roleKey = "TestSiteRole",
+			roleTitle = "TestSiteRole"
+		);
 
 		Navigator.openURL();
 
@@ -51,7 +56,9 @@ definition {
 			portlet = "Sites"
 		);
 
-		Site.addBlankCP(siteName = "Site Name");
+		Site.addBlankCP(
+			siteName = "Site Name"
+		);
 
 		Navigator.openURL();
 
@@ -61,11 +68,15 @@ definition {
 			portlet = "User Groups"
 		);
 
-		UserGroup.addCP(userGroupName = "UG UserGroup Name");
+		UserGroup.addCP(
+			userGroupName = "UG UserGroup Name"
+		);
 
 		Navigator.openURL();
 
-		ProductMenu.gotoSite(site = "Site Name");
+		ProductMenu.gotoSite(
+			site = "Site Name"
+		);
 
 		ProductMenu.gotoPortlet(
 			category = "People",
@@ -80,7 +91,9 @@ definition {
 
 		Navigator.openURL();
 
-		ProductMenu.gotoSite(site = "Site Name");
+		ProductMenu.gotoSite(
+			site = "Site Name"
+		);
 
 		ProductMenu.gotoPortlet(
 			category = "People",
@@ -114,7 +127,9 @@ definition {
 			portlet = "Users and Organizations"
 		);
 
-		User.gotoEditCP(userScreenName = "test");
+		User.gotoEditCP(
+			userScreenName = "test"
+		);
 
 		User.viewUserInfomationRolesCP(
 			roleTitle = "TestSiteRole",
@@ -125,7 +140,9 @@ definition {
 
 		User.viewLoggedOutPG();
 
-		User.logoutPG(specificURL = "http://www.able.com:9080/");
+		User.logoutPG(
+			specificURL = "http://www.able.com:9080/"
+		);
 
 		User.viewLoggedOutPG();
 
@@ -135,9 +152,13 @@ definition {
 			userEmailAddress = "test@liferay.com"
 		);
 
-		User.viewLoggedInPG(userFirstName = "Test");
+		User.viewLoggedInPG(
+			userFirstName = "Test"
+		);
 
-		AssertConsoleTextPresent(value1 = "TestSiteRole");
+		AssertConsoleTextPresent(
+			value1 = "TestSiteRole"
+		);
 	}
 
 	@priority = "4"

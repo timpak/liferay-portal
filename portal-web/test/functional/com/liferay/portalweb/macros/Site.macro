@@ -345,16 +345,22 @@ definition {
 	macro assignSiteRoleToUserGroup {
 		var key_userGroupName = "${userGroupName}";
 
-		Navigator.gotoNavItem(navItem = "User Groups");
+		Navigator.gotoNavItem(
+			navItem = "User Groups"
+		);
 
-		LexiconEntry.changeDisplayStyle(displayStyle = "table");
+		LexiconEntry.changeDisplayStyle(
+			displayStyle = "table"
+		);
 
 		AssertTextEquals(
 			locator1 = "UserGroups#USER_GROUP_TABLE_NAME",
 			value1 = "${userGroupName}"
 		);
 
-		Click(locator1 = "SiteMembershipsUserGroups#USER_GROUP_TABLE_ACTIONS");
+		Click(
+			locator1 = "SiteMembershipsUserGroups#USER_GROUP_TABLE_ACTIONS"
+		);
 
 		AssertClick(
 			locator1 = "MenuItem#ANY_MENU_ITEM",
@@ -362,7 +368,9 @@ definition {
 			key_menuItem = "Assign Site Roles"
 		);
 
-		SelectFrame(locator1 = "IFrame#DIALOG");
+		SelectFrame(
+			locator1 = "IFrame#DIALOG"
+		);
 
 		Search.searchCP(
 			searchTerm = "${roleName}"
