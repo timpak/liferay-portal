@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import CriteriaSidebarSearchBar from './CriteriaSidebarSearchBar.es';
 import CriteriaSidebarItem from './CriteriaSidebarItem.es';
-import {PROPERTY_TYPES} from '../../utils/constants.es';
+import CriteriaSidebarSearchBar from './CriteriaSidebarSearchBar.es';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import {jsDatetoYYYYMMDD} from '../../utils/utils.es';
+import {PROPERTY_TYPES} from '../../utils/constants.es';
 
 /**
  * Returns a default value for a property provided.

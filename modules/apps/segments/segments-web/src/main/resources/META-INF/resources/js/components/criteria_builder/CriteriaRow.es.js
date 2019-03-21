@@ -1,21 +1,17 @@
-import React, {Component} from 'react';
-import {PropTypes} from 'prop-types';
+import BooleanInput from '../inputs/BooleanInput.es';
 import ClayButton from '../shared/ClayButton.es';
 import ClayIcon from '../shared/ClayIcon.es';
 import ClaySelect from '../shared/ClaySelect.es';
 import CollectionInput from '../inputs/CollectionInput.es';
-import DecimalInput from '../inputs/DecimalInput.es';
 import DateInput from '../inputs/DateInput.es';
 import DateTimeInput from '../inputs/DateTimeInput.es';
-import BooleanInput from '../inputs/BooleanInput.es';
-import SelectEntityInput from '../inputs/SelectEntityInput.es';
+import DecimalInput from '../inputs/DecimalInput.es';
+import getCN from 'classnames';
 import IntegerInput from '../inputs/IntegerInput.es';
+import React, {Component} from 'react';
+import SelectEntityInput from '../inputs/SelectEntityInput.es';
 import StringInput from '../inputs/StringInput.es';
 import ThemeContext from '../../ThemeContext.es';
-import {DragSource as dragSource, DropTarget as dropTarget} from 'react-dnd';
-import {DragTypes} from '../../utils/drag-types.es';
-import {PROPERTY_TYPES} from '../../utils/constants.es';
-import getCN from 'classnames';
 import {
 	createNewGroup,
 	dateToInternationalHuman,
@@ -23,6 +19,10 @@ import {
 	objectToFormData,
 	sub
 } from '../../utils/utils.es';
+import {DragSource as dragSource, DropTarget as dropTarget} from 'react-dnd';
+import {DragTypes} from '../../utils/drag-types.es';
+import {PROPERTY_TYPES} from '../../utils/constants.es';
+import {PropTypes} from 'prop-types';
 
 const acceptedDragTypes = [
 	DragTypes.CRITERIA_ROW,

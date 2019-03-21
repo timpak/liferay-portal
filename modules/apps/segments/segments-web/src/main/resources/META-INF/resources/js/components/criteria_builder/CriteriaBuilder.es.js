@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import ClayToggle from '../shared/ClayToggle.es';
 import CriteriaGroup from './CriteriaGroup.es';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import {
 	insertAtIndex,
 	removeAtIndex,

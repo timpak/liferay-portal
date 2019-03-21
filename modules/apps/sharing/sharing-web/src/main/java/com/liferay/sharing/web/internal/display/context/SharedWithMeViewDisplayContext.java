@@ -114,6 +114,14 @@ public class SharedWithMeViewDisplayContext {
 					SafeConsumer.ignore(
 						dropdownGroupItem -> {
 							dropdownGroupItem.setDropdownItems(
+								_getFilterStateDropdownItems());
+							dropdownGroupItem.setLabel(
+								LanguageUtil.get(_request, "filter-by-state"));
+						}));
+				addGroup(
+					SafeConsumer.ignore(
+						dropdownGroupItem -> {
+							dropdownGroupItem.setDropdownItems(
 								_getFilterNavigationDropdownItems());
 							dropdownGroupItem.setLabel(
 								LanguageUtil.get(
@@ -212,19 +220,37 @@ public class SharedWithMeViewDisplayContext {
 			classNameId = ClassNameLocalServiceUtil.getClassNameId(className);
 		}
 
-		int total = _sharingEntryLocalService.getToUserSharingEntriesCount(
-			_themeDisplay.getUserId(), classNameId);
+		if (_isIncoming()) {
+			int total = _sharingEntryLocalService.getToUserSharingEntriesCount(
+				_themeDisplay.getUserId(), classNameId);
 
-		searchContainer.setTotal(total);
+			searchContainer.setTotal(total);
 
-		List<SharingEntry> sharingEntries =
-			_sharingEntryLocalService.getToUserSharingEntries(
-				_themeDisplay.getUserId(), classNameId,
-				searchContainer.getStart(), searchContainer.getEnd(),
-				new SharingEntryModifiedDateComparator(
-					Objects.equals(getSortingOrder(), "asc")));
+			List<SharingEntry> sharingEntries =
+				_sharingEntryLocalService.getToUserSharingEntries(
+					_themeDisplay.getUserId(), classNameId,
+					searchContainer.getStart(), searchContainer.getEnd(),
+					new SharingEntryModifiedDateComparator(
+						Objects.equals(getSortingOrder(), "asc")));
 
-		searchContainer.setResults(sharingEntries);
+			searchContainer.setResults(sharingEntries);
+		}
+		else {
+			int total =
+				_sharingEntryLocalService.getFromUserSharingEntriesCount(
+					_themeDisplay.getUserId(), classNameId);
+
+			searchContainer.setTotal(total);
+
+			List<SharingEntry> sharingEntries =
+				_sharingEntryLocalService.getFromUserSharingEntries(
+					_themeDisplay.getUserId(), classNameId,
+					searchContainer.getStart(), searchContainer.getEnd(),
+					new SharingEntryModifiedDateComparator(
+						Objects.equals(getSortingOrder(), "asc")));
+
+			searchContainer.setResults(sharingEntries);
+		}
 	}
 
 	private MenuItem _createEditMenuItem(SharingEntry sharingEntry)
@@ -347,6 +373,45 @@ public class SharedWithMeViewDisplayContext {
 		};
 	}
 
+	private List<DropdownItem> _getFilterStateDropdownItems() {
+		return new DropdownItemList() {
+			{
+				add(
+					SafeConsumer.ignore(
+						dropdownItem -> {
+							dropdownItem.setActive(_isIncoming());
+
+							PortletURL sharedWithMeURL = PortletURLUtil.clone(
+								_currentURLObj, _liferayPortletResponse);
+
+							sharedWithMeURL.setParameter(
+								"incoming", Boolean.TRUE.toString());
+
+							dropdownItem.setHref(sharedWithMeURL);
+
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "shared-with-me"));
+						}));
+				add(
+					SafeConsumer.ignore(
+						dropdownItem -> {
+							dropdownItem.setActive(!_isIncoming());
+
+							PortletURL sharedWithMeURL = PortletURLUtil.clone(
+								_currentURLObj, _liferayPortletResponse);
+
+							sharedWithMeURL.setParameter(
+								"incoming", Boolean.FALSE.toString());
+
+							dropdownItem.setHref(sharedWithMeURL);
+
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "shared-by-me"));
+						}));
+			}
+		};
+	}
+
 	private List<DropdownItem> _getOrderByDropdownItems() {
 		String orderByCol = ParamUtil.getString(
 			_request, "orderByCol", "sharedDate");
@@ -386,6 +451,10 @@ public class SharedWithMeViewDisplayContext {
 
 		return sharingEntryEditRenderer.getURLEdit(
 			sharingEntry, liferayPortletRequest, liferayPortletResponse);
+	}
+
+	private boolean _isIncoming() {
+		return ParamUtil.getBoolean(_request, "incoming", true);
 	}
 
 	private final PortletURL _currentURLObj;

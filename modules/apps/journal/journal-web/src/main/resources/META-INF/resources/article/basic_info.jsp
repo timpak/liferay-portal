@@ -27,12 +27,12 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 <aui:input name="groupId" type="hidden" value="<%= journalEditArticleDisplayContext.getGroupId() %>" />
 <aui:input name="ddmStructureKey" type="hidden" value="<%= ddmStructure.getStructureKey() %>" />
 
-<p class="article-structure small">
+<p class="article-structure">
 	<b><liferay-ui:message key="structure" /></b>: <%= HtmlUtil.escape(ddmStructure.getName(locale)) %>
 </p>
 
 <c:if test="<%= article != null %>">
-	<p class="article-version-status small">
+	<p class="article-version-status">
 		<b><liferay-ui:message key="version" />: <%= article.getVersion() %></b>
 
 		<span class="label label-<%= LabelItem.getStyleFromWorkflowStatus(article.getStatus()) %> text-uppercase">
@@ -46,7 +46,7 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 		<div class="article-id">
 			<label for="<portlet:namespace />newArticleId"><liferay-ui:message key="id" /></label>
 
-			<aui:input cssClass="form-control-sm" disabled="<%= true %>" label="" name="newArticleId" type="text" value="<%= (article != null) ? article.getArticleId() : StringPool.BLANK %>" wrapperCssClass="mb-1" />
+			<aui:input disabled="<%= true %>" label="" name="newArticleId" type="text" value="<%= (article != null) ? article.getArticleId() : StringPool.BLANK %>" wrapperCssClass="mb-1" />
 
 			<%
 			String taglibOnChange = "Liferay.Util.toggleDisabled('#" + renderResponse.getNamespace() + "newArticleId', event.target.checked);";

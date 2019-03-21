@@ -227,6 +227,13 @@ public class SharingEntryPersistenceTest {
 	}
 
 	@Test
+	public void testCountByUserId() throws Exception {
+		_persistence.countByUserId(RandomTestUtil.nextLong());
+
+		_persistence.countByUserId(0L);
+	}
+
+	@Test
 	public void testCountByToUserId() throws Exception {
 		_persistence.countByToUserId(RandomTestUtil.nextLong());
 
@@ -238,6 +245,14 @@ public class SharingEntryPersistenceTest {
 		_persistence.countByExpirationDate(RandomTestUtil.nextDate());
 
 		_persistence.countByExpirationDate(RandomTestUtil.nextDate());
+	}
+
+	@Test
+	public void testCountByU_C() throws Exception {
+		_persistence.countByU_C(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
+
+		_persistence.countByU_C(0L, 0L);
 	}
 
 	@Test

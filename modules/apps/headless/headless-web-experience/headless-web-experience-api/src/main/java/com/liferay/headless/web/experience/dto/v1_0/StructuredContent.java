@@ -319,30 +319,6 @@ public class StructuredContent {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String description;
 
-	public Boolean getHasComments() {
-		return hasComments;
-	}
-
-	public void setHasComments(Boolean hasComments) {
-		this.hasComments = hasComments;
-	}
-
-	@JsonIgnore
-	public void setHasComments(
-		UnsafeSupplier<Boolean, Exception> hasCommentsUnsafeSupplier) {
-
-		try {
-			hasComments = hasCommentsUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean hasComments;
-
 	public Long getId() {
 		return id;
 	}
@@ -413,18 +389,42 @@ public class StructuredContent {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Date lastReviewed;
 
+	public Number getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	public void setNumberOfComments(Number numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
+	@JsonIgnore
+	public void setNumberOfComments(
+		UnsafeSupplier<Number, Exception> numberOfCommentsUnsafeSupplier) {
+
+		try {
+			numberOfComments = numberOfCommentsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Number numberOfComments;
+
 	@Schema(description = "https://www.schema.org/templates")
-	public RenderedContents[] getRenderedContents() {
+	public RenderedContent[] getRenderedContents() {
 		return renderedContents;
 	}
 
-	public void setRenderedContents(RenderedContents[] renderedContents) {
+	public void setRenderedContents(RenderedContent[] renderedContents) {
 		this.renderedContents = renderedContents;
 	}
 
 	@JsonIgnore
 	public void setRenderedContents(
-		UnsafeSupplier<RenderedContents[], Exception>
+		UnsafeSupplier<RenderedContent[], Exception>
 			renderedContentsUnsafeSupplier) {
 
 		try {
@@ -437,19 +437,19 @@ public class StructuredContent {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected RenderedContents[] renderedContents;
+	protected RenderedContent[] renderedContents;
 
-	public TaxonomyCategories[] getTaxonomyCategories() {
+	public TaxonomyCategory[] getTaxonomyCategories() {
 		return taxonomyCategories;
 	}
 
-	public void setTaxonomyCategories(TaxonomyCategories[] taxonomyCategories) {
+	public void setTaxonomyCategories(TaxonomyCategory[] taxonomyCategories) {
 		this.taxonomyCategories = taxonomyCategories;
 	}
 
 	@JsonIgnore
 	public void setTaxonomyCategories(
-		UnsafeSupplier<TaxonomyCategories[], Exception>
+		UnsafeSupplier<TaxonomyCategory[], Exception>
 			taxonomyCategoriesUnsafeSupplier) {
 
 		try {
@@ -462,7 +462,7 @@ public class StructuredContent {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected TaxonomyCategories[] taxonomyCategories;
+	protected TaxonomyCategory[] taxonomyCategories;
 
 	public Long[] getTaxonomyCategoryIds() {
 		return taxonomyCategoryIds;
@@ -642,11 +642,6 @@ public class StructuredContent {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"hasComments\": ");
-
-		sb.append(hasComments);
-		sb.append(", ");
-
 		sb.append("\"id\": ");
 
 		sb.append(id);
@@ -680,6 +675,11 @@ public class StructuredContent {
 		sb.append("\"");
 		sb.append(lastReviewed);
 		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"numberOfComments\": ");
+
+		sb.append(numberOfComments);
 		sb.append(", ");
 
 		sb.append("\"renderedContents\": ");

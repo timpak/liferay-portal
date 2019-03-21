@@ -14,6 +14,7 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.source.formatter.checks.util.YMLSourceUtil;
@@ -187,6 +188,13 @@ public class YMLDefinitionOrderCheck extends BaseFileCheck {
 				}
 			}
 
+			if (definitionKey1.equals("- in: query") &&
+				definitionKey1.equals(definitionKey2)) {
+
+				return _sortSpecificDefinitions(
+					definition1, definition2, "name");
+			}
+
 			return definitionKey1.compareTo(definitionKey2);
 		}
 
@@ -194,21 +202,48 @@ public class YMLDefinitionOrderCheck extends BaseFileCheck {
 			Matcher matcher = _definitionKeyPattern.matcher(definition);
 
 			if (matcher.find()) {
-				return StringUtil.trim(matcher.group(1));
+				return StringUtil.trim(matcher.group());
 			}
 
 			return definition;
 		}
 
 		private int _getTravisDefinitionKeyWeight(String definitionKey) {
-			if (_travisDefinitionKeyWeightMap.containsKey(definitionKey)) {
-				return _travisDefinitionKeyWeightMap.get(definitionKey);
+			String s = StringUtil.extractFirst(definitionKey, CharPool.COLON);
+
+			if (_travisDefinitionKeyWeightMap.containsKey(s)) {
+				return _travisDefinitionKeyWeightMap.get(s);
 			}
 
 			return -1;
 		}
 
-		private final Pattern _definitionKeyPattern = Pattern.compile("(.*?):");
+		private int _sortSpecificDefinitions(
+			String definition1, String definition2, String key) {
+
+			Pattern pattern = Pattern.compile(
+				"^ *" + key + ": *(\\w*)(\n|\\Z)", Pattern.MULTILINE);
+
+			String value1 = StringPool.BLANK;
+
+			Matcher matcher = pattern.matcher(definition1);
+
+			if (matcher.find()) {
+				value1 = matcher.group(1);
+			}
+
+			String value2 = StringPool.BLANK;
+
+			matcher = pattern.matcher(definition2);
+
+			if (matcher.find()) {
+				value2 = matcher.group(1);
+			}
+
+			return value1.compareTo(value2);
+		}
+
+		private final Pattern _definitionKeyPattern = Pattern.compile(".*?:.*");
 		private final String _fileName;
 
 	}

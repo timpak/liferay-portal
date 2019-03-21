@@ -16,6 +16,7 @@ import templates from './AdaptiveMediaProgress.soy';
  */
 
 class AdaptiveMediaProgress extends PortletBase {
+
 	/**
 	 * @inheritDoc
 	 */
@@ -84,7 +85,8 @@ class AdaptiveMediaProgress extends PortletBase {
 				if (this.percentage_ >= 100) {
 					this.onProgressBarComplete_();
 				}
-			} catch(e) {
+			}
+			catch (e) {
 				clearInterval(this.intervalId_);
 			}
 		});
@@ -114,7 +116,7 @@ class AdaptiveMediaProgress extends PortletBase {
 		this.progressBarClass_ = (percentage >= 100) ? 'progress-bar-success' : '';
 		this.progressBarLabel_ = percentage + '%';
 		this.progressBarValue_ = percentage;
-		this.progressBarTooltip_ = this.tooltip ? this.tooltip : adaptedImages + "/" + totalImages;
+		this.progressBarTooltip_ = this.tooltip ? this.tooltip : adaptedImages + '/' + totalImages;
 		this.percentage_ = percentage;
 	}
 }
@@ -126,6 +128,7 @@ class AdaptiveMediaProgress extends PortletBase {
  * @type {!Object}
  */
 AdaptiveMediaProgress.STATE = {
+
 	/**
 	 * Number of adapted images in the platform.
 	 *
@@ -262,7 +265,7 @@ AdaptiveMediaProgress.STATE = {
 	 * @type {String}
 	 */
 	tooltip: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
@@ -289,6 +292,7 @@ AdaptiveMediaProgress.STATE = {
 };
 
 // Register component
+
 Soy.register(AdaptiveMediaProgress, templates);
 
 export default AdaptiveMediaProgress;

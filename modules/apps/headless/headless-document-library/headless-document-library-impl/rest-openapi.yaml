@@ -23,11 +23,11 @@ components:
                 dateModified:
                     format: date-time
                     type: string
-                hasComments:
-                    type: boolean
                 id:
                     format: int64
                     type: integer
+                numberOfComments:
+                    type: number
                 text:
                     type: string
             type: object
@@ -101,6 +101,8 @@ components:
                     items:
                         type: string
                     type: array
+                numberOfComments:
+                    type: number
                 sizeInBytes:
                     type: number
                 taxonomyCategories:
@@ -143,15 +145,15 @@ components:
                     type: string
                 description:
                     type: string
-                hasDocuments:
-                    type: boolean
-                hasFolders:
-                    type: boolean
                 id:
                     format: int64
                     type: integer
                 name:
                     type: string
+                numberOfDocuments:
+                    type: number
+                numberOfFolders:
+                    type: number
                 viewableBy:
                     enum: [Anyone, Members, Owner]
                     type: string
@@ -218,6 +220,12 @@ paths:
     "/comments/{comment-id}/comments":
         get:
             parameters:
+                - in: path
+                  name: comment-id
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
                 - in: query
                   name: filter
                   schema:
@@ -234,12 +242,6 @@ paths:
                   name: sort
                   schema:
                       type: string
-                - in: path
-                  name: comment-id
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
             responses:
                 200:
                     content:
@@ -281,6 +283,10 @@ paths:
                       format: int64
                       type: integer
                 - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
                   name: page
                   schema:
                       type: integer
@@ -288,10 +294,6 @@ paths:
                   name: pageSize
                   schema:
                       type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
                 - in: query
                   name: sort
                   schema:
@@ -477,6 +479,12 @@ paths:
     "/documents/{document-id}/comments":
         get:
             parameters:
+                - in: path
+                  name: document-id
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
                 - in: query
                   name: filter
                   schema:
@@ -493,12 +501,6 @@ paths:
                   name: sort
                   schema:
                       type: string
-                - in: path
-                  name: document-id
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
             responses:
                 200:
                     content:
@@ -606,14 +608,6 @@ paths:
     "/folders/{folder-id}/documents":
         get:
             parameters:
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
                 - in: path
                   name: folder-id
                   required: true
@@ -624,6 +618,14 @@ paths:
                   name: filter
                   schema:
                       type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
                 - in: query
                   name: sort
                   schema:
@@ -668,6 +670,12 @@ paths:
     "/folders/{folder-id}/folders":
         get:
             parameters:
+                - in: path
+                  name: folder-id
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
                 - in: query
                   name: filter
                   schema:
@@ -684,12 +692,6 @@ paths:
                   name: sort
                   schema:
                       type: string
-                - in: path
-                  name: folder-id
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
             responses:
                 200:
                     content:

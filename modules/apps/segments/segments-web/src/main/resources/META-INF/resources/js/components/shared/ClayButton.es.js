@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {PropTypes} from 'prop-types';
 import ClayIcon from './ClayIcon.es';
 import getCN from 'classnames';
+import React, {Component} from 'react';
+import {PropTypes} from 'prop-types';
 
 class ClayButton extends Component {
 	static propTypes = {

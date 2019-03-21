@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import com.liferay.headless.web.experience.dto.v1_0.Comment;
-import com.liferay.headless.web.experience.dto.v1_0.Options;
 import com.liferay.headless.web.experience.resource.v1_0.CommentResource;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -1216,12 +1215,12 @@ public abstract class BaseCommentResourceTestCase {
 			return sb.toString();
 		}
 
-		if (entityFieldName.equals("hasComments")) {
+		if (entityFieldName.equals("id")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("id")) {
+		if (entityFieldName.equals("numberOfComments")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
@@ -1243,7 +1242,6 @@ public abstract class BaseCommentResourceTestCase {
 			{
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
-				hasComments = RandomTestUtil.randomBoolean();
 				id = RandomTestUtil.randomLong();
 				text = RandomTestUtil.randomString();
 			}

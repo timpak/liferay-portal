@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 
 import java.net.URI;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -200,11 +201,6 @@ public abstract class BaseStructuredContentResourceImpl
 				structuredContent.getDescription());
 		}
 
-		if (Validator.isNotNull(structuredContent.getHasComments())) {
-			existingStructuredContent.setHasComments(
-				structuredContent.getHasComments());
-		}
-
 		if (Validator.isNotNull(structuredContent.getKeywords())) {
 			existingStructuredContent.setKeywords(
 				structuredContent.getKeywords());
@@ -213,6 +209,11 @@ public abstract class BaseStructuredContentResourceImpl
 		if (Validator.isNotNull(structuredContent.getLastReviewed())) {
 			existingStructuredContent.setLastReviewed(
 				structuredContent.getLastReviewed());
+		}
+
+		if (Validator.isNotNull(structuredContent.getNumberOfComments())) {
+			existingStructuredContent.setNumberOfComments(
+				structuredContent.getNumberOfComments());
 		}
 
 		if (Validator.isNotNull(structuredContent.getTaxonomyCategoryIds())) {
@@ -293,9 +294,10 @@ public abstract class BaseStructuredContentResourceImpl
 	}
 
 	protected <T, R> List<R> transform(
-		List<T> list, UnsafeFunction<T, R, Exception> unsafeFunction) {
+		Collection<T> collection,
+		UnsafeFunction<T, R, Exception> unsafeFunction) {
 
-		return TransformUtil.transform(list, unsafeFunction);
+		return TransformUtil.transform(collection, unsafeFunction);
 	}
 
 	protected <T, R> R[] transform(
@@ -306,10 +308,11 @@ public abstract class BaseStructuredContentResourceImpl
 	}
 
 	protected <T, R> R[] transformToArray(
-		List<T> list, UnsafeFunction<T, R, Exception> unsafeFunction,
-		Class<?> clazz) {
+		Collection<T> collection,
+		UnsafeFunction<T, R, Exception> unsafeFunction, Class<?> clazz) {
 
-		return TransformUtil.transformToArray(list, unsafeFunction, clazz);
+		return TransformUtil.transformToArray(
+			collection, unsafeFunction, clazz);
 	}
 
 	protected <T, R> List<R> transformToList(

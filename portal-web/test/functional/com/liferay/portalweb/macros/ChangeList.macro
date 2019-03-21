@@ -139,6 +139,15 @@ definition {
 		);
 	}
 
+	macro viewContentTypeOnOverview {
+		var key_contentTitle = "${contentTitle}";
+
+		AssertTextEquals(
+			locator1 = "ChangeList#LATEST_CHANGES_CONTENT_TYPE",
+			value1 = "${contentType}"
+		);
+	}
+
 	macro viewDeletedItemCounter {
 		AssertTextEquals(
 			locator1 = "ChangeList#CHANGE_LIST_DELETED",

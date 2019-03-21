@@ -7,6 +7,12 @@ AUI.add(
 
 		var HTML5_UPLOAD = WIN && WIN.File && WIN.FormData && WIN.XMLHttpRequest;
 
+		var TPL_MOVE_FORM = '<form action="{actionUrl}" method="POST"><input name="{namespace}cmd" value="move"/>' +
+			'<input name="{namespace}newFolderId" value="{newFolderId}"/>' +
+			'<input name="{namespace}{parameterName}" value="{parameterValue}"/>' +
+			'<input name="{namespace}redirect" value="{redirectUrl}"/>' +
+			'</form>';
+
 		var DocumentLibrary = A.Component.create(
 			{
 				ATTRS: {
@@ -22,15 +28,15 @@ AUI.add(
 						validator: Lang.isObject
 					},
 
-					moveEntryUrl: {
-						validator: Lang.isString
-					},
-
 					searchContainerId: {
 						validator: Lang.isString
 					},
 
 					selectFileEntryTypeURL: {
+						validator: Lang.isString
+					},
+
+					selectFolderURL: {
 						validator: Lang.isString
 					},
 
@@ -111,17 +117,19 @@ AUI.add(
 						if (action === 'editTags') {
 							instance._openModalTags();
 
-							return;
+							action = null;
 						}
 
 						if (action === 'editCategories') {
 							instance._openModalCategories();
 
-							return;
+							action = null;
 						}
 
 						if (action === 'move' || action === 'moveEntries') {
-							url = instance.get('moveEntryUrl');
+							instance._openModalMove();
+
+							action = null;
 						}
 
 						if (action === 'download') {
@@ -177,6 +185,39 @@ AUI.add(
 						}
 					},
 
+					showFolderDialog(selectedItems, parameterName, parameterValue) {
+						var instance = this;
+
+						var namespace = instance.NS;
+
+						var dialogTitle = Lang.sub(
+							Liferay.Language.get('select-destination-folder-for-x-items'),
+							[selectedItems]
+						);
+
+						Liferay.Util.selectEntity(
+							{
+								dialog: {
+									constrain: true,
+									destroyOnHide: true,
+									modal: true,
+									width: 680
+								},
+								id: namespace + 'selectFolder',
+								title: dialogTitle,
+								uri: instance.get('selectFolderURL')
+							},
+							function(event) {
+								if (parameterName && parameterValue) {
+									instance._moveSingleElement(event.folderid, parameterName, parameterValue);
+								}
+								else {
+									instance._moveCurrectSelection(event.folderid);
+								}
+							}
+						);
+					},
+
 					_handleSearchContainerRowToggled: function(event) {
 						var instance = this;
 
@@ -190,10 +231,50 @@ AUI.add(
 						}
 					},
 
-					_moveToFolder: function(obj) {
+					_moveCurrectSelection(newFolderId) {
 						var instance = this;
 
+						var form = instance.get('form').node;
+
+						var actionUrl = instance.get('editEntryUrl');
+
+						form.attr('action', actionUrl);
+						form.attr('method', 'POST');
+						form.attr('enctype', 'multipart/form-data');
+
+						form.get(instance.NS + 'cmd').val('move');
+						form.get(instance.NS + 'newFolderId').val(newFolderId);
+
+						submitForm(form, actionUrl, false);
+					},
+
+					_moveSingleElement: function(newFolderId, parameterName, parameterValue) {
+						var instance = this;
+
+						var actionUrl = instance.get('editEntryUrl');
 						var namespace = instance.NS;
+						var originalForm = instance.get('form').node;
+						var redirectUrl = originalForm.get(namespace + 'redirect').val();
+
+						var formNode = A.Node.create(
+							A.Lang.sub(
+								TPL_MOVE_FORM,
+								{
+									actionUrl: actionUrl,
+									namespace: namespace,
+									newFolderId: newFolderId,
+									parameterName: parameterName,
+									parameterValue: parameterValue,
+									redirectUrl: redirectUrl
+								}
+							)
+						);
+
+						submitForm(formNode, actionUrl, false);
+					},
+
+					_moveToFolder: function(obj) {
+						var instance = this;
 
 						var dropTarget = obj.targetItem;
 
@@ -205,11 +286,7 @@ AUI.add(
 							if (!instance._searchContainer.select ||
 								selectedItems.indexOf(dropTarget.one('input[type=checkbox]'))
 							) {
-								var form = instance.get('form').node;
-
-								form.get(namespace + 'newFolderId').val(folderId);
-
-								instance._processAction('move', instance.get('moveEntryUrl'));
+								instance._moveCurrectSelection(folderId);
 							}
 						}
 					},
@@ -253,6 +330,18 @@ AUI.add(
 
 							editCategoriesComponent.open(instance._selectedFileEntries, bulkSelection, instance.getFolderId());
 						}
+					},
+
+					_openModalMove: function() {
+						var instance = this;
+
+						var selectedItems = 0;
+
+						if (instance._searchContainer.select) {
+							selectedItems = instance._searchContainer.select.getAllSelectedElements().filter(':enabled').size();
+						}
+
+						this.showFolderDialog(selectedItems);
 					},
 
 					_openModalTags: function() {

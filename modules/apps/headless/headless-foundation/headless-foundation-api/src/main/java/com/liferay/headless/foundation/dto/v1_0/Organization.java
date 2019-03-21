@@ -64,30 +64,6 @@ public class Organization {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String comment;
 
-	public Boolean getHasOrganizations() {
-		return hasOrganizations;
-	}
-
-	public void setHasOrganizations(Boolean hasOrganizations) {
-		this.hasOrganizations = hasOrganizations;
-	}
-
-	@JsonIgnore
-	public void setHasOrganizations(
-		UnsafeSupplier<Boolean, Exception> hasOrganizationsUnsafeSupplier) {
-
-		try {
-			hasOrganizations = hasOrganizationsUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean hasOrganizations;
-
 	public Long getId() {
 		return id;
 	}
@@ -181,6 +157,30 @@ public class Organization {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String name;
 
+	public Number getNumberOfOrganizations() {
+		return numberOfOrganizations;
+	}
+
+	public void setNumberOfOrganizations(Number numberOfOrganizations) {
+		this.numberOfOrganizations = numberOfOrganizations;
+	}
+
+	@JsonIgnore
+	public void setNumberOfOrganizations(
+		UnsafeSupplier<Number, Exception> numberOfOrganizationsUnsafeSupplier) {
+
+		try {
+			numberOfOrganizations = numberOfOrganizationsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Number numberOfOrganizations;
+
 	public Organization getParentOrganization() {
 		return parentOrganization;
 	}
@@ -231,17 +231,17 @@ public class Organization {
 	protected Long parentOrganizationId;
 
 	@Schema(description = "https://www.schema.org/Service")
-	public Services[] getServices() {
+	public Service[] getServices() {
 		return services;
 	}
 
-	public void setServices(Services[] services) {
+	public void setServices(Service[] services) {
 		this.services = services;
 	}
 
 	@JsonIgnore
 	public void setServices(
-		UnsafeSupplier<Services[], Exception> servicesUnsafeSupplier) {
+		UnsafeSupplier<Service[], Exception> servicesUnsafeSupplier) {
 
 		try {
 			services = servicesUnsafeSupplier.get();
@@ -253,7 +253,7 @@ public class Organization {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Services[] services;
+	protected Service[] services;
 
 	public String toString() {
 		StringBundler sb = new StringBundler();
@@ -265,11 +265,6 @@ public class Organization {
 		sb.append("\"");
 		sb.append(comment);
 		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"hasOrganizations\": ");
-
-		sb.append(hasOrganizations);
 		sb.append(", ");
 
 		sb.append("\"id\": ");
@@ -294,6 +289,11 @@ public class Organization {
 		sb.append("\"");
 		sb.append(name);
 		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"numberOfOrganizations\": ");
+
+		sb.append(numberOfOrganizations);
 		sb.append(", ");
 
 		sb.append("\"parentOrganization\": ");

@@ -17,7 +17,7 @@ package com.liferay.headless.foundation.internal.resource.v1_0;
 import com.liferay.headless.foundation.dto.v1_0.HoursAvailable;
 import com.liferay.headless.foundation.dto.v1_0.Location;
 import com.liferay.headless.foundation.dto.v1_0.Organization;
-import com.liferay.headless.foundation.dto.v1_0.Services;
+import com.liferay.headless.foundation.dto.v1_0.Service;
 import com.liferay.headless.foundation.resource.v1_0.OrganizationResource;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -186,22 +186,17 @@ public class OrganizationResourceImpl extends BaseOrganizationResourceImpl {
 					}
 				};
 				name = organization.getName();
+				numberOfOrganizations =
+					_organizationService.getOrganizationsCount(
+						organization.getCompanyId(),
+						organization.getOrganizationId());
 				parentOrganization = _toOrganization(
 					organization.getParentOrganization());
 				services = transformToArray(
 					_orgLaborService.getOrgLabors(
 						organization.getOrganizationId()),
-					OrganizationResourceImpl.this::_toServices, Services.class);
+					OrganizationResourceImpl.this::_toService, Service.class);
 
-				setHasOrganizations(
-					() -> {
-						int organizationsCount =
-							_organizationService.getOrganizationsCount(
-								organization.getCompanyId(),
-								organization.getOrganizationId());
-
-						return organizationsCount > 0;
-					});
 				setImage(
 					() -> {
 						if (organization.getLogoId() <= 0) {
@@ -227,10 +222,10 @@ public class OrganizationResourceImpl extends BaseOrganizationResourceImpl {
 		};
 	}
 
-	private Services _toServices(OrgLabor orgLabor) throws PortalException {
+	private Service _toService(OrgLabor orgLabor) throws PortalException {
 		ListType listType = orgLabor.getType();
 
-		return new Services() {
+		return new Service() {
 			{
 				hoursAvailable = new HoursAvailable[] {
 					_createHoursAvailable(

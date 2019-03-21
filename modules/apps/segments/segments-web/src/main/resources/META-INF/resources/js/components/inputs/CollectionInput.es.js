@@ -1,5 +1,5 @@
-import React from 'react';
 import propTypes from 'prop-types';
+import React from 'react';
 
 /**
  * Input displayed for collection type properties. 2 inputs will be displayed

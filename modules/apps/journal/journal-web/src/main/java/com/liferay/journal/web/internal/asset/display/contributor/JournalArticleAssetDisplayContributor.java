@@ -32,7 +32,9 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.util.Html;
+import com.liferay.portal.kernel.sanitizer.Sanitizer;
+import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -92,10 +94,17 @@ public class JournalArticleAssetDisplayContributor
 
 				Value value = ddmFormFieldValue0.getValue();
 
-				String fieldValue = _html.escape(value.getString(locale));
+				String fieldValue = value.getString(locale);
 
 				if (Objects.equals(ddmFormFieldValue0.getType(), "ddm-image")) {
 					fieldValue = _transformFileEntryURL(fieldValue);
+				}
+				else {
+					fieldValue = SanitizerUtil.sanitize(
+						article.getCompanyId(), article.getGroupId(),
+						article.getUserId(), JournalArticle.class.getName(),
+						article.getResourcePrimKey(), ContentTypes.TEXT_HTML,
+						Sanitizer.MODE_ALL, fieldValue, null);
 				}
 
 				classTypeValues.put(entry.getKey(), fieldValue);
@@ -147,9 +156,6 @@ public class JournalArticleAssetDisplayContributor
 
 	@Reference
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
-
-	@Reference
-	private Html _html;
 
 	@Reference
 	private JournalConverter _journalConverter;

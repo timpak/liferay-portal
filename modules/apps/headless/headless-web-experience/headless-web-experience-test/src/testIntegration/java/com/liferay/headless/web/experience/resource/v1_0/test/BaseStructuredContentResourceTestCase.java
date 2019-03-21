@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-import com.liferay.headless.web.experience.dto.v1_0.Options;
 import com.liferay.headless.web.experience.dto.v1_0.StructuredContent;
 import com.liferay.headless.web.experience.resource.v1_0.StructuredContentResource;
 import com.liferay.petra.string.StringBundler;
@@ -1482,11 +1481,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 			return sb.toString();
 		}
 
-		if (entityFieldName.equals("hasComments")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("id")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1501,6 +1495,11 @@ public abstract class BaseStructuredContentResourceTestCase {
 			sb.append(_dateFormat.format(structuredContent.getLastReviewed()));
 
 			return sb.toString();
+		}
+
+		if (entityFieldName.equals("numberOfComments")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
 		}
 
 		if (entityFieldName.equals("renderedContents")) {
@@ -1544,7 +1543,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 				dateModified = RandomTestUtil.nextDate();
 				datePublished = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
-				hasComments = RandomTestUtil.randomBoolean();
 				id = RandomTestUtil.randomLong();
 				lastReviewed = RandomTestUtil.nextDate();
 				title = RandomTestUtil.randomString();

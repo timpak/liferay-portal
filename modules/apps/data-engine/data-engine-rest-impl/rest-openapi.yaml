@@ -188,6 +188,10 @@ paths:
                       format: int64
                       type: integer
                 - in: query
+                  name: keywords
+                  schema:
+                      type: string
+                - in: query
                   name: page
                   required: true
                   schema:
@@ -197,10 +201,6 @@ paths:
                   required: true
                   schema:
                       type: integer
-                - in: query
-                  name: keywords
-                  schema:
-                      type: string
             responses:
                 200:
                     content:
@@ -232,7 +232,7 @@ paths:
                                 $ref: "#/components/schemas/DataDefinition"
                     description: ""
             tags: ["DataDefinition"]
-    "/content-spaces/{content-space-id}/data-record-collections":
+    "/content-spaces/{content-space-id}/data-layout":
         get:
             parameters:
                 - in: path
@@ -251,10 +251,39 @@ paths:
                   required: true
                   schema:
                       type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/DataLayout"
+                                type: array
+                    description: ""
+            tags: ["DataLayout"]
+    "/content-spaces/{content-space-id}/data-record-collections":
+        get:
+            parameters:
+                - in: path
+                  name: content-space-id
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
                 - in: query
                   name: keywords
                   schema:
                       type: string
+                - in: query
+                  name: page
+                  required: true
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  required: true
+                  schema:
+                      type: integer
             responses:
                 200:
                     content:
@@ -349,6 +378,10 @@ paths:
                       format: int64
                       type: integer
                 - in: query
+                  name: keywords
+                  schema:
+                      type: string
+                - in: query
                   name: page
                   required: true
                   schema:
@@ -358,10 +391,6 @@ paths:
                   required: true
                   schema:
                       type: integer
-                - in: query
-                  name: keywords
-                  schema:
-                      type: string
             responses:
                 200:
                     content:

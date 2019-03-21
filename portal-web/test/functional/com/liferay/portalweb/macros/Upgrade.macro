@@ -1309,20 +1309,9 @@ definition {
 
 		Navigator.gotoPage(pageName = "Document");
 
-		var key_menuItem = "List";
-
-		Click(locator1 = "Icon#CURRENT_DISPLAY_STYLE");
-
-		if (IsElementPresent(locator1 = "MenuItem#ANY_MENU_ITEM")) {
-			Click(locator1 = "MenuItem#ANY_MENU_ITEM");
-		}
-		else {
-			Navigator.gotoPage(pageName = "Document");
-
-			Click(locator1 = "Icon#CURRENT_DISPLAY_STYLE");
-
-			Click(locator1 = "MenuItem#ANY_MENU_ITEM");
-		}
+		ManagementBar.changeDisplayStyle(
+			displayStyle = "List"
+		);
 
 		DMDocument.viewPG(dmDocumentTitle = "Document1");
 
@@ -1374,30 +1363,6 @@ definition {
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 		DMDocument.viewPG(dmDocumentTitle = "Document1");
-
-		DMDocument.expandInfo();
-
-		AssertTextEquals(
-			locator1 = "DocumentsAndMediaDocument#DOCUMENT_INFO_UPLOADED_BY",
-			value1 = "Test Test"
-		);
-
-		AssertTextEquals(
-			locator1 = "DocumentsAndMediaDocument#DOCUMENT_DETAILS_VERSION",
-			value1 = "VERSION 1.0",
-			key_dmDocumentVersionNumber = "1.0"
-		);
-
-		AssertTextEquals(
-			locator1 = "DocumentsAndMediaDocument#DOCUMENT_INFO_WORKFLOW_STATUS",
-			value1 = "APPROVED"
-		);
-
-		AssertTextEquals(
-			locator1 = "DocumentsAndMediaDocument#DOCUMENT_DETAILS_DOWNLOAD",
-			value1 = "Download",
-			key_dmDocumentSize = "22KB"
-		);
 
 		Navigator.gotoPage(pageName = "Message Boards");
 

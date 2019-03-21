@@ -41,6 +41,36 @@ import java.util.TreeSet;
  */
 public class OpenAPIParserUtil {
 
+	public static Map<String, Schema> getAllOfPropertySchemas(Schema schema) {
+		List<Schema> allOfSchemas = schema.getAllOfSchemas();
+
+		if (allOfSchemas.size() == 1) {
+			return schema.getPropertySchemas();
+		}
+
+		Map<String, Schema> propertySchemas = new HashMap<>();
+
+		for (Schema allOfSchema : allOfSchemas) {
+			if (allOfSchema.getReference() != null) {
+				Schema itemSchema = new Schema();
+
+				String reference = allOfSchema.getReference();
+
+				itemSchema.setReference(reference);
+
+				propertySchemas.put(
+					StringUtil.lowerCaseFirstLetter(
+						getReferenceName(reference)),
+					itemSchema);
+			}
+			else {
+				propertySchemas.putAll(allOfSchema.getPropertySchemas());
+			}
+		}
+
+		return propertySchemas;
+	}
+
 	public static String getArguments(
 		List<JavaMethodParameter> javaMethodParameters) {
 
@@ -282,27 +312,24 @@ public class OpenAPIParserUtil {
 	}
 
 	public static boolean isSchemaParameter(
-		JavaMethodParameter javaMethodParameter, OpenAPIYAML openAPIYAML) {
+		String javaDataType, OpenAPIYAML openAPIYAML) {
 
-		String simpleClassName = javaMethodParameter.getParameterType();
-
-		if (simpleClassName.startsWith("[")) {
-			simpleClassName = getElementClassName(simpleClassName);
+		if (javaDataType.startsWith("[")) {
+			javaDataType = getElementClassName(javaDataType);
 		}
 
-		if (simpleClassName.endsWith(">")) {
-			simpleClassName = simpleClassName.substring(
-				0, simpleClassName.indexOf("<"));
+		if (javaDataType.endsWith(">")) {
+			javaDataType = javaDataType.substring(0, javaDataType.indexOf("<"));
 		}
 
-		if (simpleClassName.indexOf('.') != -1) {
-			simpleClassName = simpleClassName.substring(
-				simpleClassName.lastIndexOf(".") + 1);
+		if (javaDataType.indexOf('.') != -1) {
+			javaDataType = javaDataType.substring(
+				javaDataType.lastIndexOf(".") + 1);
 		}
 
 		Map<String, Schema> schemas = OpenAPIUtil.getAllSchemas(openAPIYAML);
 
-		if (schemas.containsKey(simpleClassName)) {
+		if (schemas.containsKey(javaDataType)) {
 			return true;
 		}
 
@@ -312,9 +339,6 @@ public class OpenAPIParserUtil {
 	private static final Map<Map.Entry<String, String>, String>
 		_openAPIDataTypeMap = new HashMap<Map.Entry<String, String>, String>() {
 			{
-
-				// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#dataTypes
-
 				put(
 					new AbstractMap.SimpleImmutableEntry<>("boolean", null),
 					Boolean.class.getName());

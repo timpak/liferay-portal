@@ -30,7 +30,9 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -80,6 +82,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.SystemUtils;
 
 import org.json.JSONArray;
@@ -1632,17 +1635,28 @@ public class JenkinsResultsParserUtil {
 		try {
 			InetAddress inetAddress = InetAddress.getByName(hostname);
 
-			if (inetAddress.isReachable(5000)) {
-				return true;
-			}
+			return inetAddress.isReachable(5000);
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			System.out.println("Unable to reach " + hostname);
+
+			return false;
 		}
+	}
 
-		System.out.println("Unable to reach " + hostname);
+	public static boolean isServerPortReachable(String hostname, int port) {
+		try (Socket socket = new Socket()) {
+			socket.connect(new InetSocketAddress(hostname, port), 5000);
 
-		return false;
+			return true;
+		}
+		catch (IOException ioe) {
+			System.out.println(
+				combine(
+					"Unable to reach ", hostname, ":", String.valueOf(port)));
+
+			return false;
+		}
 	}
 
 	public static boolean isWindows() {
@@ -1957,6 +1971,20 @@ public class JenkinsResultsParserUtil {
 		}
 
 		return durationString;
+	}
+
+	public static void toFile(URL url, File file) {
+		try {
+			System.out.println(
+				combine(
+					"Downloading ", url.toString(), " to ",
+					getCanonicalPath(file)));
+
+			FileUtils.copyURLToFile(url, file);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
 	}
 
 	public static JSONArray toJSONArray(String url) throws IOException {

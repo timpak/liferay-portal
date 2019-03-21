@@ -46,11 +46,11 @@ import com.liferay.headless.common.spi.service.context.ServiceContextUtil;
 import com.liferay.headless.web.experience.dto.v1_0.ContentDocument;
 import com.liferay.headless.web.experience.dto.v1_0.ContentField;
 import com.liferay.headless.web.experience.dto.v1_0.Geo;
-import com.liferay.headless.web.experience.dto.v1_0.RenderedContents;
+import com.liferay.headless.web.experience.dto.v1_0.RenderedContent;
 import com.liferay.headless.web.experience.dto.v1_0.StructuredContent;
 import com.liferay.headless.web.experience.dto.v1_0.StructuredContentImage;
 import com.liferay.headless.web.experience.dto.v1_0.StructuredContentLink;
-import com.liferay.headless.web.experience.dto.v1_0.TaxonomyCategories;
+import com.liferay.headless.web.experience.dto.v1_0.TaxonomyCategory;
 import com.liferay.headless.web.experience.dto.v1_0.Value;
 import com.liferay.headless.web.experience.internal.dto.v1_0.util.AggregateRatingUtil;
 import com.liferay.headless.web.experience.internal.dto.v1_0.util.ContentStructureUtil;
@@ -568,18 +568,6 @@ public class StructuredContentResourceImpl
 			sorts);
 	}
 
-	private boolean _hasComments(JournalArticle journalArticle) {
-		int count = _commentManager.getCommentsCount(
-			JournalArticle.class.getName(),
-			journalArticle.getResourcePrimKey());
-
-		if (count > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
 	private ContentField _toContentField(DDMFormFieldValue ddmFormFieldValue)
 		throws Exception {
 
@@ -871,7 +859,6 @@ public class StructuredContentResourceImpl
 				datePublished = journalArticle.getDisplayDate();
 				description = journalArticle.getDescription(
 					contextAcceptLanguage.getPreferredLocale());
-				hasComments = _hasComments(journalArticle);
 				id = journalArticle.getResourcePrimKey();
 				keywords = ListUtil.toArray(
 					_assetTagLocalService.getTags(
@@ -879,9 +866,12 @@ public class StructuredContentResourceImpl
 						journalArticle.getResourcePrimKey()),
 					AssetTag.NAME_ACCESSOR);
 				lastReviewed = journalArticle.getReviewDate();
+				numberOfComments = _commentManager.getCommentsCount(
+					JournalArticle.class.getName(),
+					journalArticle.getResourcePrimKey());
 				renderedContents = transformToArray(
 					ddmStructure.getTemplates(),
-					ddmTemplate -> new RenderedContents() {
+					ddmTemplate -> new RenderedContent() {
 						{
 							renderedContentURL = getJAXRSLink(
 								"getStructuredContentRenderedContentTemplate",
@@ -891,18 +881,18 @@ public class StructuredContentResourceImpl
 								contextAcceptLanguage.getPreferredLocale());
 						}
 					},
-					RenderedContents.class);
+					RenderedContent.class);
 				taxonomyCategories = transformToArray(
 					_assetCategoryLocalService.getCategories(
 						JournalArticle.class.getName(),
 						journalArticle.getResourcePrimKey()),
-					assetCategory -> new TaxonomyCategories() {
+					assetCategory -> new TaxonomyCategory() {
 						{
 							taxonomyCategoryId = assetCategory.getCategoryId();
 							taxonomyCategoryName = assetCategory.getName();
 						}
 					},
-					TaxonomyCategories.class);
+					TaxonomyCategory.class);
 				title = journalArticle.getTitle(
 					contextAcceptLanguage.getPreferredLocale());
 			}

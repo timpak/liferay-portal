@@ -55,7 +55,7 @@
 </tr>
 <tr>
 	<td>LATEST_CHANGES_CONTENT_TYPE</td>
-	<td>//div[contains(@id,'change-entry-content-type') and contains(.,'${key_contentType}')]</td>
+	<td>//div[contains(@id,'change-entry-title') and contains(.,'${key_contentTitle}')]//parent::td//following-sibling::td//div[contains(@id,'change-entry-content-type')]</td>
 	<td></td>
 </tr>
 <tr>

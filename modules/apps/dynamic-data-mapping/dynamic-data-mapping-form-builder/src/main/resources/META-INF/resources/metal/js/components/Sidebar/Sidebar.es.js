@@ -23,7 +23,6 @@ const getImplementedFieldTypes = fieldTypes => {
 	return fieldTypes.filter(
 		({name}) => {
 			return ![
-				'checkbox_multiple',
 				'date'
 			].some(fieldType => fieldType === name);
 		}
@@ -653,20 +652,19 @@ class Sidebar extends Component {
 					const previousField = getPreviousField(newField);
 
 					if (previousField) {
-						if (newField.fieldName === 'repeatable') {
-							newField.value = previousField.value;
-						}
-						else {
-							newField = {
-								...newField,
-								...previousField,
-								visible: newField.visible
-							};
+						const {multiple, visible} = newField;
 
-							if (newField.fieldName === 'predefinedValue') {
-								delete newField.multiple;
-								delete newField.value;
+						for (const prop in newField) {
+							if (previousField.hasOwnProperty(prop)) {
+								newField[prop] = previousField[prop];
 							}
+						}
+
+						newField.multiple = multiple;
+						newField.visible = visible;
+
+						if (newField.fieldName === 'predefinedValue') {
+							delete newField.value;
 						}
 					}
 

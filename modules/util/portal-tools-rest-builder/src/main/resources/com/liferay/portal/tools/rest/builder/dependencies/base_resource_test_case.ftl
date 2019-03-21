@@ -101,6 +101,8 @@ public abstract class Base${schemaName}ResourceTestCase {
 		GroupTestUtil.deleteGroup(testGroup);
 	}
 
+	<#assign properties = freeMarkerTool.getDTOProperties(configYAML, openAPIYAML, schema) />
+
 	<#list freeMarkerTool.getResourceJavaMethodSignatures(configYAML, openAPIYAML, schemaName) as javaMethodSignature>
 		<#assign
 			arguments = freeMarkerTool.getResourceArguments(javaMethodSignature.javaMethodParameters)
@@ -110,16 +112,22 @@ public abstract class Base${schemaName}ResourceTestCase {
 		<#if freeMarkerTool.hasHTTPMethod(javaMethodSignature, "delete")>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
-				${schemaName} ${schemaVarName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
+				<#if properties?keys?seq_contains("id")>
+					${schemaName} ${schemaVarName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
-				assertResponseCode(200, invoke${javaMethodSignature.methodName?cap_first}Response(${schemaVarName}.getId()));
+					assertResponseCode(200, invoke${javaMethodSignature.methodName?cap_first}Response(${schemaVarName}.getId()));
 
-				assertResponseCode(404, invokeGet${javaMethodSignature.methodName?remove_beginning("delete")}Response(${schemaVarName}.getId()));
+					assertResponseCode(404, invokeGet${javaMethodSignature.methodName?remove_beginning("delete")}Response(${schemaVarName}.getId()));
+				<#else>
+					Assert.assertTrue(true);
+				</#if>
 			}
 
-			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-				throw new UnsupportedOperationException("This method needs to be implemented");
-			}
+			<#if properties?keys?seq_contains("id")>
+				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
+					throw new UnsupportedOperationException("This method needs to be implemented");
+				}
+			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "get") && javaMethodSignature.returnType?contains("Page<")>
 			<#if (javaMethodSignature.javaMethodParameters?size == 0) || stringUtil.equals(javaMethodSignature.javaMethodParameters[0].parameterName, "filter") || stringUtil.equals(javaMethodSignature.javaMethodParameters[0].parameterName, "pagination") || stringUtil.equals(javaMethodSignature.javaMethodParameters[0].parameterName, "sorts")>
 				@Test
@@ -669,21 +677,27 @@ public abstract class Base${schemaName}ResourceTestCase {
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "get") && javaMethodSignature.returnType?ends_with(schemaName)>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
-				${schemaName} post${schemaName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
+				<#if properties?keys?seq_contains("id")>
+					${schemaName} post${schemaName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
-				${schemaName} get${schemaName} = invoke${javaMethodSignature.methodName?cap_first}(post${schemaName}.getId());
+					${schemaName} get${schemaName} = invoke${javaMethodSignature.methodName?cap_first}(post${schemaName}.getId());
 
-				assertEquals(post${schemaName}, get${schemaName});
-				assertValid(get${schemaName});
+					assertEquals(post${schemaName}, get${schemaName});
+					assertValid(get${schemaName});
+				<#else>
+					Assert.assertTrue(true);
+				</#if>
 			}
 
-			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-				throw new UnsupportedOperationException("This method needs to be implemented");
-			}
+			<#if properties?keys?seq_contains("id")>
+				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
+					throw new UnsupportedOperationException("This method needs to be implemented");
+				}
+			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "patch")>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
-				<#if arguments?ends_with(",multipartBody")>
+				<#if !properties?keys?seq_contains("id") || arguments?ends_with(",multipartBody")>
 					Assert.assertTrue(true);
 				<#else>
 					${schemaName} post${schemaName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}(random${schemaName}());
@@ -703,9 +717,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 			}
 
-			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
-				throw new UnsupportedOperationException("This method needs to be implemented");
-			}
+			<#if properties?keys?seq_contains("id")>
+				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
+					throw new UnsupportedOperationException("This method needs to be implemented");
+				}
+			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "post")>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
@@ -727,7 +743,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "put")>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
-				<#if arguments?ends_with(",multipartBody")>
+				<#if !properties?keys?seq_contains("id") || arguments?ends_with(",multipartBody")>
 					Assert.assertTrue(true);
 				<#else>
 					${schemaName} post${schemaName} = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
@@ -746,9 +762,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 			}
 
-			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-				throw new UnsupportedOperationException("This method needs to be implemented");
-			}
+			<#if properties?keys?seq_contains("id")>
+				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
+					throw new UnsupportedOperationException("This method needs to be implemented");
+				}
+			</#if>
 		<#else>
 			@Test
 			public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
@@ -990,15 +1008,15 @@ public abstract class Base${schemaName}ResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		<#list freeMarkerTool.getDTOJavaMethodParameters(configYAML, openAPIYAML, schema) as javaMethodParameter>
-			if (entityFieldName.equals("${javaMethodParameter.parameterName}")) {
-				<#if stringUtil.equals(javaMethodParameter.parameterType, "java.util.Date")>
-					sb.append(_dateFormat.format(${schemaVarName}.get${javaMethodParameter.parameterName?cap_first}()));
+		<#list properties?keys as propertyName>
+			if (entityFieldName.equals("${propertyName}")) {
+				<#if stringUtil.equals(properties[propertyName], "java.util.Date")>
+					sb.append(_dateFormat.format(${schemaVarName}.get${propertyName?cap_first}()));
 
 					return sb.toString();
-				<#elseif stringUtil.equals(javaMethodParameter.parameterType, "java.lang.String")>
+				<#elseif stringUtil.equals(properties[propertyName], "java.lang.String")>
 					sb.append("'");
-					sb.append(String.valueOf(${schemaVarName}.get${javaMethodParameter.parameterName?cap_first}()));
+					sb.append(String.valueOf(${schemaVarName}.get${propertyName?cap_first}()));
 					sb.append("'");
 
 					return sb.toString();
@@ -1016,11 +1034,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 			{
 				<#assign randomDataTypes = ["java.lang.Boolean", "java.lang.Double", "java.lang.Long", "java.lang.String"] />
 
-				<#list freeMarkerTool.getDTOJavaMethodParameters(configYAML, openAPIYAML, schema) as javaMethodParameter>
-					<#if randomDataTypes?seq_contains(javaMethodParameter.parameterType)>
-						${javaMethodParameter.parameterName} = RandomTestUtil.random${javaMethodParameter.parameterType}();
-					<#elseif stringUtil.equals(javaMethodParameter.parameterType, "java.util.Date")>
-						${javaMethodParameter.parameterName} = RandomTestUtil.nextDate();
+				<#list properties?keys as propertyName>
+					<#if randomDataTypes?seq_contains(properties[propertyName])>
+						${propertyName} = RandomTestUtil.random${properties[propertyName]}();
+					<#elseif stringUtil.equals(properties[propertyName], "java.util.Date")>
+						${propertyName} = RandomTestUtil.nextDate();
 					</#if>
 				</#list>
 			}

@@ -56,11 +56,11 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 	<aui:input name="ddmTemplateId" type="hidden" />
 	<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
 
-	<nav class="component-tbar subnav-tbar-light tbar">
+	<nav class="component-tbar subnav-tbar-light tbar tbar-article">
 		<div class="container-fluid container-fluid-max-xl">
 			<ul class="tbar-nav">
-				<li class="col-4 col-sm-6 tbar-item">
-					<aui:input autoFocus="<%= true %>" label="" localized="<%= true %>" name="titleMapAsXML" placeholder="title" type="text" wrapperCssClass="article-content-title mb-0">
+				<li class="tbar-item tbar-item-expand">
+					<aui:input autoFocus="<%= true %>" cssClass="form-control-inline" label="" localized="<%= true %>" name="titleMapAsXML" placeholder="title" type="text" wrapperCssClass="article-content-title mb-0">
 						<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
 							<aui:validator name="required" />
 						</c:if>
@@ -79,7 +79,7 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 					</li>
 				</c:if>
 
-				<li class="tbar-item tbar-item-expand">
+				<li class="tbar-item">
 					<div class="journal-article-button-row tbar-section text-right">
 						<a class="btn btn-outline-borderless btn-outline-secondary btn-sm mr-3" href="<%= journalEditArticleDisplayContext.getRedirect() %>">
 							<liferay-ui:message key="cancel" />
@@ -151,7 +151,7 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 		</div>
 	</div>
 
-	<div class="contextual-sidebar contextual-sidebar-visible edit-article-sidebar sidebar-light" id="<portlet:namespace />contextualSidebarContainer">
+	<div class="contextual-sidebar contextual-sidebar-visible edit-article-sidebar sidebar-light sidebar-sm" id="<portlet:namespace />contextualSidebarContainer">
 		<div class="sidebar-body">
 
 			<%

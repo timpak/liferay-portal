@@ -119,10 +119,6 @@ definition {
 			AssertElementPresent(locator1 = "Button#SUBMIT");
 
 			AssertElementPresent(locator1 = "Button#CANCEL");
-
-			AssertClickNoError(locator1 = "Button#SUBMIT", value1 = "Submit");
-
-			AssertConfirm(value1 = "Form submitted");
 		}
 	}
 
@@ -160,7 +156,7 @@ definition {
 				value1 = ""
 			);
 
-			SelectFrame(locator1 = "FragmentEditor#PREVIEW_IFRAME");
+			SelectFrame.selectFrameNoLoading(locator1 = "FragmentEditor#PREVIEW_IFRAME");
 
 			AssertTextEquals(
 				locator1 = "//div[@class='fragment-header']/h1[@class='title']",
@@ -179,7 +175,7 @@ definition {
 		}
 
 		task ("Assert the edits to the section fragment persist by asserting that the preview displays the Title fragment") {
-			SelectFrame(locator1 = "FragmentEditor#PREVIEW_IFRAME");
+			SelectFrame.selectFrameNoLoading(locator1 = "FragmentEditor#PREVIEW_IFRAME");
 
 			AssertTextEquals(
 				locator1 = "//div[@class='fragment-header']/h1[@class='title']",
@@ -196,15 +192,11 @@ definition {
 		property portal.acceptance = "true";
 
 		task ("Assert the preview properly displays the Button fragment") {
-			SelectFrame(locator1 = "FragmentEditor#PREVIEW_IFRAME");
+			SelectFrame.selectFrameNoLoading(locator1 = "FragmentEditor#PREVIEW_IFRAME");
 
 			AssertElementPresent(locator1 = "Button#SUBMIT");
 
 			AssertElementPresent(locator1 = "Button#CANCEL");
-
-			AssertClickNoError(locator1 = "Button#SUBMIT", value1 = "Submit");
-
-			AssertConfirm(value1 = "Form submitted");
 
 			SelectFrameTop();
 		}

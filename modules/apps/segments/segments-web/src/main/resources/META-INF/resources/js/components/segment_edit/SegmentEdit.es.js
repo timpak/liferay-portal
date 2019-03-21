@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import ClayButton from '../shared/ClayButton.es';
 import ClaySpinner from '../shared/ClaySpinner.es';
+import ContributorBuilder from '../criteria_builder/ContributorBuilder.es';
 import debounce from 'lodash.debounce';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ThemeContext from '../../ThemeContext.es';
 import TitleEditor from '../title_editor/TitleEditor.es';
+import {FieldArray, withFormik} from 'formik';
 import {getPluralMessage, sub} from '../../utils/utils.es';
 import {
 	SOURCES,
@@ -12,8 +14,6 @@ import {
 	SUPPORTED_OPERATORS,
 	SUPPORTED_PROPERTY_TYPES
 } from '../../utils/constants.es';
-import {FieldArray, withFormik} from 'formik';
-import ContributorBuilder from '../criteria_builder/ContributorBuilder.es';
 
 const DEFAULT_SEGMENT_NAME = Liferay.Language.get('unnamed-segment');
 

@@ -1,5 +1,5 @@
-import React from 'react';
 import CriteriaSidebar from 'components/criteria_sidebar/CriteriaSidebar.es';
+import React from 'react';
 import {cleanup, render} from 'react-testing-library';
 
 describe(

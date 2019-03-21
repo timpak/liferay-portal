@@ -16,7 +16,6 @@ package com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.pars
 
 import com.liferay.portal.kernel.util.CamelCaseUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaMethodParameter;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.parser.util.OpenAPIParserUtil;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.util.OpenAPIUtil;
 import com.liferay.portal.vulcan.yaml.config.ConfigYAML;
@@ -24,22 +23,22 @@ import com.liferay.portal.vulcan.yaml.openapi.Items;
 import com.liferay.portal.vulcan.yaml.openapi.OpenAPIYAML;
 import com.liferay.portal.vulcan.yaml.openapi.Schema;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Peter Shin
  */
 public class DTOOpenAPIParser {
 
-	public static List<JavaMethodParameter> getJavaMethodParameters(
+	public static Map<String, String> getProperties(
 		ConfigYAML configYAML, OpenAPIYAML openAPIYAML, Schema schema) {
 
 		Map<String, String> javaDataTypeMap =
 			OpenAPIParserUtil.getJavaDataTypeMap(configYAML, openAPIYAML);
-		List<JavaMethodParameter> javaMethodParameters = new ArrayList<>();
+		Map<String, String> properties = new TreeMap<>();
 
 		Map<String, Schema> propertySchemas = _getPropertySchemas(schema);
 
@@ -47,44 +46,44 @@ public class DTOOpenAPIParser {
 			String propertySchemaName = entry.getKey();
 			Schema propertySchema = entry.getValue();
 
-			String parameterName = CamelCaseUtil.toCamelCase(
-				propertySchemaName);
-			String parameterType = _getParameterType(
+			String javaDataType = _getJavaDataType(
 				javaDataTypeMap, propertySchema, propertySchemaName);
+			String propertyName = _getPropertyName(
+				propertySchema, propertySchemaName);
 
-			javaMethodParameters.add(
-				new JavaMethodParameter(parameterName, parameterType));
+			properties.put(propertyName, javaDataType);
 		}
 
-		return javaMethodParameters;
+		return properties;
 	}
 
-	public static List<JavaMethodParameter> getJavaMethodParameters(
+	public static Map<String, String> getProperties(
 		ConfigYAML configYAML, OpenAPIYAML openAPIYAML, String schemaName) {
 
 		Map<String, Schema> schemas = OpenAPIUtil.getAllSchemas(openAPIYAML);
 
-		return getJavaMethodParameters(
-			configYAML, openAPIYAML, schemas.get(schemaName));
+		return getProperties(configYAML, openAPIYAML, schemas.get(schemaName));
 	}
 
-	public static Schema getPropertySchema(
-		JavaMethodParameter javaMethodParameter, Schema schema) {
-
-		String parameterName = javaMethodParameter.getParameterName();
-
+	public static Schema getPropertySchema(String propertyName, Schema schema) {
 		Map<String, Schema> propertySchemas = _getPropertySchemas(schema);
 
 		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
-			if (StringUtil.equalsIgnoreCase(entry.getKey(), parameterName)) {
-				return entry.getValue();
+			String propertySchemaName = entry.getKey();
+			Schema propertySchema = entry.getValue();
+
+			String curPropertyName = _getPropertyName(
+				propertySchema, propertySchemaName);
+
+			if (StringUtil.equalsIgnoreCase(curPropertyName, propertyName)) {
+				return propertySchema;
 			}
 		}
 
 		return null;
 	}
 
-	private static String _getParameterType(
+	private static String _getJavaDataType(
 		Map<String, String> javaDataTypeMap, Schema propertySchema,
 		String propertySchemaName) {
 
@@ -102,6 +101,10 @@ public class DTOOpenAPIParser {
 
 			String name = StringUtil.upperCaseFirstLetter(propertySchemaName);
 
+			if (items != null) {
+				name = OpenAPIUtil.formatSingular(name);
+			}
+
 			if (javaDataTypeMap.containsKey(name)) {
 				return OpenAPIParserUtil.getArrayClassName(name);
 			}
@@ -109,6 +112,10 @@ public class DTOOpenAPIParser {
 
 		if (StringUtil.equalsIgnoreCase(type, "object")) {
 			String name = StringUtil.upperCaseFirstLetter(propertySchemaName);
+
+			if (items != null) {
+				name = OpenAPIUtil.formatSingular(name);
+			}
 
 			if (javaDataTypeMap.containsKey(name)) {
 				return name;
@@ -119,6 +126,20 @@ public class DTOOpenAPIParser {
 			javaDataTypeMap, propertySchema);
 	}
 
+	private static String _getPropertyName(
+		Schema propertySchema, String propertySchemaName) {
+
+		String name = CamelCaseUtil.toCamelCase(propertySchemaName);
+
+		if (StringUtil.equalsIgnoreCase(propertySchema.getType(), "object")) {
+			if (propertySchema.getItems() != null) {
+				return OpenAPIUtil.formatSingular(name);
+			}
+		}
+
+		return name;
+	}
+
 	private static Map<String, Schema> _getPropertySchemas(Schema schema) {
 		Map<String, Schema> propertySchemas = null;
 
@@ -126,6 +147,9 @@ public class DTOOpenAPIParser {
 
 		if (items != null) {
 			propertySchemas = items.getPropertySchemas();
+		}
+		else if (schema.getAllOfSchemas() != null) {
+			propertySchemas = OpenAPIParserUtil.getAllOfPropertySchemas(schema);
 		}
 		else {
 			propertySchemas = schema.getPropertySchemas();

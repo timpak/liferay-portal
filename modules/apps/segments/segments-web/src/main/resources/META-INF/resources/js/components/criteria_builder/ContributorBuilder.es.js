@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {DragDropContext as dragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import Conjunction from './Conjunction.es';
 import CriteriaBuilder from './CriteriaBuilder.es';
 import CriteriaSidebar from '../criteria_sidebar/CriteriaSidebar.es';
 import getCN from 'classnames';
+import HTML5Backend from 'react-dnd-html5-backend';
+import PropTypes from 'prop-types';
+import React from 'react';
 import {buildQueryString, translateQueryToCriteria} from '../../utils/odata.es';
 import {CONJUNCTIONS} from '../../utils/constants.es';
+import {DragDropContext as dragDropContext} from 'react-dnd';
 import {sub} from '../../utils/utils.es';
 
 const conjunctionShape = PropTypes.shape(

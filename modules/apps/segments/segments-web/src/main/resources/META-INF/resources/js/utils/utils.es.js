@@ -1,6 +1,6 @@
+import dateFns from 'date-fns';
 import uniqueId from 'lodash.uniqueid';
 import {CONJUNCTIONS} from 'utils/constants.es';
-import dateFns from 'date-fns';
 
 const GROUP_ID_NAMESPACE = 'group_';
 

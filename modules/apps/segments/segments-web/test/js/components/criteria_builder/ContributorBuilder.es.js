@@ -1,5 +1,5 @@
-import React from 'react';
 import ContributorBuilder from 'components/criteria_builder/ContributorBuilder.es';
+import React from 'react';
 import {cleanup, render} from 'react-testing-library';
 import {CONJUNCTIONS, SUPPORTED_CONJUNCTIONS, SUPPORTED_OPERATORS, SUPPORTED_PROPERTY_TYPES} from '../../../../src/main/resources/META-INF/resources/js/utils/constants.es';
 

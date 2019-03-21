@@ -19,6 +19,7 @@ import com.liferay.petra.function.UnsafeFunction;
 import java.lang.reflect.Array;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,16 +28,17 @@ import java.util.List;
 public class TransformUtil {
 
 	public static <T, R> List<R> transform(
-		List<T> list, UnsafeFunction<T, R, Exception> unsafeFunction) {
+		Collection<T> collection,
+		UnsafeFunction<T, R, Exception> unsafeFunction) {
 
-		List<R> newList = new ArrayList<>(list.size());
+		List<R> list = new ArrayList<>(collection.size());
 
-		for (T item : list) {
+		for (T item : collection) {
 			try {
 				R newItem = unsafeFunction.apply(item);
 
 				if (newItem != null) {
-					newList.add(newItem);
+					list.add(newItem);
 				}
 			}
 			catch (Exception e) {
@@ -44,7 +46,7 @@ public class TransformUtil {
 			}
 		}
 
-		return newList;
+		return list;
 	}
 
 	public static <T, R> R[] transform(
@@ -57,12 +59,12 @@ public class TransformUtil {
 	}
 
 	public static <T, R> R[] transformToArray(
-		List<T> list, UnsafeFunction<T, R, Exception> unsafeFunction,
-		Class<?> clazz) {
+		Collection<T> collection,
+		UnsafeFunction<T, R, Exception> unsafeFunction, Class<?> clazz) {
 
-		List<R> newList = transform(list, unsafeFunction);
+		List<R> list = transform(collection, unsafeFunction);
 
-		return newList.toArray((R[])Array.newInstance(clazz, newList.size()));
+		return list.toArray((R[])Array.newInstance(clazz, list.size()));
 	}
 
 	public static <T, R> List<R> transformToList(

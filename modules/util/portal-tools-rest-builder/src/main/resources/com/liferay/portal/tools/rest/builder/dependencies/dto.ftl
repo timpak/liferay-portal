@@ -103,10 +103,12 @@ public class ${schemaName} <#if freeMarkerTool.getDTOParentClassName(openAPIYAML
 		</#list>
 	</#if>
 
-	<#list freeMarkerTool.getDTOJavaMethodParameters(configYAML, openAPIYAML, schema) as javaMethodParameter>
+	<#assign properties = freeMarkerTool.getDTOProperties(configYAML, openAPIYAML, schema) />
+
+	<#list properties?keys as propertyName>
 		<#assign
-			javaDataType = javaMethodParameter.parameterType
-			propertySchema = freeMarkerTool.getDTOPropertySchema(javaMethodParameter, schema)
+			javaDataType = properties[propertyName]
+			propertySchema = freeMarkerTool.getDTOPropertySchema(propertyName, schema)
 		/>
 
 		<#if stringUtil.equals(javaDataType, "[Z")>
@@ -128,29 +130,29 @@ public class ${schemaName} <#if freeMarkerTool.getDTOParentClassName(openAPIYAML
 		<#if propertySchema.description??>
 			@Schema(description = "${propertySchema.description}")
 		</#if>
-		public ${javaDataType} get${javaMethodParameter.parameterName?cap_first}() {
-			return ${javaMethodParameter.parameterName};
+		public ${javaDataType} get${propertyName?cap_first}() {
+			return ${propertyName};
 		}
 
-		<#if enumSimpleClassNames?seq_contains(javaMethodParameter.parameterType)>
+		<#if enumSimpleClassNames?seq_contains(javaDataType)>
 			@JsonIgnore
-			public String get${javaMethodParameter.parameterName?cap_first}AsString() {
-				if (${javaMethodParameter.parameterName} == null) {
+			public String get${propertyName?cap_first}AsString() {
+				if (${propertyName} == null) {
 					return null;
 				}
 
-				return ${javaMethodParameter.parameterName}.toString();
+				return ${propertyName}.toString();
 			}
 		</#if>
 
-		public void set${javaMethodParameter.parameterName?cap_first}(${javaDataType} ${javaMethodParameter.parameterName}) {
-			this.${javaMethodParameter.parameterName} = ${javaMethodParameter.parameterName};
+		public void set${propertyName?cap_first}(${javaDataType} ${propertyName}) {
+			this.${propertyName} = ${propertyName};
 		}
 
 		@JsonIgnore
-		public void set${javaMethodParameter.parameterName?cap_first}(UnsafeSupplier<${javaDataType}, Exception> ${javaMethodParameter.parameterName}UnsafeSupplier) {
+		public void set${propertyName?cap_first}(UnsafeSupplier<${javaDataType}, Exception> ${propertyName}UnsafeSupplier) {
 			try {
-				${javaMethodParameter.parameterName} = ${javaMethodParameter.parameterName}UnsafeSupplier.get();
+				${propertyName} = ${propertyName}UnsafeSupplier.get();
 			}
 			catch (Exception e) {
 				throw new RuntimeException(e);
@@ -167,10 +169,10 @@ public class ${schemaName} <#if freeMarkerTool.getDTOParentClassName(openAPIYAML
 				access = JsonProperty.Access.READ_WRITE
 			</#if>
 		)
-		<#if schema.requiredPropertySchemaNames?? && schema.requiredPropertySchemaNames?seq_contains(javaMethodParameter.parameterName)>
+		<#if schema.requiredPropertySchemaNames?? && schema.requiredPropertySchemaNames?seq_contains(propertyName)>
 			@NotNull
 		</#if>
-		protected ${javaDataType} ${javaMethodParameter.parameterName};
+		protected ${javaDataType} ${propertyName};
 	</#list>
 
 	public String toString() {
@@ -178,30 +180,30 @@ public class ${schemaName} <#if freeMarkerTool.getDTOParentClassName(openAPIYAML
 
 		sb.append("{");
 
-		<#list freeMarkerTool.getDTOJavaMethodParameters(configYAML, openAPIYAML, schema) as javaMethodParameter>
-			<#if !javaMethodParameter?is_first>
+		<#list properties?keys as propertyName>
+			<#if !propertyName?is_first>
 				sb.append(", ");
 			</#if>
 
-			sb.append("\"${javaMethodParameter.parameterName}\": ");
+			sb.append("\"${propertyName}\": ");
 
-			<#if javaMethodParameter.parameterType?starts_with("[")>
-				if (${javaMethodParameter.parameterName} == null) {
+			<#if properties[propertyName]?starts_with("[")>
+				if (${propertyName} == null) {
 					sb.append("null");
 				}
 				else {
 					sb.append("[");
 
-					for (int i = 0; i < ${javaMethodParameter.parameterName}.length; i++) {
-						<#if javaMethodParameter.parameterType?ends_with("Date;") || javaMethodParameter.parameterType?ends_with("String;") || enumSimpleClassNames?seq_contains(javaMethodParameter.parameterType)>
+					for (int i = 0; i < ${propertyName}.length; i++) {
+						<#if properties[propertyName]?ends_with("Date;") || properties[propertyName]?ends_with("String;") || enumSimpleClassNames?seq_contains(properties[propertyName])>
 							sb.append("\"");
-							sb.append(${javaMethodParameter.parameterName}[i]);
+							sb.append(${propertyName}[i]);
 							sb.append("\"");
 						<#else>
-							sb.append(${javaMethodParameter.parameterName}[i]);
+							sb.append(${propertyName}[i]);
 						</#if>
 
-						if ((i + 1) < ${javaMethodParameter.parameterName}.length) {
+						if ((i + 1) < ${propertyName}.length) {
 							sb.append(", ");
 						}
 					}
@@ -209,12 +211,12 @@ public class ${schemaName} <#if freeMarkerTool.getDTOParentClassName(openAPIYAML
 					sb.append("]");
 				}
 			<#else>
-				<#if javaMethodParameter.parameterType?ends_with("Date") || javaMethodParameter.parameterType?ends_with("String") || enumSimpleClassNames?seq_contains(javaMethodParameter.parameterType)>
+				<#if properties[propertyName]?ends_with("Date") || properties[propertyName]?ends_with("String") || enumSimpleClassNames?seq_contains(properties[propertyName])>
 					sb.append("\"");
-					sb.append(${javaMethodParameter.parameterName});
+					sb.append(${propertyName});
 					sb.append("\"");
 				<#else>
-					sb.append(${javaMethodParameter.parameterName});
+					sb.append(${propertyName});
 				</#if>
 			</#if>
 		</#list>

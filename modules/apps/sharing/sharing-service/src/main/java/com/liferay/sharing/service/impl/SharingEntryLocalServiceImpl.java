@@ -342,6 +342,52 @@ public class SharingEntryLocalServiceImpl
 	}
 
 	/**
+	 * Returns the ordered range of sharing entries for the type of resource
+	 * shared by the user. The class name ID identifies the resource type.
+	 *
+	 * @param  fromUserId the user's ID
+	 * @param  classNameId the class name ID of the resources
+	 * @param  start the ordered range's lower bound
+	 * @param  end the ordered range's upper bound (not inclusive)
+	 * @param  orderByComparator the comparator that orders the sharing entries
+	 * @return the ordered range of sharing entries
+	 * @review
+	 */
+	@Override
+	public List<SharingEntry> getFromUserSharingEntries(
+		long fromUserId, long classNameId, int start, int end,
+		OrderByComparator<SharingEntry> orderByComparator) {
+
+		if (classNameId > 0) {
+			return sharingEntryPersistence.findByU_C(
+				fromUserId, classNameId, start, end, orderByComparator);
+		}
+
+		return sharingEntryPersistence.findByUserId(
+			fromUserId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the number of sharing entries for the type of resource shared
+	 * by the user. The class name ID identifies the resource type.
+	 *
+	 * @param  fromUserId the user's ID
+	 * @param  classNameId the class name ID of the resources
+	 * @return the number of sharing entries
+	 * @review
+	 */
+	@Override
+	public int getFromUserSharingEntriesCount(
+		long fromUserId, long classNameId) {
+
+		if (classNameId > 0) {
+			return sharingEntryPersistence.countByU_C(fromUserId, classNameId);
+		}
+
+		return sharingEntryPersistence.countByUserId(fromUserId);
+	}
+
+	/**
 	 * Returns the the group's sharing entries.
 	 *
 	 * @param  groupId the primary key of the group
@@ -489,8 +535,13 @@ public class SharingEntryLocalServiceImpl
 		long toUserId, long classNameId, int start, int end,
 		OrderByComparator<SharingEntry> orderByComparator) {
 
-		return sharingEntryFinder.findByToUserId(
-			toUserId, classNameId, start, end, orderByComparator);
+		if (classNameId > 0) {
+			return sharingEntryPersistence.findByTU_C(
+				toUserId, classNameId, start, end, orderByComparator);
+		}
+
+		return sharingEntryPersistence.findByToUserId(
+			toUserId, start, end, orderByComparator);
 	}
 
 	/**
@@ -515,7 +566,11 @@ public class SharingEntryLocalServiceImpl
 	 */
 	@Override
 	public int getToUserSharingEntriesCount(long toUserId, long classNameId) {
-		return sharingEntryFinder.countByToUserId(toUserId, classNameId);
+		if (classNameId > 0) {
+			return sharingEntryPersistence.countByTU_C(toUserId, classNameId);
+		}
+
+		return sharingEntryPersistence.countByToUserId(toUserId);
 	}
 
 	/**

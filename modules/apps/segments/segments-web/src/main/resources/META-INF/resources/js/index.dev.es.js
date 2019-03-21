@@ -2,8 +2,8 @@ import '../css/main.scss';
 import 'clay-css/lib/css/atlas.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ThemeContext from './ThemeContext.es';
 import SegmentEdit from './components/segment_edit/SegmentEdit.es';
+import ThemeContext from './ThemeContext.es';
 
 const altProps = {
 	contributors: [

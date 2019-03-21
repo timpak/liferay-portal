@@ -1,9 +1,9 @@
 /* eslint no-spaced-func: 0 */
 
-import {Config} from 'metal-state';
-import objectHash from 'object-hash';
-import {convertToSearchParams, makeFetch} from 'dynamic-data-mapping-form-builder/metal/js/util/fetch.es';
 import Component from 'metal-jsx';
+import objectHash from 'object-hash';
+import {Config} from 'metal-state';
+import {convertToSearchParams, makeFetch} from 'dynamic-data-mapping-form-builder/metal/js/util/fetch.es';
 
 class AutoSave extends Component {
 	static PROPS = {

@@ -94,7 +94,9 @@ public class SharedWithMeViewMVCRenderCommand implements MVCRenderCommand {
 				SharingEntry sharingEntry = _getSharingEntry(
 					renderRequest, themeDisplay);
 
-				if (sharingEntry.getToUserId() != themeDisplay.getUserId()) {
+				if ((sharingEntry.getUserId() != themeDisplay.getUserId()) &&
+					(sharingEntry.getToUserId() != themeDisplay.getUserId())) {
+
 					throw new PrincipalException(
 						StringBundler.concat(
 							"User ", themeDisplay.getUserId(),

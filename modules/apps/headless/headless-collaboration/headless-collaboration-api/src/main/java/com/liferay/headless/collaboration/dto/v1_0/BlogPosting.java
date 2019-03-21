@@ -341,30 +341,6 @@ public class BlogPosting {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String friendlyUrlPath;
 
-	public Boolean getHasComments() {
-		return hasComments;
-	}
-
-	public void setHasComments(Boolean hasComments) {
-		this.hasComments = hasComments;
-	}
-
-	@JsonIgnore
-	public void setHasComments(
-		UnsafeSupplier<Boolean, Exception> hasCommentsUnsafeSupplier) {
-
-		try {
-			hasComments = hasCommentsUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Boolean hasComments;
-
 	public String getHeadline() {
 		return headline;
 	}
@@ -457,17 +433,41 @@ public class BlogPosting {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String[] keywords;
 
-	public TaxonomyCategories[] getTaxonomyCategories() {
+	public Number getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	public void setNumberOfComments(Number numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
+	@JsonIgnore
+	public void setNumberOfComments(
+		UnsafeSupplier<Number, Exception> numberOfCommentsUnsafeSupplier) {
+
+		try {
+			numberOfComments = numberOfCommentsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Number numberOfComments;
+
+	public TaxonomyCategory[] getTaxonomyCategories() {
 		return taxonomyCategories;
 	}
 
-	public void setTaxonomyCategories(TaxonomyCategories[] taxonomyCategories) {
+	public void setTaxonomyCategories(TaxonomyCategory[] taxonomyCategories) {
 		this.taxonomyCategories = taxonomyCategories;
 	}
 
 	@JsonIgnore
 	public void setTaxonomyCategories(
-		UnsafeSupplier<TaxonomyCategories[], Exception>
+		UnsafeSupplier<TaxonomyCategory[], Exception>
 			taxonomyCategoriesUnsafeSupplier) {
 
 		try {
@@ -480,7 +480,7 @@ public class BlogPosting {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	protected TaxonomyCategories[] taxonomyCategories;
+	protected TaxonomyCategory[] taxonomyCategories;
 
 	public Long[] getTaxonomyCategoryIds() {
 		return taxonomyCategoryIds;
@@ -615,11 +615,6 @@ public class BlogPosting {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"hasComments\": ");
-
-		sb.append(hasComments);
-		sb.append(", ");
-
 		sb.append("\"headline\": ");
 
 		sb.append("\"");
@@ -658,6 +653,11 @@ public class BlogPosting {
 			sb.append("]");
 		}
 
+		sb.append(", ");
+
+		sb.append("\"numberOfComments\": ");
+
+		sb.append(numberOfComments);
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");

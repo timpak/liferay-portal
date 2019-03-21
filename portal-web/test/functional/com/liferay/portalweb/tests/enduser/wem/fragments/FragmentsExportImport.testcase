@@ -153,15 +153,11 @@ definition {
 				entry = "Fragment Name"
 			);
 
-			SelectFrame(locator1 = "FragmentEditor#PREVIEW_IFRAME");
+			SelectFrame.selectFrameNoLoading(locator1 = "FragmentEditor#PREVIEW_IFRAME");
 
 			for (var button : list "Submit,Cancel") {
 				Button.viewPresent(button = "${button}");
 			}
-
-			Button.clickNoError(button = "Submit");
-
-			AssertConfirm(value1 = "Form submitted");
 
 			IFrame.selectTopFrame();
 		}
