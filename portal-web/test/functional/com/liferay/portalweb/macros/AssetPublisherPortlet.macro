@@ -797,12 +797,7 @@ definition {
 	macro gotoEditAssetPG {
 		MouseOver(locator1 = "APAsset#ASSET_TITLE", key_assetTitle = "${assetTitle}");
 
-		Click.mouseOverClick(
-			locator1 = "AP#ASSET_ELLIPSIS_ICON",
-			key_assetTitle = "${assetTitle}"
-		);
-
-		MenuItem.click(menuItem = "Edit");
+		PortletEntry.clickEditFromEllipsis();
 	}
 
 	macro gotoViewInContext {
