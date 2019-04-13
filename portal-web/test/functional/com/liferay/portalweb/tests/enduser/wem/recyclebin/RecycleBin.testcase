@@ -1150,6 +1150,8 @@ definition {
 
 	@priority = "3"
 	test RestoreWebContentWithArticleVersions {
+		property portal.acceptance = "tim-pak";
+
 		ProductMenu.gotoSite(site = "Site Name");
 
 		ProductMenu.gotoPortlet(

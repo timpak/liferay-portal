@@ -2094,6 +2094,7 @@ definition {
 
 	@priority = "4"
 	test ViewWebContentWithConfiguredDisplayPageViaAP {
+		property portal.acceptance = "tim-pak";
 		var siteName = TestCase.getSiteName(siteName = "${siteName}");
 
 		ProductMenu.gotoSite(site = "${siteName}");
