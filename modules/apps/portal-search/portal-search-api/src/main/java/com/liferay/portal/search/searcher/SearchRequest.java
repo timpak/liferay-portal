@@ -14,16 +14,17 @@
 
 package com.liferay.portal.search.searcher;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.management.Query;
+
 import com.liferay.portal.search.aggregation.Aggregation;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.groupby.GroupByRequest;
-import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.sort.Sort;
 import com.liferay.portal.search.stats.StatsRequest;
-
-import java.util.List;
-import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -51,8 +52,8 @@ public interface SearchRequest {
 	public Integer getFrom();
 
 	/**
-	 * Provides the top hits aggregations used for grouping results by the
-	 * specified fields.
+	 * Provides the top hits aggregations used for grouping results by the specified
+	 * fields.
 	 *
 	 * @return the GroupByRequests that are enabled for the search.
 	 *
@@ -108,8 +109,8 @@ public interface SearchRequest {
 	public boolean isExplain();
 
 	/**
-	 * Returns <code>true</code> if the search engine's response string is
-	 * included with the returned results.
+	 * Returns <code>true</code> if the search engine's response string is included
+	 * with the returned results.
 	 *
 	 * @return <code>true</code> if the response string is included;
 	 *         <code>false</code> otherwise
