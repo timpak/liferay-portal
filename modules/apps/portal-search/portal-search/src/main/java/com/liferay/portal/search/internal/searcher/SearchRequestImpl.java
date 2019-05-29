@@ -14,6 +14,16 @@
 
 package com.liferay.portal.search.internal.searcher;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.management.Query;
+
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -23,19 +33,9 @@ import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
 import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.groupby.GroupByRequest;
-import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.sort.Sort;
 import com.liferay.portal.search.stats.StatsRequest;
-
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author André de Oliveira
@@ -43,9 +43,8 @@ import java.util.Map;
 public class SearchRequestImpl implements SearchRequest, Serializable {
 
 	public static boolean isBasicFacetSelection(SearchContext searchContext) {
-		return GetterUtil.getBoolean(
-			searchContext.getAttribute(
-				SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION));
+		return GetterUtil
+				.getBoolean(searchContext.getAttribute(SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION));
 	}
 
 	public SearchRequestImpl(SearchContext searchContext) {
@@ -60,15 +59,13 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 		_excludeContributors.addAll(searchRequestImpl._excludeContributors);
 		_explain = searchRequestImpl._explain;
 		_federatedSearchKey = searchRequestImpl._federatedSearchKey;
-		_federatedSearchRequestsMap.putAll(
-			searchRequestImpl._federatedSearchRequestsMap);
+		_federatedSearchRequestsMap.putAll(searchRequestImpl._federatedSearchRequestsMap);
 		_from = searchRequestImpl._from;
 		_groupByRequests.addAll(searchRequestImpl._groupByRequests);
 		_includeContributors.addAll(searchRequestImpl._includeContributors);
 		_includeResponseString = searchRequestImpl._includeResponseString;
 		_modelIndexerClasses.addAll(searchRequestImpl._modelIndexerClasses);
-		_pipelineAggregationsMap.putAll(
-			searchRequestImpl._pipelineAggregationsMap);
+		_pipelineAggregationsMap.putAll(searchRequestImpl._pipelineAggregationsMap);
 		_postFilterQuery = searchRequestImpl._postFilterQuery;
 		_query = searchRequestImpl._query;
 		_rescoreQuery = searchRequestImpl._rescoreQuery;
@@ -95,8 +92,7 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	}
 
 	public void addFederatedSearchRequest(SearchRequest searchRequest) {
-		_federatedSearchRequestsMap.put(
-			searchRequest.getFederatedSearchKey(), searchRequest);
+		_federatedSearchRequestsMap.put(searchRequest.getFederatedSearchKey(), searchRequest);
 	}
 
 	public void addIncludeContributors(String... ids) {
@@ -106,15 +102,12 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	public void addIndex(String index) {
 		QueryConfig queryConfig = _searchContext.getQueryConfig();
 
-		queryConfig.setSelectedIndexNames(
-			ArrayUtil.append(queryConfig.getSelectedIndexNames(), index));
+		queryConfig.setSelectedIndexNames(ArrayUtil.append(queryConfig.getSelectedIndexNames(), index));
 	}
 
-	public void addPipelineAggregation(
-		PipelineAggregation pipelineAggregation) {
+	public void addPipelineAggregation(PipelineAggregation pipelineAggregation) {
 
-		_pipelineAggregationsMap.put(
-			pipelineAggregation.getName(), pipelineAggregation);
+		_pipelineAggregationsMap.put(pipelineAggregation.getName(), pipelineAggregation);
 	}
 
 	public void addSelectedFieldNames(String... selectedFieldNames) {
@@ -135,8 +128,7 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 
 	@Override
 	public List<String> getEntryClassNames() {
-		return Collections.unmodifiableList(
-			Arrays.asList(_searchContext.getEntryClassNames()));
+		return Collections.unmodifiableList(Arrays.asList(_searchContext.getEntryClassNames()));
 	}
 
 	@Override
@@ -173,8 +165,7 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	public List<String> getIndexes() {
 		QueryConfig queryConfig = _searchContext.getQueryConfig();
 
-		return Collections.unmodifiableList(
-			Arrays.asList(queryConfig.getSelectedIndexNames()));
+		return Collections.unmodifiableList(Arrays.asList(queryConfig.getSelectedIndexNames()));
 	}
 
 	@Override
@@ -254,17 +245,15 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	public void setBasicFacetSelection(boolean basicFacetSelection) {
 		_basicFacetSelection = basicFacetSelection;
 
-		_searchContext.setAttribute(
-			SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION,
-			Boolean.valueOf(basicFacetSelection));
+		_searchContext.setAttribute(SearchContextAttributes.ATTRIBUTE_KEY_BASIC_FACET_SELECTION,
+				Boolean.valueOf(basicFacetSelection));
 	}
 
 	public void setEmptySearchEnabled(boolean emptySearchEnabled) {
 		_emptySearchEnabled = emptySearchEnabled;
 
-		_searchContext.setAttribute(
-			SearchContextAttributes.ATTRIBUTE_KEY_EMPTY_SEARCH,
-			Boolean.valueOf(emptySearchEnabled));
+		_searchContext.setAttribute(SearchContextAttributes.ATTRIBUTE_KEY_EMPTY_SEARCH,
+				Boolean.valueOf(emptySearchEnabled));
 	}
 
 	public void setExplain(boolean explain) {
@@ -313,8 +302,7 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 		Collections.addAll(_modelIndexerClasses, classes);
 	}
 
-	public void setPaginationStartParameterName(
-		String paginationStartParameterName) {
+	public void setPaginationStartParameterName(String paginationStartParameterName) {
 
 		_paginationStartParameterName = paginationStartParameterName;
 	}
@@ -357,24 +345,21 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 		Collections.addAll(_statsRequests, statsRequests);
 	}
 
-	private final Map<String, Aggregation> _aggregationsMap =
-		new LinkedHashMap<>();
+	private final Map<String, Aggregation> _aggregationsMap = new LinkedHashMap<>();
 	private boolean _basicFacetSelection;
 	private final List<ComplexQueryPart> _complexQueryParts = new ArrayList<>();
 	private boolean _emptySearchEnabled;
 	private final List<String> _excludeContributors = new ArrayList<>();
 	private boolean _explain;
 	private String _federatedSearchKey;
-	private final Map<String, SearchRequest> _federatedSearchRequestsMap =
-		new LinkedHashMap<>();
+	private final Map<String, SearchRequest> _federatedSearchRequestsMap = new LinkedHashMap<>();
 	private Integer _from;
 	private final List<GroupByRequest> _groupByRequests = new ArrayList<>();
 	private final List<String> _includeContributors = new ArrayList<>();
 	private boolean _includeResponseString;
 	private final List<Class<?>> _modelIndexerClasses = new ArrayList<>();
 	private String _paginationStartParameterName;
-	private final Map<String, PipelineAggregation> _pipelineAggregationsMap =
-		new LinkedHashMap<>();
+	private final Map<String, PipelineAggregation> _pipelineAggregationsMap = new LinkedHashMap<>();
 	private Query _postFilterQuery;
 	private Query _query;
 	private Query _rescoreQuery;
