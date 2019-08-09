@@ -1,0 +1,60 @@
+{
+	"dependencies": {
+		"@clayui/button": "^3.0.0-milestone.1",
+		"@clayui/checkbox": "^3.0.0-milestone.1",
+		"@clayui/icon": "^3.0.0-milestone.1",
+		"@clayui/loading-indicator": "^3.0.0-milestone.1",
+		"classnames": "^2.2.6",
+		"frontend-js-web": "^4.0.0",
+		"lodash.isfunction": "3.0.9",
+		"lodash.times": "^4.3.2",
+		"metal-uri": "2.4.0",
+		"prop-types": "^15.6.2",
+		"react": "^16.8.6",
+		"react-dnd": "7.4.5",
+		"react-dnd-html5-backend": "^7.0.2",
+		"react-dom": "^16.6.3",
+		"react-modal": "^3.8.1",
+		"react-select": "^2.4.2",
+		"react-tabs": "^3.0.0"
+	},
+	"devDependencies": {
+		"@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+		"@storybook/addon-a11y": "^5.0.6",
+		"@storybook/addon-actions": "^5.0.6",
+		"@storybook/addon-knobs": "^5.0.6",
+		"@storybook/addon-options": "^5.0.6",
+		"@storybook/addon-viewport": "^5.0.6",
+		"@storybook/react": "^5.0.5",
+		"babel-jest": "^24.8.0",
+		"babel-loader": "^8.0.6",
+		"babel-plugin-module-resolver": "^3.2.0",
+		"css-loader": "^2.1.1",
+		"http-proxy-middleware": "^0.19.1",
+		"liferay-lang-key-dev-loader": "^1.0.3",
+		"node-sass": "^4.11.0",
+		"sass-loader": "^7.1.0",
+		"style-loader": "^0.23.1"
+	},
+	"jest": {
+		"setupFilesAfterEnv": [
+			"@testing-library/react/cleanup-after-each",
+			"<rootDir>/test/js/setup.js"
+		],
+		"testPathIgnorePatterns": [
+			"<rootDir>/test/js/mock-data.js",
+			"<rootDir>/test/js/setup.js"
+		]
+	},
+	"main": "js/index.js",
+	"name": "portal-search-ranking-web",
+	"private": true,
+	"scripts": {
+		"build": "liferay-npm-scripts build --bundler",
+		"checkFormat": "liferay-npm-scripts lint",
+		"format": "liferay-npm-scripts format",
+		"storybook": "start-storybook -p 9000 -c ./src/main/resources/META-INF/resources/js/stories",
+		"test": "liferay-npm-scripts test"
+	},
+	"version": "1.0.0"
+}

@@ -1,0 +1,15 @@
+{
+	"presets": ["@babel/preset-react"],
+	"plugins": [
+		[
+			"module-resolver",
+			{
+				"root": ["./src/main/resources/META-INF/resources/js/"],
+				"alias": {
+					"test": "./test/js/"
+				}
+			}
+		],
+		["@babel/transform-modules-commonjs"]
+	]
+}
