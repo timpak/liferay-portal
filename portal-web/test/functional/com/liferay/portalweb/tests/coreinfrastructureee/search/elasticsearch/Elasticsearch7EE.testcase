@@ -377,6 +377,7 @@ definition {
 		SearchResultPortlet.viewNoSearchResults(searchTerm = "fruit");
 	}
 
+	@ignore = "true"
 	@priority = "5"
 	test XPackSmokeTest {
 		property elastic.xpack.enabled = "true";
