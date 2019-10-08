@@ -776,6 +776,7 @@ definition {
 	@description = "This is a test for LPS-96187. When there is a Language Selector widget on a display page template, selecting a different language should not redirect the user to a different place."
 	@priority = "4"
 	test ViewlanguageSelectorRedirect {
+		property portal.acceptance = "tim";
 		property test.name.skip.portal.instance = "DisplayPagesUseCase#ViewlanguageSelectorRedirect";
 
 		task ("Add a display page with a Language Selector widget and with a fragment mapped to Basic Web Content") {

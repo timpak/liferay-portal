@@ -31,6 +31,8 @@ definition {
 	@description = "An asset publisher widget can be added to a content page and used to display a web content article."
 	@priority = "5"
 	test ViewWebContentArticleInAP {
+		property portal.acceptance = "tim";
+
 		task ("Add a web content article to the site") {
 			JSONWebcontent.addWebContent(
 				content = "WC WebContent Content",
@@ -66,6 +68,8 @@ definition {
 	@description = "A web content display widget can be added to a content page and used to display a web content article."
 	@priority = "5"
 	test ViewWebContentArticleInWCD {
+		property portal.acceptance = "tim";
+
 		task ("Add a web content article to the site") {
 			JSONWebcontent.addWebContent(
 				content = "WC WebContent Content",

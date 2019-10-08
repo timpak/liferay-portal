@@ -922,6 +922,8 @@ definition {
 
 	@priority = "4"
 	test SearchContentPagesSmoke {
+		property portal.acceptance = "tim";
+
 		JSONGroup.addGroup(groupName = "Site Name");
 
 		SitePages.openPagesAdmin(siteURLKey = "site-name");

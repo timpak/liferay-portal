@@ -516,6 +516,8 @@ definition {
 	@description = "This is a use case for LPS-95340."
 	@priority = "5"
 	test AddUserAfterPublishContentPageWithAP {
+		property portal.acceptance = "tim";
+
 		JSONGroup.addGroup(groupName = "Test Site Name");
 
 		SitePages.openPagesAdmin(siteURLKey = "test-site-name");

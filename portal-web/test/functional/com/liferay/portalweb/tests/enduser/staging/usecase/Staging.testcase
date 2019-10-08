@@ -524,6 +524,8 @@ definition {
 	@description = "This is a use case for LPS-93695."
 	@priority = "3"
 	test PublishContentPageWithCategory {
+		property portal.acceptance = "tim";
+
 		JSONLayout.addPublicLayout(
 			groupName = "Site Name",
 			layoutName = "Search");
