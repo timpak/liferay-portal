@@ -15,17 +15,23 @@
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch7.internal.index.IndexFactory;
+import com.liferay.portal.search.elasticsearch7.internal.settings.SettingsBuilder;
+import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
+import com.liferay.portal.search.elasticsearch7.settings.ClientSettingsHelper;
+import com.liferay.portal.search.elasticsearch7.settings.SettingsContributor;
 
-import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.Future;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.ClusterAdminClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.unit.TimeValue;
 
 /**
  * @author Michael C. Han
@@ -35,54 +41,133 @@ public abstract class BaseElasticsearchConnection
 
 	@Override
 	public void close() {
-		if (_restHighLevelClient == null) {
+		if (_client == null) {
 			return;
 		}
 
-		try {
-			_restHighLevelClient.close();
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		_client.close();
 
-		_restHighLevelClient = null;
+		_client = null;
 	}
 
 	@Override
 	public void connect() {
-		Log log = LogFactory.getLog(RestClient.class);
+		settingsBuilder = new SettingsBuilder(Settings.builder());
 
-		if (log instanceof Log4JLogger) {
-			Log4JLogger log4JLogger = (Log4JLogger)log;
+		loadOptionalDefaultConfigurations();
 
-			Logger logger = log4JLogger.getLogger();
+		loadAdditionalConfigurations();
 
-			logger.setLevel(
-				Level.toLevel(
-					elasticsearchConfiguration.restClientLoggerLevel()));
-		}
+		loadRequiredDefaultConfigurations();
 
-		_restHighLevelClient = createRestHighLevelClient();
+		loadSettingsContributors();
+
+		_client = createClient();
 	}
 
 	@Override
-	public RestHighLevelClient getRestHighLevelClient() {
-		return _restHighLevelClient;
+	public Client getClient() {
+		return _client;
+	}
+
+	@Override
+	public ClusterHealthResponse getClusterHealthResponse(long timeout) {
+		Client client = getClient();
+
+		AdminClient adminClient = client.admin();
+
+		ClusterAdminClient clusterAdminClient = adminClient.cluster();
+
+		ClusterHealthRequestBuilder clusterHealthRequestBuilder =
+			clusterAdminClient.prepareHealth();
+
+		clusterHealthRequestBuilder.setTimeout(
+			TimeValue.timeValueMillis(timeout));
+
+		clusterHealthRequestBuilder.setWaitForYellowStatus();
+
+		Future<ClusterHealthResponse> future =
+			clusterHealthRequestBuilder.execute();
+
+		try {
+			return future.get();
+		}
+		catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public boolean isConnected() {
-		if (_restHighLevelClient != null) {
+		if (_client != null) {
 			return true;
 		}
 
 		return false;
 	}
 
-	protected abstract RestHighLevelClient createRestHighLevelClient();
+	public void setIndexFactory(IndexFactory indexFactory) {
+		_indexFactory = indexFactory;
+	}
+
+	protected void addSettingsContributor(
+		SettingsContributor settingsContributor) {
+
+		_settingsContributors.add(settingsContributor);
+	}
+
+	protected abstract Client createClient();
+
+	protected IndexFactory getIndexFactory() {
+		return _indexFactory;
+	}
+
+	protected void loadAdditionalConfigurations() {
+		settingsBuilder.loadFromSource(
+			elasticsearchConfiguration.additionalConfigurations());
+	}
+
+	protected void loadOptionalDefaultConfigurations() {
+		String defaultConfigurations = ResourceUtil.getResourceAsString(
+			getClass(), "/META-INF/elasticsearch-optional-defaults.yml");
+
+		settingsBuilder.loadFromSource(defaultConfigurations);
+	}
+
+	protected abstract void loadRequiredDefaultConfigurations();
+
+	protected void loadSettingsContributors() {
+		ClientSettingsHelper clientSettingsHelper = new ClientSettingsHelper() {
+
+			@Override
+			public void put(String setting, String value) {
+				settingsBuilder.put(setting, value);
+			}
+
+			@Override
+			public void putArray(String setting, String... values) {
+				settingsBuilder.putList(setting, values);
+			}
+
+		};
+
+		for (SettingsContributor settingsContributor : _settingsContributors) {
+			settingsContributor.populate(clientSettingsHelper);
+		}
+	}
+
+	protected void removeSettingsContributor(
+		SettingsContributor settingsContributor) {
+
+		_settingsContributors.remove(settingsContributor);
+	}
 
 	protected volatile ElasticsearchConfiguration elasticsearchConfiguration;
+	protected SettingsBuilder settingsBuilder = new SettingsBuilder(
+		Settings.builder());
 
-	private RestHighLevelClient _restHighLevelClient;
+	private Client _client;
+	private IndexFactory _indexFactory;
+	private final Set<SettingsContributor> _settingsContributors =
+		new ConcurrentSkipListSet<>();
 
 }

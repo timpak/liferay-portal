@@ -14,13 +14,13 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.Client;
 
 /**
  * @author André de Oliveira
  */
 public interface ElasticsearchClientResolver {
 
-	public RestHighLevelClient getRestHighLevelClient();
+	public Client getClient();
 
 }

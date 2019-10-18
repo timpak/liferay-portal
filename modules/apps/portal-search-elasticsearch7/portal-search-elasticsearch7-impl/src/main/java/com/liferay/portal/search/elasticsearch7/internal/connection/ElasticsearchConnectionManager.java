@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -58,12 +59,14 @@ public class ElasticsearchConnectionManager
 		elasticsearchConnection.connect();
 	}
 
-	public ElasticsearchConnection getElasticsearchConnection() {
-		return _elasticsearchConnections.get(_operationMode);
+	public AdminClient getAdminClient() {
+		Client client = getClient();
+
+		return client.admin();
 	}
 
 	@Override
-	public RestHighLevelClient getRestHighLevelClient() {
+	public Client getClient() {
 		ElasticsearchConnection elasticsearchConnection =
 			getElasticsearchConnection();
 
@@ -71,7 +74,11 @@ public class ElasticsearchConnectionManager
 			throw new ElasticsearchConnectionNotInitializedException();
 		}
 
-		return elasticsearchConnection.getRestHighLevelClient();
+		return elasticsearchConnection.getClient();
+	}
+
+	public ElasticsearchConnection getElasticsearchConnection() {
+		return _elasticsearchConnections.get(_operationMode);
 	}
 
 	public synchronized void registerCompanyId(long companyId) {
@@ -161,11 +168,7 @@ public class ElasticsearchConnectionManager
 
 		for (Long companyId : _companyIds.values()) {
 			try {
-				RestHighLevelClient restHighLevelClient =
-					getRestHighLevelClient();
-
-				indexFactory.createIndices(
-					restHighLevelClient.indices(), companyId);
+				indexFactory.createIndices(getAdminClient(), companyId);
 			}
 			catch (Exception e) {
 				if (_log.isWarnEnabled()) {

@@ -14,7 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.client.Client;
 
 /**
  * @author Michael C. Han
@@ -25,8 +26,10 @@ public interface ElasticsearchConnection {
 
 	public void connect();
 
-	public OperationMode getOperationMode();
+	public Client getClient();
 
-	public RestHighLevelClient getRestHighLevelClient();
+	public ClusterHealthResponse getClusterHealthResponse(long timeout);
+
+	public OperationMode getOperationMode();
 
 }
