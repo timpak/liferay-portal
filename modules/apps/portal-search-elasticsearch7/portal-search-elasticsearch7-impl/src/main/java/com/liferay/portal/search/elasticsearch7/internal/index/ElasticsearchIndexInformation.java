@@ -14,20 +14,16 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.index;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.index.IndexInformation;
 import com.liferay.portal.search.index.IndexNameBuilder;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
+import org.elasticsearch.action.admin.indices.get.GetIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.get.GetIndexResponse;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequest;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.Strings;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,59 +42,32 @@ public class ElasticsearchIndexInformation implements IndexInformation {
 
 	@Override
 	public String getFieldMappings(String indexName) {
-		GetMappingsRequest getMappingsRequest = new GetMappingsRequest();
+		IndicesAdminClient indicesAdminClient = getIndicesAdminClient();
 
-		getMappingsRequest.indices(indexName);
+		GetMappingsRequestBuilder getMappingsRequestBuilder =
+			indicesAdminClient.prepareGetMappings(indexName);
 
-		GetMappingsResponse getMappingsResponse = getMappingsResponse(
-			getMappingsRequest);
-
-		return Strings.toString(getMappingsResponse, true, true);
+		return Strings.toString(getMappingsRequestBuilder.get(), true, true);
 	}
 
 	@Override
 	public String[] getIndexNames() {
-		GetIndexRequest getIndexRequest = new GetIndexRequest();
+		IndicesAdminClient indicesAdminClient = getIndicesAdminClient();
 
-		getIndexRequest.indices(StringPool.STAR);
+		GetIndexRequestBuilder getIndexRequestBuilder =
+			indicesAdminClient.prepareGetIndex();
 
-		GetIndexResponse getIndexResponse = getIndexResponse(getIndexRequest);
+		GetIndexResponse getIndexResponse = getIndexRequestBuilder.get();
 
 		return getIndexResponse.getIndices();
 	}
 
-	protected GetIndexResponse getIndexResponse(
-		GetIndexRequest getIndexRequest) {
+	protected IndicesAdminClient getIndicesAdminClient() {
+		Client client = elasticsearchClientResolver.getClient();
 
-		IndicesClient indicesClient = getIndicesClient();
+		AdminClient adminClient = client.admin();
 
-		try {
-			return indicesClient.get(getIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-	}
-
-	protected IndicesClient getIndicesClient() {
-		RestHighLevelClient restHighLevelClient =
-			elasticsearchClientResolver.getRestHighLevelClient();
-
-		return restHighLevelClient.indices();
-	}
-
-	protected GetMappingsResponse getMappingsResponse(
-		GetMappingsRequest getMappingsRequest) {
-
-		IndicesClient indicesClient = getIndicesClient();
-
-		try {
-			return indicesClient.getMapping(
-				getMappingsRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return adminClient.indices();
 	}
 
 	@Reference

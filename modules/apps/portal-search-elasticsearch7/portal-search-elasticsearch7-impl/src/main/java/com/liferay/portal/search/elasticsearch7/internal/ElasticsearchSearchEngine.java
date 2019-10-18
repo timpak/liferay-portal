@@ -51,7 +51,7 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.Strings;
 
 import org.osgi.service.component.annotations.Activate;
@@ -107,10 +107,9 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 		waitForYellowStatus();
 
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchConnectionManager.getRestHighLevelClient();
+		Client client = _elasticsearchConnectionManager.getClient();
 
-		_indexFactory.createIndices(restHighLevelClient.indices(), companyId);
+		_indexFactory.createIndices(client.admin(), companyId);
 
 		_elasticsearchConnectionManager.registerCompanyId(companyId);
 
@@ -134,11 +133,8 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		super.removeCompany(companyId);
 
 		try {
-			RestHighLevelClient restHighLevelClient =
-				_elasticsearchConnectionManager.getRestHighLevelClient();
-
 			_indexFactory.deleteIndices(
-				restHighLevelClient.indices(), companyId);
+				_elasticsearchConnectionManager.getAdminClient(), companyId);
 
 			_elasticsearchConnectionManager.unregisterCompanyId(companyId);
 		}

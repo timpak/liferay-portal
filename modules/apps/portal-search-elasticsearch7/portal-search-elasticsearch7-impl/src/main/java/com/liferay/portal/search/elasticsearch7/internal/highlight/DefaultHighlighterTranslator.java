@@ -16,7 +16,7 @@ package com.liferay.portal.search.elasticsearch7.internal.highlight;
 
 import com.liferay.portal.kernel.search.highlight.HighlightUtil;
 
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +29,7 @@ public class DefaultHighlighterTranslator implements HighlighterTranslator {
 
 	@Override
 	public void translate(
-		SearchSourceBuilder searchSourceBuilder, String[] highlightFieldNames,
+		SearchRequestBuilder searchRequestBuilder, String[] highlightFieldNames,
 		boolean highlightRequireFieldMatch, int highlightFragmentSize,
 		int highlightSnippetSize, boolean luceneSyntax) {
 
@@ -50,7 +50,7 @@ public class DefaultHighlighterTranslator implements HighlighterTranslator {
 
 		highlightBuilder.requireFieldMatch(highlightRequireFieldMatch);
 
-		searchSourceBuilder.highlighter(highlightBuilder);
+		searchRequestBuilder.highlighter(highlightBuilder);
 	}
 
 }

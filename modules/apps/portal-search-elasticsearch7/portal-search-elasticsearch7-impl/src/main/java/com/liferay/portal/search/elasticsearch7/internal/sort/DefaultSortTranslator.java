@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -46,7 +46,7 @@ public class DefaultSortTranslator implements SortTranslator {
 
 	@Override
 	public void translate(
-		SearchSourceBuilder searchSourceBuilder, Sort[] sorts) {
+		SearchRequestBuilder searchRequestBuilder, Sort[] sorts) {
 
 		if (ArrayUtil.isEmpty(sorts)) {
 			return;
@@ -118,7 +118,7 @@ public class DefaultSortTranslator implements SortTranslator {
 
 			sortBuilder.order(sortOrder);
 
-			searchSourceBuilder.sort(sortBuilder);
+			searchRequestBuilder.addSort(sortBuilder);
 		}
 	}
 

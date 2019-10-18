@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -40,7 +41,6 @@ import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
@@ -59,11 +59,11 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 	@Override
 	public void translate(
-		SearchSourceBuilder searchSourceBuilder, GroupByRequest groupByRequest,
-		Locale locale, String[] selectedFieldNames,
-		String[] highlightFieldNames, boolean highlightEnabled,
-		boolean highlightRequireFieldMatch, int highlightFragmentSize,
-		int highlightSnippetSize) {
+		SearchRequestBuilder searchRequestBuilder,
+		GroupByRequest groupByRequest, Locale locale,
+		String[] selectedFieldNames, String[] highlightFieldNames,
+		boolean highlightEnabled, boolean highlightRequireFieldMatch,
+		int highlightFragmentSize, int highlightSnippetSize) {
 
 		TermsAggregationBuilder termsAggregationBuilder =
 			AggregationBuilders.terms(
@@ -94,7 +94,7 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		termsAggregationBuilder.subAggregation(topHitsAggregationBuilder);
 
-		searchSourceBuilder.aggregation(termsAggregationBuilder);
+		searchRequestBuilder.addAggregation(termsAggregationBuilder);
 	}
 
 	protected void addDocsSorts(

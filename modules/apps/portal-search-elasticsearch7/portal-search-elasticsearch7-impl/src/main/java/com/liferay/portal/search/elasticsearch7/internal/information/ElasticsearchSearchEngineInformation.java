@@ -16,31 +16,27 @@ package com.liferay.portal.search.elasticsearch7.internal.information;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.search.elasticsearch7.internal.ElasticsearchSearchEngine;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch7.internal.connection.OperationMode;
 import com.liferay.portal.search.engine.SearchEngineInformation;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.http.util.EntityUtils;
-
 import org.elasticsearch.Version;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.cluster.node.info.NodeInfo;
+import org.elasticsearch.action.admin.cluster.node.info.NodesInfoRequestBuilder;
+import org.elasticsearch.action.admin.cluster.node.info.NodesInfoResponse;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.ClusterAdminClient;
+import org.elasticsearch.cluster.node.DiscoveryNode;
+import org.elasticsearch.common.unit.TimeValue;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -60,25 +56,26 @@ public class ElasticsearchSearchEngineInformation
 	@Override
 	public String getNodesString() {
 		try {
-			RestHighLevelClient restHighLevelClient =
-				elasticsearchConnectionManager.getRestHighLevelClient();
+			Client client = elasticsearchConnectionManager.getClient();
 
-			if (restHighLevelClient == null) {
+			if (client == null) {
 				return StringPool.BLANK;
 			}
 
-			List<NodeInfo> nodeInfos = _getClusterNodes(restHighLevelClient);
+			List<NodeInfo> nodeInfos = _getClusterNodes(client);
 
 			Stream<NodeInfo> stream = nodeInfos.stream();
 
 			return stream.map(
 				nodeInfo -> {
+					DiscoveryNode node = nodeInfo.getNode();
+
 					StringBundler sb = new StringBundler(5);
 
-					sb.append(nodeInfo.getName());
+					sb.append(node.getName());
 					sb.append(StringPool.SPACE);
 					sb.append(StringPool.OPEN_PARENTHESIS);
-					sb.append(nodeInfo.getVersion());
+					sb.append(node.getVersion());
 					sb.append(StringPool.CLOSE_PARENTHESIS);
 
 					return sb.toString();
@@ -142,76 +139,23 @@ public class ElasticsearchSearchEngineInformation
 	@Reference
 	protected ElasticsearchSearchEngine elasticsearchSearchEngine;
 
-	private List<NodeInfo> _getClusterNodes(
-		RestHighLevelClient restHighLevelClient) {
+	private List<NodeInfo> _getClusterNodes(Client client) {
+		AdminClient adminClient = client.admin();
 
-		List<NodeInfo> nodeInfoList = new ArrayList<>();
+		ClusterAdminClient clusterAdminClient = adminClient.cluster();
 
-		RestClient restClient = restHighLevelClient.getLowLevelClient();
+		NodesInfoRequestBuilder nodesInfoRequestBuilder =
+			clusterAdminClient.prepareNodesInfo();
 
-		String endpoint = "/_nodes";
+		TimeValue timeout = TimeValue.timeValueMillis(10000);
 
-		Request request = new Request("GET", endpoint);
+		NodesInfoResponse nodesInfoResponse = nodesInfoRequestBuilder.get(
+			timeout);
 
-		request.addParameter("timeout", "10000ms");
-
-		try {
-			Response response = restClient.performRequest(request);
-
-			String responseBody = EntityUtils.toString(response.getEntity());
-
-			JSONObject responseJSONObject = JSONFactoryUtil.createJSONObject(
-				responseBody);
-
-			JSONObject nodesJSONObject = responseJSONObject.getJSONObject(
-				"nodes");
-
-			Set<String> nodes = nodesJSONObject.keySet();
-
-			for (String node : nodes) {
-				JSONObject nodeJSONObject = nodesJSONObject.getJSONObject(node);
-
-				NodeInfo nodeInfo = new NodeInfo();
-
-				nodeInfo.setName(
-					GetterUtil.getString(nodeJSONObject.get("name")));
-				nodeInfo.setVersion(
-					GetterUtil.getString(nodeJSONObject.get("version")));
-
-				nodeInfoList.add(nodeInfo);
-			}
-
-			return nodeInfoList;
-		}
-		catch (Exception ioe) {
-			throw new SystemException(ioe);
-		}
+		return nodesInfoResponse.getNodes();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchSearchEngineInformation.class);
-
-	private class NodeInfo {
-
-		public String getName() {
-			return _name;
-		}
-
-		public String getVersion() {
-			return _version;
-		}
-
-		public void setName(String name) {
-			_name = name;
-		}
-
-		public void setVersion(String version) {
-			_version = version;
-		}
-
-		private String _name;
-		private String _version;
-
-	}
 
 }

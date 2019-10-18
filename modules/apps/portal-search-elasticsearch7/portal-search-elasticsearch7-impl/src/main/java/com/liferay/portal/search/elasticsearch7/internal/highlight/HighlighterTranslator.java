@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.highlight;
 
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 
 /**
  * @author Michael C. Han
@@ -22,7 +22,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 public interface HighlighterTranslator {
 
 	public void translate(
-		SearchSourceBuilder searchSourceBuilder, String[] highlightFieldNames,
+		SearchRequestBuilder searchRequestBuilder, String[] highlightFieldNames,
 		boolean highlightRequireFieldMatch, int highlightFragmentSize,
 		int highlightSnippetSize, boolean luceneSyntax);
 

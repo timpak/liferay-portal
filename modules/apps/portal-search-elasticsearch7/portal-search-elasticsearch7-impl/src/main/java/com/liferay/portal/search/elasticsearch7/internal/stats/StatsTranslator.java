@@ -19,8 +19,8 @@ import com.liferay.portal.search.stats.StatsResponse;
 
 import java.util.Map;
 
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 /**
  * @author Michael C. Han
@@ -28,7 +28,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 public interface StatsTranslator {
 
 	public void populateRequest(
-		SearchSourceBuilder searchSourceBuilder, StatsRequest statsRequest);
+		SearchRequestBuilder searchRequestBuilder, StatsRequest statsRequest);
 
 	public StatsResponse translateResponse(
 		Map<String, Aggregation> aggregationMap, StatsRequest statsRequest);

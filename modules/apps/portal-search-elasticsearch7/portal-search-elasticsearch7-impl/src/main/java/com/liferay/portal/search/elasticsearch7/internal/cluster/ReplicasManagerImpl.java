@@ -19,9 +19,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.search.elasticsearch7.internal.util.LogUtil;
 
 import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequestBuilder;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.settings.Settings;
 
 /**
@@ -29,26 +28,25 @@ import org.elasticsearch.common.settings.Settings;
  */
 public class ReplicasManagerImpl implements ReplicasManager {
 
-	public ReplicasManagerImpl(IndicesClient indicesClient) {
-		_indicesClient = indicesClient;
+	public ReplicasManagerImpl(IndicesAdminClient indicesAdminClient) {
+		_indicesAdminClient = indicesAdminClient;
 	}
 
 	@Override
 	public void updateNumberOfReplicas(
 		int numberOfReplicas, String... indices) {
 
-		UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(
-			indices);
+		UpdateSettingsRequestBuilder updateSettingsRequestBuilder =
+			_indicesAdminClient.prepareUpdateSettings(indices);
 
 		Settings.Builder builder = Settings.builder();
 
 		builder.put("number_of_replicas", numberOfReplicas);
 
-		updateSettingsRequest.settings(builder);
+		updateSettingsRequestBuilder.setSettings(builder);
 
 		try {
-			ActionResponse actionResponse = _indicesClient.putSettings(
-				updateSettingsRequest, RequestOptions.DEFAULT);
+			ActionResponse actionResponse = updateSettingsRequestBuilder.get();
 
 			LogUtil.logActionResponse(_log, actionResponse);
 		}
@@ -62,6 +60,6 @@ public class ReplicasManagerImpl implements ReplicasManager {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ReplicasManagerImpl.class);
 
-	private final IndicesClient _indicesClient;
+	private final IndicesAdminClient _indicesAdminClient;
 
 }

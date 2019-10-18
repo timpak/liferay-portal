@@ -28,18 +28,18 @@ import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsContributo
 import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
 
-import java.io.IOException;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -61,36 +61,34 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 public class CompanyIndexFactory implements IndexFactory {
 
 	@Override
-	public void createIndices(IndicesClient indicesClient, long companyId) {
+	public void createIndices(AdminClient adminClient, long companyId) {
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
 		String indexName = getIndexName(companyId);
 
-		if (hasIndex(indicesClient, indexName)) {
+		if (hasIndex(indicesAdminClient, indexName)) {
 			return;
 		}
 
-		createIndex(indexName, indicesClient);
+		createIndex(indexName, indicesAdminClient);
 	}
 
 	@Override
-	public void deleteIndices(IndicesClient indicesClient, long companyId) {
+	public void deleteIndices(AdminClient adminClient, long companyId) {
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
 		String indexName = getIndexName(companyId);
 
-		if (!hasIndex(indicesClient, indexName)) {
+		if (!hasIndex(indicesAdminClient, indexName)) {
 			return;
 		}
 
-		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
-			indexName);
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			indicesAdminClient.prepareDelete(indexName);
 
-		try {
-			ActionResponse actionResponse = indicesClient.delete(
-				deleteIndexRequest, RequestOptions.DEFAULT);
+		ActionResponse actionResponse = deleteIndexRequestBuilder.get();
 
-			LogUtil.logActionResponse(_log, actionResponse);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		LogUtil.logActionResponse(_log, actionResponse);
 	}
 
 	@Activate
@@ -124,40 +122,37 @@ public class CompanyIndexFactory implements IndexFactory {
 	}
 
 	protected void addLiferayDocumentTypeMappings(
-		CreateIndexRequest createIndexRequest,
+		CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
 
 		if (Validator.isNotNull(_overrideTypeMappings)) {
 			liferayDocumentTypeFactory.createLiferayDocumentTypeMappings(
-				createIndexRequest, _overrideTypeMappings);
+				createIndexRequestBuilder, _overrideTypeMappings);
 		}
 		else {
 			liferayDocumentTypeFactory.createRequiredDefaultTypeMappings(
-				createIndexRequest);
+				createIndexRequestBuilder);
 		}
 	}
 
-	protected void createIndex(String indexName, IndicesClient indicesClient) {
-		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
-			indexName);
+	protected void createIndex(
+		String indexName, IndicesAdminClient indicesAdminClient) {
+
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			indicesAdminClient.prepareCreate(indexName);
 
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory =
-			new LiferayDocumentTypeFactory(indicesClient, jsonFactory);
+			new LiferayDocumentTypeFactory(indicesAdminClient, jsonFactory);
 
-		setSettings(createIndexRequest, liferayDocumentTypeFactory);
+		setSettings(createIndexRequestBuilder, liferayDocumentTypeFactory);
 
 		addLiferayDocumentTypeMappings(
-			createIndexRequest, liferayDocumentTypeFactory);
+			createIndexRequestBuilder, liferayDocumentTypeFactory);
 
-		try {
-			ActionResponse actionResponse = indicesClient.create(
-				createIndexRequest, RequestOptions.DEFAULT);
+		CreateIndexResponse createIndexResponse =
+			createIndexRequestBuilder.get();
 
-			LogUtil.logActionResponse(_log, actionResponse);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		LogUtil.logActionResponse(_log, createIndexResponse);
 
 		updateLiferayDocumentType(indexName, liferayDocumentTypeFactory);
 	}
@@ -166,16 +161,16 @@ public class CompanyIndexFactory implements IndexFactory {
 		return indexNameBuilder.getIndexName(companyId);
 	}
 
-	protected boolean hasIndex(IndicesClient indicesClient, String indexName) {
-		GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
+	protected boolean hasIndex(
+		IndicesAdminClient indicesAdminClient, String indexName) {
 
-		try {
-			return indicesClient.exists(
-				getIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
+			indicesAdminClient.prepareExists(indexName);
+
+		IndicesExistsResponse indicesExistsResponse =
+			indicesExistsRequestBuilder.get();
+
+		return indicesExistsResponse.isExists();
 	}
 
 	protected void loadAdditionalIndexConfigurations(
@@ -281,7 +276,7 @@ public class CompanyIndexFactory implements IndexFactory {
 	}
 
 	protected void setSettings(
-		CreateIndexRequest createIndexRequest,
+		CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
 
 		Settings.Builder builder = Settings.builder();
@@ -300,7 +295,7 @@ public class CompanyIndexFactory implements IndexFactory {
 
 		loadIndexSettingsContributors(builder);
 
-		createIndexRequest.settings(builder);
+		createIndexRequestBuilder.setSettings(builder);
 	}
 
 	protected void updateLiferayDocumentType(

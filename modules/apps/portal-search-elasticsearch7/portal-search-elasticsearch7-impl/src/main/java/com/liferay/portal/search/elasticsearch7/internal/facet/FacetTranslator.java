@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.search.facet.Facet;
 
 import java.util.Map;
 
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 
 /**
  * @author Michael C. Han
@@ -27,7 +27,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 public interface FacetTranslator {
 
 	public void translate(
-		SearchSourceBuilder searchSourceBuilder, Query query,
+		SearchRequestBuilder searchRequestBuilder, Query query,
 		Map<String, Facet> facetsMap, boolean basicFacetSelection);
 
 }
