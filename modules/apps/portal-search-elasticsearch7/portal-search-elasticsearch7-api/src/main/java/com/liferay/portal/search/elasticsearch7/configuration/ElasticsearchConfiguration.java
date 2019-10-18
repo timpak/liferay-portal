@@ -73,12 +73,6 @@ public interface ElasticsearchConfiguration {
 	public boolean logExceptionsOnly();
 
 	@Meta.AD(
-		deflt = "ERROR", description = "rest-client-logger-level-help",
-		name = "rest-client-logger-level", required = false
-	)
-	public String restClientLoggerLevel();
-
-	@Meta.AD(
 		deflt = "5", description = "retry-on-conflict-help",
 		name = "retry-on-conflict", required = false
 	)
@@ -98,12 +92,6 @@ public interface ElasticsearchConfiguration {
 	public String networkHost();
 
 	@Meta.AD(
-		deflt = "9201", description = "embedded-http-port-help",
-		name = "embedded-http-port", required = false
-	)
-	public int embeddedHttpPort();
-
-	@Meta.AD(
 		deflt = "", description = "network-bind-host-help",
 		name = "network-bind-host", required = false
 	)
@@ -120,13 +108,6 @@ public interface ElasticsearchConfiguration {
 		name = "transport-tcp-port", required = false
 	)
 	public String transportTcpPort();
-
-	@Meta.AD(
-		deflt = "http://localhost:9200",
-		description = "network-host-addresses-help",
-		name = "network-host-addresses", required = false
-	)
-	public String[] networkHostAddresses();
 
 	@Meta.AD(
 		deflt = "localhost:9300", description = "transport-addresses-help",
