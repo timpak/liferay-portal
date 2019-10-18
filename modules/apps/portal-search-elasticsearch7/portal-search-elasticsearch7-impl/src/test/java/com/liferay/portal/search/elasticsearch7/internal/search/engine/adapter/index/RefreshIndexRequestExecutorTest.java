@@ -18,6 +18,7 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
 
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -57,9 +58,11 @@ public class RefreshIndexRequestExecutorTest {
 				}
 			};
 
-		RefreshRequest refreshRequest =
-			refreshIndexRequestExecutorImpl.createRefreshRequest(
+		RefreshRequestBuilder refreshRequestBuilder =
+			refreshIndexRequestExecutorImpl.createRefreshRequestBuilder(
 				refreshIndexRequest);
+
+		RefreshRequest refreshRequest = refreshRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			new String[] {_INDEX_NAME}, refreshRequest.indices());

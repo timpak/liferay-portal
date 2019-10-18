@@ -21,6 +21,7 @@ import com.liferay.portal.search.elasticsearch7.internal.legacy.query.Elasticsea
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
 
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -82,9 +83,12 @@ public class DeleteByQueryDocumentRequestExecutorTest {
 					}
 				};
 
+		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
+			deleteByQueryDocumentRequestExecutorImpl.
+				createDeleteByQueryRequestBuilder(deleteByQueryDocumentRequest);
+
 		DeleteByQueryRequest deleteByQueryRequest =
-			deleteByQueryDocumentRequestExecutorImpl.createDeleteByQueryRequest(
-				deleteByQueryDocumentRequest);
+			deleteByQueryRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			new String[] {_INDEX_NAME}, deleteByQueryRequest.indices());

@@ -16,7 +16,9 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.cluster.StatsClusterRequest;
-import com.liferay.portal.search.engine.adapter.cluster.StatsClusterResponse;
+
+import org.elasticsearch.action.admin.cluster.stats.ClusterStatsRequest;
+import org.elasticsearch.action.admin.cluster.stats.ClusterStatsRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -42,7 +44,7 @@ public class StatsClusterRequestExecutorTest {
 	}
 
 	@Test
-	public void testClusterRequestExecution() {
+	public void testClusterRequestTranslation() {
 		StatsClusterRequest statsClusterRequest = new StatsClusterRequest(
 			new String[] {_INDEX_NAME});
 
@@ -53,10 +55,14 @@ public class StatsClusterRequestExecutorTest {
 				}
 			};
 
-		StatsClusterResponse statsClusterResponse =
-			statsClusterRequestExecutorImpl.execute(statsClusterRequest);
+		ClusterStatsRequestBuilder clusterStatsRequestBuilder =
+			statsClusterRequestExecutorImpl.createClusterStatsRequestBuilder(
+				statsClusterRequest);
 
-		Assert.assertNotNull(statsClusterResponse);
+		ClusterStatsRequest clusterStatsRequest =
+			clusterStatsRequestBuilder.request();
+
+		Assert.assertNotNull(clusterStatsRequest);
 	}
 
 	private static final String _INDEX_NAME = "test_request_index";

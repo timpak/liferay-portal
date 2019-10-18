@@ -19,6 +19,7 @@ import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.i
 import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRepositoryRequest;
 
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest;
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.repositories.fs.FsRepository;
 
@@ -46,7 +47,7 @@ public class CreateSnapshotRepositoryRequestExecutorImplTest {
 	}
 
 	@Test
-	public void testCreatePutRepositoryRequest() {
+	public void testCreatePutRepositoryRequestBuilder() {
 		CreateSnapshotRepositoryRequest createSnapshotRepositoryRequest =
 			new CreateSnapshotRepositoryRequest("name", "location");
 
@@ -62,9 +63,13 @@ public class CreateSnapshotRepositoryRequestExecutorImplTest {
 					}
 				};
 
-		PutRepositoryRequest putRepositoryRequest =
+		PutRepositoryRequestBuilder putRepositoryRequestBuilder =
 			createSnapshotRepositoryRequestExecutorImpl.
-				createPutRepositoryRequest(createSnapshotRepositoryRequest);
+				createPutRepositoryRequestBuilder(
+					createSnapshotRepositoryRequest);
+
+		PutRepositoryRequest putRepositoryRequest =
+			putRepositoryRequestBuilder.request();
 
 		Settings settings = putRepositoryRequest.settings();
 

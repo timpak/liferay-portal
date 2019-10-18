@@ -19,6 +19,7 @@ import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.i
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotRepositoriesRequest;
 
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequest;
+import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -44,7 +45,7 @@ public class GetSnapshotRepositoriesRequestExecutorImplTest {
 	}
 
 	@Test
-	public void testGetSnapshotRepositoriesRequest() {
+	public void testGetSnapshotRepositoriesRequestBuilder() {
 		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest =
 			new GetSnapshotRepositoriesRequest("repository1", "repository2");
 
@@ -56,9 +57,13 @@ public class GetSnapshotRepositoriesRequestExecutorImplTest {
 					}
 				};
 
-		GetRepositoriesRequest getRepositoriesRequest =
+		GetRepositoriesRequestBuilder getRepositoriesRequestBuilder =
 			getSnapshotRepositoriesRequestExecutorImpl.
-				createGetRepositoriesRequest(getSnapshotRepositoriesRequest);
+				createGetRepositoriesRequestBuilder(
+					getSnapshotRepositoriesRequest);
+
+		GetRepositoriesRequest getRepositoriesRequest =
+			getRepositoriesRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			getSnapshotRepositoriesRequest.getRepositoryNames(),

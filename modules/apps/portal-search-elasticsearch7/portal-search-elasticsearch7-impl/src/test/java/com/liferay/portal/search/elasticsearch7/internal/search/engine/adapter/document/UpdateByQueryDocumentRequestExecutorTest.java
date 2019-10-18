@@ -23,6 +23,7 @@ import com.liferay.portal.search.elasticsearch7.internal.legacy.query.Elasticsea
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
 
 import org.elasticsearch.index.reindex.UpdateByQueryRequest;
+import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -86,9 +87,12 @@ public class UpdateByQueryDocumentRequestExecutorTest {
 					}
 				};
 
+		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
+			updateByQueryDocumentRequestExecutorImpl.
+				createUpdateByQueryRequestBuilder(updateByQueryDocumentRequest);
+
 		UpdateByQueryRequest updateByQueryRequest =
-			updateByQueryDocumentRequestExecutorImpl.createUpdateByQueryRequest(
-				updateByQueryDocumentRequest);
+			updateByQueryRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			new String[] {_INDEX_NAME}, updateByQueryRequest.indices());

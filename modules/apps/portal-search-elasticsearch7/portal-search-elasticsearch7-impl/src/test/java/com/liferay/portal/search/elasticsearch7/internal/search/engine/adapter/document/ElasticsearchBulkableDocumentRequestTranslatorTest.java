@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.document.DefaultElasticsearchDocumentFactory;
 import com.liferay.portal.search.elasticsearch7.internal.document.ElasticsearchDocumentFactory;
@@ -26,11 +27,15 @@ import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
 import com.liferay.portal.search.test.util.indexing.DocumentFixture;
 
-import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkAction;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -55,7 +60,7 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		ElasticsearchBulkableDocumentRequestTranslator
 			elasticsearchBulkableDocumentRequestTranslator =
 				createElasticsearchBulkableDocumentRequestTranslator(
-					elasticsearchDocumentFactory);
+					elasticsearchFixture, elasticsearchDocumentFactory);
 
 		_elasticsearchBulkableDocumentRequestTranslator =
 			elasticsearchBulkableDocumentRequestTranslator;
@@ -153,10 +158,12 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 
 	protected static ElasticsearchBulkableDocumentRequestTranslator
 		createElasticsearchBulkableDocumentRequestTranslator(
+			ElasticsearchClientResolver elasticsearchClientResolver,
 			ElasticsearchDocumentFactory elasticsearchDocumentFactory) {
 
 		return new ElasticsearchBulkableDocumentRequestTranslator() {
 			{
+				setElasticsearchClientResolver(elasticsearchClientResolver);
 				setElasticsearchDocumentFactory(elasticsearchDocumentFactory);
 			}
 		};
@@ -180,9 +187,11 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		deleteDocumentRequest.setRefresh(refreshPolicy);
 		deleteDocumentRequest.setType(_MAPPING_NAME);
 
-		DeleteRequest deleteRequest =
+		DeleteRequestBuilder deleteRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				deleteDocumentRequest);
+
+		DeleteRequest deleteRequest = deleteRequestBuilder.request();
 
 		Assert.assertEquals(
 			expectedRefreshPolicy, deleteRequest.getRefreshPolicy());
@@ -190,13 +199,14 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		Assert.assertEquals(_MAPPING_NAME, deleteRequest.type());
 		Assert.assertEquals(id, deleteRequest.id());
 
-		BulkRequest bulkRequest = new BulkRequest();
+		BulkRequestBuilder bulkRequestBuilder = new BulkRequestBuilder(
+			_elasticsearchFixture.getClient(), BulkAction.INSTANCE);
 
-		bulkRequest.add(
+		bulkRequestBuilder.add(
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				deleteDocumentRequest));
 
-		Assert.assertEquals(1, bulkRequest.numberOfActions());
+		Assert.assertEquals(1, bulkRequestBuilder.numberOfActions());
 	}
 
 	protected void doTestIndexDocumentRequestTranslation(
@@ -214,9 +224,11 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		indexDocumentRequest.setRefresh(refreshPolicy);
 		indexDocumentRequest.setType(_MAPPING_NAME);
 
-		IndexRequest indexRequest =
+		IndexRequestBuilder indexRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				indexDocumentRequest);
+
+		IndexRequest indexRequest = indexRequestBuilder.request();
 
 		Assert.assertEquals(
 			expectedRefreshPolicy, indexRequest.getRefreshPolicy());
@@ -231,13 +243,14 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 			_elasticsearchDocumentFactory.getElasticsearchDocument(document),
 			source);
 
-		BulkRequest bulkRequest = new BulkRequest();
+		BulkRequestBuilder bulkRequestBuilder = new BulkRequestBuilder(
+			_elasticsearchFixture.getClient(), BulkAction.INSTANCE);
 
-		bulkRequest.add(
+		bulkRequestBuilder.add(
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				indexDocumentRequest));
 
-		Assert.assertEquals(1, bulkRequest.numberOfActions());
+		Assert.assertEquals(1, bulkRequestBuilder.numberOfActions());
 	}
 
 	protected void doTestUpdateDocumentRequestTranslation(
@@ -255,9 +268,11 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		updateDocumentRequest.setRefresh(refreshPolicy);
 		updateDocumentRequest.setType(_MAPPING_NAME);
 
-		UpdateRequest updateRequest =
+		UpdateRequestBuilder updateRequestBuilder =
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				updateDocumentRequest);
+
+		UpdateRequest updateRequest = updateRequestBuilder.request();
 
 		Assert.assertEquals(
 			expectedRefreshPolicy, updateRequest.getRefreshPolicy());
@@ -273,13 +288,14 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 			_elasticsearchDocumentFactory.getElasticsearchDocument(document),
 			source);
 
-		BulkRequest bulkRequest = new BulkRequest();
+		BulkRequestBuilder bulkRequestBuilder = new BulkRequestBuilder(
+			_elasticsearchFixture.getClient(), BulkAction.INSTANCE);
 
-		bulkRequest.add(
+		bulkRequestBuilder.add(
 			_elasticsearchBulkableDocumentRequestTranslator.translate(
 				updateDocumentRequest));
 
-		Assert.assertEquals(1, bulkRequest.numberOfActions());
+		Assert.assertEquals(1, bulkRequestBuilder.numberOfActions());
 	}
 
 	private void _setUid(Document document, String uid) {

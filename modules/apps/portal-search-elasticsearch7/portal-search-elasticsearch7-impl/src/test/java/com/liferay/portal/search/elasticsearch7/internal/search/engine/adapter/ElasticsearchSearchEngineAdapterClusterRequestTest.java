@@ -31,13 +31,11 @@ import com.liferay.portal.search.engine.adapter.cluster.StateClusterResponse;
 import com.liferay.portal.search.engine.adapter.cluster.StatsClusterRequest;
 import com.liferay.portal.search.engine.adapter.cluster.StatsClusterResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -57,17 +55,12 @@ public class ElasticsearchSearchEngineAdapterClusterRequestTest {
 
 		_searchEngineAdapter = createSearchEngineAdapter(_elasticsearchFixture);
 
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchFixture.getRestHighLevelClient();
-
-		_indicesClient = restHighLevelClient.indices();
-
-		_createIndex();
+		createIndex();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		_deleteIndex();
+		deleteIndex();
 
 		_elasticsearchFixture.tearDown();
 	}
@@ -174,28 +167,30 @@ public class ElasticsearchSearchEngineAdapterClusterRequestTest {
 		};
 	}
 
-	private void _createIndex() {
-		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
-			_INDEX_NAME);
+	protected void createIndex() {
+		Client client = _elasticsearchFixture.getClient();
 
-		try {
-			_indicesClient.create(createIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		AdminClient adminClient = client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			indicesAdminClient.prepareCreate(_INDEX_NAME);
+
+		createIndexRequestBuilder.get();
 	}
 
-	private void _deleteIndex() {
-		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
-			_INDEX_NAME);
+	protected void deleteIndex() {
+		Client client = _elasticsearchFixture.getClient();
 
-		try {
-			_indicesClient.delete(deleteIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		AdminClient adminClient = client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			indicesAdminClient.prepareDelete(_INDEX_NAME);
+
+		deleteIndexRequestBuilder.get();
 	}
 
 	private static final String _ELASTICSEARCH_DEFAULT_NUMBER_OF_SHARDS = "1";
@@ -203,7 +198,6 @@ public class ElasticsearchSearchEngineAdapterClusterRequestTest {
 	private static final String _INDEX_NAME = "test_request_index";
 
 	private ElasticsearchFixture _elasticsearchFixture;
-	private IndicesClient _indicesClient;
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }

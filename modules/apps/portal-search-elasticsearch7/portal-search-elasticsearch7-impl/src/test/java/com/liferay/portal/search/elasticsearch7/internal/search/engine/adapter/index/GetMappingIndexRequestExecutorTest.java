@@ -18,6 +18,7 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -55,9 +56,12 @@ public class GetMappingIndexRequestExecutorTest {
 				}
 			};
 
-		GetMappingsRequest getMappingsRequest =
-			getMappingIndexRequestExecutorImpl.createGetMappingsRequest(
+		GetMappingsRequestBuilder getMappingsRequestBuilder =
+			getMappingIndexRequestExecutorImpl.createGetMappingsRequestBuilder(
 				getMappingIndexRequest);
+
+		GetMappingsRequest getMappingsRequest =
+			getMappingsRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			new String[] {_INDEX_NAME}, getMappingsRequest.indices());

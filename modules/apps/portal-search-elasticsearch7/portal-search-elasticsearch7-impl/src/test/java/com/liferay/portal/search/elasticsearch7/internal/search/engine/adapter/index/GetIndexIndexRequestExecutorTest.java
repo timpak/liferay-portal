@@ -20,6 +20,7 @@ import com.liferay.portal.search.engine.adapter.index.GetIndexIndexRequest;
 import java.util.Arrays;
 
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
+import org.elasticsearch.action.admin.indices.get.GetIndexRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -56,9 +57,11 @@ public class GetIndexIndexRequestExecutorTest {
 				}
 			};
 
-		GetIndexRequest getIndexRequest =
-			getIndexIndexRequestExecutorImpl.createGetIndexRequest(
+		GetIndexRequestBuilder getIndexRequestBuilder =
+			getIndexIndexRequestExecutorImpl.createGetIndexRequestBuilder(
 				getIndexIndexRequest);
+
+		GetIndexRequest getIndexRequest = getIndexRequestBuilder.request();
 
 		String[] indices = getIndexRequest.indices();
 

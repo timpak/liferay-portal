@@ -18,6 +18,7 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
 import com.liferay.portal.search.engine.adapter.index.OpenIndexRequest;
 
+import org.elasticsearch.action.admin.indices.open.OpenIndexRequestBuilder;
 import org.elasticsearch.action.support.ActiveShardCount;
 import org.elasticsearch.common.unit.TimeValue;
 
@@ -66,10 +67,12 @@ public class OpenIndexRequestExecutorTest {
 				}
 			};
 
+		OpenIndexRequestBuilder openIndexRequestBuilder =
+			openIndexRequestExecutorImpl.createOpenIndexRequestBuilder(
+				openIndexRequest);
+
 		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-			elastichsearchOpenIndexRequest =
-				openIndexRequestExecutorImpl.createOpenIndexRequest(
-					openIndexRequest);
+			elastichsearchOpenIndexRequest = openIndexRequestBuilder.request();
 
 		Assert.assertArrayEquals(
 			openIndexRequest.getIndexNames(),

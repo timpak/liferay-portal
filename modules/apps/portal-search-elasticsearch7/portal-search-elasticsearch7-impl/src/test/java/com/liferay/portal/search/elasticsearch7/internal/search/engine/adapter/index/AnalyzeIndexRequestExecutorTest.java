@@ -17,7 +17,8 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.AnalyzeIndexRequest;
 
-import org.elasticsearch.client.indices.AnalyzeRequest;
+import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
+import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -55,9 +56,11 @@ public class AnalyzeIndexRequestExecutorTest {
 				}
 			};
 
-		AnalyzeRequest analyzeRequest =
-			analyzeIndexRequestExecutorImpl.createAnalyzeRequest(
+		AnalyzeRequestBuilder analyzeRequestBuilder =
+			analyzeIndexRequestExecutorImpl.createAnalyzeRequestBuilder(
 				analyzeIndexRequest);
+
+		AnalyzeAction.Request analyzeRequest = analyzeRequestBuilder.request();
 
 		Assert.assertEquals(_INDEX_NAME, analyzeRequest.index());
 	}

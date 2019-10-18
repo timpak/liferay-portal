@@ -21,6 +21,7 @@ import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRe
 import java.util.Arrays;
 
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequestBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -76,9 +77,13 @@ public class UpdateIndexSettingsIndexRequestExecutorTest {
 					}
 				};
 
-		UpdateSettingsRequest updateSettingsRequest =
+		UpdateSettingsRequestBuilder updateSettingsRequestBuilder =
 			updateIndexSettingsIndexRequestExecutorImpl.
-				createUpdateSettingsRequest(updateIndexSettingsIndexRequest);
+				createUpdateSettingsRequestBuilder(
+					updateIndexSettingsIndexRequest);
+
+		UpdateSettingsRequest updateSettingsRequest =
+			updateSettingsRequestBuilder.request();
 
 		String[] indices = updateSettingsRequest.indices();
 
