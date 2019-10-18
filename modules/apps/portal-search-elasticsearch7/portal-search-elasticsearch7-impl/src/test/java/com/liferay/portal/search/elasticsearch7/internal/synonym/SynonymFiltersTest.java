@@ -28,10 +28,12 @@ import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
-import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.DeleteIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
 
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 
 import org.junit.After;
@@ -52,11 +54,16 @@ public class SynonymFiltersTest {
 
 		_elasticsearchFixture.setUp();
 
+		Client client = _elasticsearchFixture.getClient();
+
+		AdminClient adminClient = client.admin();
+
+		_indicesAdminClient = adminClient.indices();
+
 		_searchEngineAdapter = createSearchEngineAdapter(_elasticsearchFixture);
 
 		_singleFieldFixture = new SingleFieldFixture(
-			_elasticsearchFixture.getRestHighLevelClient(),
-			new IndexName(_INDEX_NAME),
+			client, new IndexName(_INDEX_NAME),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 
 		_singleFieldFixture.setField(_FIELD_NAME);
@@ -218,7 +225,7 @@ public class SynonymFiltersTest {
 			new MatchPhraseQueryBuilder(_FIELD_NAME, text);
 
 		SearchAssert.assertSearch(
-			_elasticsearchFixture.getRestHighLevelClient(), _FIELD_NAME,
+			_elasticsearchFixture.getClient(), _FIELD_NAME,
 			matchPhraseQueryBuilder, expectedValues);
 	}
 
@@ -235,13 +242,10 @@ public class SynonymFiltersTest {
 	}
 
 	protected void deleteIndex() {
-		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
-			_INDEX_NAME);
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			_indicesAdminClient.prepareDelete(_INDEX_NAME);
 
-		DeleteIndexResponse deleteIndexResponse = _searchEngineAdapter.execute(
-			deleteIndexRequest);
-
-		Assert.assertTrue(deleteIndexResponse.isAcknowledged());
+		deleteIndexRequestBuilder.get();
 	}
 
 	protected String getSource(String suffix) {
@@ -255,6 +259,7 @@ public class SynonymFiltersTest {
 	private static final String _INDEX_NAME = "test_synonyms";
 
 	private ElasticsearchFixture _elasticsearchFixture;
+	private IndicesAdminClient _indicesAdminClient;
 	private SearchEngineAdapter _searchEngineAdapter;
 	private SingleFieldFixture _singleFieldFixture;
 

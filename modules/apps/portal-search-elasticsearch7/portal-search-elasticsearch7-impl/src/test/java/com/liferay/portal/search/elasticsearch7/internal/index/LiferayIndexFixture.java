@@ -19,13 +19,10 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Index;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexCreator;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexName;
 
-import java.io.IOException;
-
 import java.util.Map;
 
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.client.Client;
 
 /**
  * @author André de Oliveira
@@ -38,42 +35,35 @@ public class LiferayIndexFixture {
 	}
 
 	public void assertAnalyzer(String field, String analyzer) throws Exception {
-		RestHighLevelClient restHighLevelClient = getRestHighLevelClient();
-
 		FieldMappingAssert.assertAnalyzer(
 			analyzer, field, LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE,
-			_index.getName(), restHighLevelClient.indices());
+			_index.getName(), _elasticsearchFixture.getIndicesAdminClient());
 	}
 
 	public void assertType(String field, String type) throws Exception {
-		RestHighLevelClient restHighLevelClient = getRestHighLevelClient();
-
 		FieldMappingAssert.assertType(
 			type, field, LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE,
-			_index.getName(), restHighLevelClient.indices());
+			_index.getName(), _elasticsearchFixture.getIndicesAdminClient());
+	}
+
+	public Client getClient() {
+		return _elasticsearchFixture.getClient();
+	}
+
+	public ElasticsearchFixture getElasticsearchFixture() {
+		return _elasticsearchFixture;
 	}
 
 	public Index getIndex() {
 		return _index;
 	}
 
-	public RestHighLevelClient getRestHighLevelClient() {
-		return _elasticsearchFixture.getRestHighLevelClient();
-	}
-
 	public void index(Map<String, Object> map) {
-		IndexRequest indexRequest = getIndexRequest();
+		IndexRequestBuilder indexRequestBuilder = getIndexRequestBuilder();
 
-		indexRequest.source(map);
+		indexRequestBuilder.setSource(map);
 
-		RestHighLevelClient restHighLevelClient = getRestHighLevelClient();
-
-		try {
-			restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		indexRequestBuilder.get();
 	}
 
 	public void setUp() throws Exception {
@@ -97,8 +87,10 @@ public class LiferayIndexFixture {
 		return indexCreator.createIndex(_indexName);
 	}
 
-	protected IndexRequest getIndexRequest() {
-		return new IndexRequest(
+	protected IndexRequestBuilder getIndexRequestBuilder() {
+		Client client = _elasticsearchFixture.getClient();
+
+		return client.prepareIndex(
 			_index.getName(),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 	}

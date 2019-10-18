@@ -14,8 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -24,15 +22,17 @@ import java.io.InputStream;
 import java.net.URL;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.http.util.EntityUtils;
-
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.admin.cluster.node.info.NodeInfo;
+import org.elasticsearch.action.admin.cluster.node.info.NodesInfoRequestBuilder;
+import org.elasticsearch.action.admin.cluster.node.info.NodesInfoResponse;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.ClusterAdminClient;
+import org.elasticsearch.common.transport.BoundTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.http.HttpInfo;
 
 import org.hamcrest.CoreMatchers;
 
@@ -85,40 +85,28 @@ public class EmbeddedElasticsearchConnectionHttpTest {
 				"\"cluster_name\" : \"" + _clusterName));
 	}
 
-	protected int getHttpPort() throws Exception {
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchFixture.getRestHighLevelClient();
+	protected int getHttpPort() {
+		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
 
-		RestClient restClient = restHighLevelClient.getLowLevelClient();
+		ClusterAdminClient clusterAdminClient = adminClient.cluster();
 
-		String endpoint = "/_nodes";
+		NodesInfoRequestBuilder nodesInfoRequestBuilder =
+			clusterAdminClient.prepareNodesInfo();
 
-		Request request = new Request("GET", endpoint);
+		NodesInfoResponse nodesInfoResponse = nodesInfoRequestBuilder.get();
 
-		Response response = restClient.performRequest(request);
+		List<NodeInfo> nodeInfos = nodesInfoResponse.getNodes();
 
-		String responseBody = EntityUtils.toString(response.getEntity());
+		NodeInfo nodeInfo = nodeInfos.get(0);
 
-		JSONObject responseJSONObject = JSONFactoryUtil.createJSONObject(
-			responseBody);
+		HttpInfo httpInfo = nodeInfo.getHttp();
 
-		JSONObject nodesJSONObject = responseJSONObject.getJSONObject("nodes");
+		BoundTransportAddress boundTransportAddress = httpInfo.address();
 
-		Set<String> nodes = nodesJSONObject.keySet();
+		TransportAddress transportAddress =
+			boundTransportAddress.publishAddress();
 
-		for (String node : nodes) {
-			JSONObject nodeJSONObject = nodesJSONObject.getJSONObject(node);
-
-			JSONObject settingsJSONObject = nodeJSONObject.getJSONObject(
-				"settings");
-
-			JSONObject httpJSONObject = settingsJSONObject.getJSONObject(
-				"http");
-
-			return httpJSONObject.getInt("port");
-		}
-
-		return 0;
+		return transportAddress.getPort();
 	}
 
 	protected String toString(URL url) throws Exception {

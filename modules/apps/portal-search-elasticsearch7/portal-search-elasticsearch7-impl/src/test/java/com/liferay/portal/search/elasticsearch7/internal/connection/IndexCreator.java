@@ -14,14 +14,12 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
 import org.elasticsearch.action.support.IndicesOptions;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.settings.Settings;
 
 import org.mockito.Mockito;
@@ -32,26 +30,24 @@ import org.mockito.Mockito;
 public class IndexCreator {
 
 	public Index createIndex(IndexName indexName) {
-		IndicesClient indicesClient = getIndicesClient();
+		IndicesAdminClient indicesAdminClient = getIndicesAdminClient();
 
 		String name = indexName.getName();
 
-		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(name);
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			indicesAdminClient.prepareDelete(name);
 
-		deleteIndexRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
+		deleteIndexRequestBuilder.setIndicesOptions(
+			IndicesOptions.lenientExpandOpen());
 
-		try {
-			indicesClient.delete(deleteIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		deleteIndexRequestBuilder.get();
 
-		CreateIndexRequest createIndexRequest = new CreateIndexRequest(name);
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			indicesAdminClient.prepareCreate(name);
 
 		IndexCreationHelper indexCreationHelper = getIndexCreationHelper();
 
-		indexCreationHelper.contribute(createIndexRequest);
+		indexCreationHelper.contribute(createIndexRequestBuilder);
 
 		Settings.Builder builder = Settings.builder();
 
@@ -60,14 +56,9 @@ public class IndexCreator {
 
 		indexCreationHelper.contributeIndexSettings(builder);
 
-		createIndexRequest.settings(builder);
+		createIndexRequestBuilder.setSettings(builder);
 
-		try {
-			indicesClient.create(createIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		createIndexRequestBuilder.get();
 
 		indexCreationHelper.whenIndexCreated(name);
 
@@ -93,10 +84,13 @@ public class IndexCreator {
 		return new IndexCreationHelper() {
 
 			@Override
-			public void contribute(CreateIndexRequest createIndexRequest) {
-				_indexCreationHelper.contribute(createIndexRequest);
+			public void contribute(
+				CreateIndexRequestBuilder createIndexRequestBuilder) {
 
-				liferayIndexCreationHelper.contribute(createIndexRequest);
+				_indexCreationHelper.contribute(createIndexRequestBuilder);
+
+				liferayIndexCreationHelper.contribute(
+					createIndexRequestBuilder);
 			}
 
 			@Override
@@ -116,11 +110,12 @@ public class IndexCreator {
 		};
 	}
 
-	protected final IndicesClient getIndicesClient() {
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+	protected final IndicesAdminClient getIndicesAdminClient() {
+		Client client = _elasticsearchClientResolver.getClient();
 
-		return restHighLevelClient.indices();
+		AdminClient adminClient = client.admin();
+
+		return adminClient.indices();
 	}
 
 	protected void setElasticsearchClientResolver(

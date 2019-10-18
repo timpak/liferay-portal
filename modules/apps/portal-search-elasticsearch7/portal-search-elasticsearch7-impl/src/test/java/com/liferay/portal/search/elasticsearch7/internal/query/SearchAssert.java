@@ -17,8 +17,6 @@ package com.liferay.portal.search.elasticsearch7.internal.query;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.search.test.util.IdempotentRetryAssert;
 
-import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,15 +25,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import org.junit.Assert;
 
@@ -45,33 +41,26 @@ import org.junit.Assert;
 public class SearchAssert {
 
 	public static void assertNoHits(
-			RestHighLevelClient restHighLevelClient, String field,
-			QueryBuilder queryBuilder)
+			Client client, String field, QueryBuilder queryBuilder)
 		throws Exception {
 
-		assertSearch(restHighLevelClient, field, queryBuilder, new String[0]);
+		assertSearch(client, field, queryBuilder, new String[0]);
 	}
 
 	public static void assertSearch(
-			RestHighLevelClient restHighLevelClient,
-			SearchSourceBuilder searchSourceBuilder,
-			SearchRequest searchRequest, String field, String... expectedValues)
-		throws Exception {
-
-		assertSearch(
-			() -> search(
-				restHighLevelClient, searchSourceBuilder, searchRequest),
-			field, expectedValues);
-	}
-
-	public static void assertSearch(
-			final RestHighLevelClient restHighLevelClient, final String field,
+			final Client client, final String field,
 			final QueryBuilder queryBuilder, final String... expectedValues)
 		throws Exception {
 
-		assertSearch(
-			() -> search(restHighLevelClient, queryBuilder), field,
-			expectedValues);
+		assertSearch(() -> search(client, queryBuilder), field, expectedValues);
+	}
+
+	public static void assertSearch(
+			SearchRequestBuilder searchRequestBuilder, String field,
+			String... expectedValues)
+		throws Exception {
+
+		assertSearch(() -> search(searchRequestBuilder), field, expectedValues);
 	}
 
 	protected static void assertSearch(
@@ -101,33 +90,23 @@ public class SearchAssert {
 	}
 
 	protected static SearchHits search(
-		RestHighLevelClient restHighLevelClient, QueryBuilder queryBuilder) {
+		Client client, QueryBuilder queryBuilder) {
 
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		SearchRequestBuilder searchRequestBuilder = client.prepareSearch();
 
-		searchSourceBuilder.query(queryBuilder);
+		searchRequestBuilder.setQuery(queryBuilder);
 
-		return search(
-			restHighLevelClient, searchSourceBuilder, new SearchRequest());
+		return search(searchRequestBuilder);
 	}
 
 	protected static SearchHits search(
-		RestHighLevelClient restHighLevelClient,
-		SearchSourceBuilder searchSourceBuilder, SearchRequest searchRequest) {
+		SearchRequestBuilder searchRequestBuilder) {
 
-		searchSourceBuilder.storedField(StringPool.STAR);
+		searchRequestBuilder.addStoredField(StringPool.STAR);
 
-		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = searchRequestBuilder.get();
 
-		try {
-			SearchResponse searchResponse = restHighLevelClient.search(
-				searchRequest, RequestOptions.DEFAULT);
-
-			return searchResponse.getHits();
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return searchResponse.getHits();
 	}
 
 	protected static String sort(Collection<String> collection) {

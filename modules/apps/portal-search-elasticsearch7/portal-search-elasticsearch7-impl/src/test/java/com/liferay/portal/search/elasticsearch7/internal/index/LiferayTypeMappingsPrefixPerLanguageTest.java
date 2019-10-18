@@ -38,7 +38,7 @@ public class LiferayTypeMappingsPrefixPerLanguageTest {
 		_liferayIndexFixture.setUp();
 
 		_singleFieldFixture = new SingleFieldFixture(
-			_liferayIndexFixture.getRestHighLevelClient(), indexName,
+			_liferayIndexFixture.getClient(), indexName,
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 
 		_singleFieldFixture.setQueryBuilderFactory(
