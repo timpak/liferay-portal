@@ -35,9 +35,8 @@ import com.liferay.portal.search.engine.adapter.index.IndexRequestExecutor;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -45,8 +44,8 @@ import org.junit.Test;
  */
 public class SynonymFiltersTest {
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		_elasticsearchFixture = new ElasticsearchFixture(
 			ElasticsearchSearchEngineAdapterIndexRequestTest.class.
 				getSimpleName());
@@ -64,14 +63,11 @@ public class SynonymFiltersTest {
 		_singleFieldFixture.setQueryBuilderFactory(QueryBuilderFactories.MATCH);
 	}
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-		_elasticsearchFixture.tearDown();
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		deleteIndex();
+
+		_elasticsearchFixture.tearDown();
 	}
 
 	@Test
@@ -258,8 +254,8 @@ public class SynonymFiltersTest {
 
 	private static final String _INDEX_NAME = "test_synonyms";
 
-	private static ElasticsearchFixture _elasticsearchFixture;
-	private static SearchEngineAdapter _searchEngineAdapter;
-	private static SingleFieldFixture _singleFieldFixture;
+	private ElasticsearchFixture _elasticsearchFixture;
+	private SearchEngineAdapter _searchEngineAdapter;
+	private SingleFieldFixture _singleFieldFixture;
 
 }

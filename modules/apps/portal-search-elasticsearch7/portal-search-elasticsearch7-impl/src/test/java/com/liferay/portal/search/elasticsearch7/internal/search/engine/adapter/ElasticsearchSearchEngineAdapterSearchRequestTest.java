@@ -67,7 +67,9 @@ public class ElasticsearchSearchEngineAdapterSearchRequestTest {
 	public void setUp() throws Exception {
 		_documentFixture.setUp();
 
-		_elasticsearchFixture = new ElasticsearchFixture(getClass());
+		_elasticsearchFixture = new ElasticsearchFixture(
+			ElasticsearchSearchEngineAdapterIndexRequestTest.class.
+				getSimpleName());
 
 		_elasticsearchFixture.setUp();
 

@@ -21,8 +21,7 @@ import com.liferay.portal.search.test.util.query.BaseMoreLikeThisQueryTestCase;
 
 import java.util.Collections;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.client.ResponseException;
+import org.elasticsearch.action.search.SearchPhaseExecutionException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,12 +44,10 @@ public class MoreLikeThisQueryTest extends BaseMoreLikeThisQueryTestCase {
 
 			Assert.fail();
 		}
-		catch (ElasticsearchStatusException ese) {
-			Throwable[] throwables = ese.getSuppressed();
+		catch (SearchPhaseExecutionException spee) {
+			Throwable throwable = spee.getRootCause();
 
-			ResponseException re = (ResponseException)throwables[0];
-
-			String message = re.getMessage();
+			String message = throwable.getMessage();
 
 			Assert.assertTrue(
 				message,
