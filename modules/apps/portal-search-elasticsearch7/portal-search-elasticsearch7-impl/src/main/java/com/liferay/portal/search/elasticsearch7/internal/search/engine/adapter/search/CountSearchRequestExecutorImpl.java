@@ -53,7 +53,7 @@ public class CountSearchRequestExecutorImpl
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
-		_commonSearchSourceBuilderAssembler.assemble(
+		_commonSearchRequestBuilderAssembler.assemble(
 			searchSourceBuilder, countSearchRequest, searchRequest);
 
 		searchSourceBuilder.size(0);
@@ -98,18 +98,19 @@ public class CountSearchRequestExecutorImpl
 	}
 
 	@Reference(unbind = "-")
+	protected void setCommonSearchRequestBuilderAssembler(
+		CommonSearchRequestBuilderAssembler
+			commonSearchRequestBuilderAssembler) {
+
+		_commonSearchRequestBuilderAssembler =
+			commonSearchRequestBuilderAssembler;
+	}
+
+	@Reference(unbind = "-")
 	protected void setCommonSearchResponseAssembler(
 		CommonSearchResponseAssembler commonSearchResponseAssembler) {
 
 		_commonSearchResponseAssembler = commonSearchResponseAssembler;
-	}
-
-	@Reference(unbind = "-")
-	protected void setCommonSearchSourceBuilderAssembler(
-		CommonSearchSourceBuilderAssembler commonSearchSourceBuilderAssembler) {
-
-		_commonSearchSourceBuilderAssembler =
-			commonSearchSourceBuilderAssembler;
 	}
 
 	@Reference(unbind = "-")
@@ -122,9 +123,9 @@ public class CountSearchRequestExecutorImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		CountSearchRequestExecutorImpl.class);
 
+	private CommonSearchRequestBuilderAssembler
+		_commonSearchRequestBuilderAssembler;
 	private CommonSearchResponseAssembler _commonSearchResponseAssembler;
-	private CommonSearchSourceBuilderAssembler
-		_commonSearchSourceBuilderAssembler;
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
 
 }

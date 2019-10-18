@@ -61,8 +61,8 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 
 		Queries queries = new QueriesImpl();
 
-		_commonSearchSourceBuilderAssembler =
-			createCommonSearchSourceBuilderAssembler(queries);
+		_commonSearchRequestBuilderAssembler =
+			createCommonSearchRequestBuilderAssembler(queries);
 		_queries = queries;
 	}
 
@@ -117,8 +117,8 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 	@Rule
 	public TestName testName = new TestName();
 
-	protected static CommonSearchSourceBuilderAssembler
-		createCommonSearchSourceBuilderAssembler(Queries queries) {
+	protected static CommonSearchRequestBuilderAssembler
+		createCommonSearchRequestBuilderAssembler(Queries queries) {
 
 		ElasticsearchQueryTranslatorFixture
 			elasticsearchQueryTranslatorFixture =
@@ -143,7 +143,7 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 				legacyElasticsearchQueryTranslatorFixture.
 					getElasticsearchQueryTranslator();
 
-		return new CommonSearchSourceBuilderAssemblerImpl() {
+		return new CommonSearchRequestBuilderAssemblerImpl() {
 			{
 				setComplexQueryBuilderFactory(
 					createComplexQueryBuilderFactory(queries));
@@ -200,7 +200,7 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 
 		SearchRequest searchRequest = new SearchRequest();
 
-		_commonSearchSourceBuilderAssembler.assemble(
+		_commonSearchRequestBuilderAssembler.assemble(
 			searchSourceBuilder, searchSearchRequest, searchRequest);
 
 		SearchAssert.assertSearch(
@@ -226,8 +226,8 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 			});
 	}
 
-	private CommonSearchSourceBuilderAssembler
-		_commonSearchSourceBuilderAssembler;
+	private CommonSearchRequestBuilderAssembler
+		_commonSearchRequestBuilderAssembler;
 	private final ComplexQueryPartBuilderFactory
 		_complexQueryPartBuilderFactory =
 			new ComplexQueryPartBuilderFactoryImpl();
