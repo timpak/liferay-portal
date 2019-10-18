@@ -20,14 +20,11 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateByQueryDocumentResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.UpdateByQueryRequest;
+import org.elasticsearch.index.reindex.UpdateByQueryAction;
+import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
 import org.elasticsearch.script.Script;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,11 +43,11 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 	public UpdateByQueryDocumentResponse execute(
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
-		UpdateByQueryRequest updateByQueryRequest = createUpdateByQueryRequest(
-			updateByQueryDocumentRequest);
+		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
+			createUpdateByQueryRequestBuilder(updateByQueryDocumentRequest);
 
-		BulkByScrollResponse bulkByScrollResponse = getBulkByScrollResponse(
-			updateByQueryRequest);
+		BulkByScrollResponse bulkByScrollResponse =
+			updateByQueryRequestBuilder.get();
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
@@ -58,17 +55,20 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 			bulkByScrollResponse.getUpdated(), timeValue.getMillis());
 	}
 
-	protected UpdateByQueryRequest createUpdateByQueryRequest(
+	protected UpdateByQueryRequestBuilder createUpdateByQueryRequestBuilder(
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest) {
 
-		UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest();
+		UpdateByQueryRequestBuilder updateByQueryRequestBuilder =
+			new UpdateByQueryRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				UpdateByQueryAction.INSTANCE);
 
 		QueryBuilder queryBuilder = _queryTranslator.translate(
 			updateByQueryDocumentRequest.getQuery(), null);
 
-		updateByQueryRequest.setQuery(queryBuilder);
+		updateByQueryRequestBuilder.filter(queryBuilder);
 
-		updateByQueryRequest.setRefresh(
+		updateByQueryRequestBuilder.refresh(
 			updateByQueryDocumentRequest.isRefresh());
 
 		JSONObject jsonObject =
@@ -77,28 +77,13 @@ public class UpdateByQueryDocumentRequestExecutorImpl
 		if (jsonObject != null) {
 			Script script = new Script(jsonObject.toString());
 
-			updateByQueryRequest.setScript(script);
+			updateByQueryRequestBuilder.script(script);
 		}
 
-		updateByQueryRequest.indices(
+		updateByQueryRequestBuilder.source(
 			updateByQueryDocumentRequest.getIndexNames());
 
-		return updateByQueryRequest;
-	}
-
-	protected BulkByScrollResponse getBulkByScrollResponse(
-		UpdateByQueryRequest updateByQueryRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		try {
-			return restHighLevelClient.updateByQuery(
-				updateByQueryRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return updateByQueryRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

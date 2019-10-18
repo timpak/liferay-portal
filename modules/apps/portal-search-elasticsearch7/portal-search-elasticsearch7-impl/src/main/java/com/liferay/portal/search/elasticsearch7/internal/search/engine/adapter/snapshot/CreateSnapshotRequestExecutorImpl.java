@@ -16,15 +16,12 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
+import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRequest;
+import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotResponse;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotDetails;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequest;
-import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.SnapshotClient;
+import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotAction;
+import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequestBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -37,62 +34,43 @@ public class CreateSnapshotRequestExecutorImpl
 	implements CreateSnapshotRequestExecutor {
 
 	@Override
-	public
-		com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotResponse
-			execute(
-				com.liferay.portal.search.engine.adapter.snapshot.
-					CreateSnapshotRequest createSnapshotRequest) {
+	public CreateSnapshotResponse execute(
+		CreateSnapshotRequest createSnapshotRequest) {
 
-		CreateSnapshotRequest elasticsearchCreateSnapshotRequest =
-			createCreateSnapshotRequest(createSnapshotRequest);
+		CreateSnapshotRequestBuilder createSnapshotRequestBuilder =
+			createCreateSnapshotRequestBuilder(createSnapshotRequest);
 
-		CreateSnapshotResponse elasticsearchCreateSnapshotResponse =
-			getCreateSnapshotResponse(elasticsearchCreateSnapshotRequest);
+		org.elasticsearch.action.admin.cluster.snapshots.create.
+			CreateSnapshotResponse elasticsearchCreateSnapshotResponse =
+				createSnapshotRequestBuilder.get();
 
 		SnapshotDetails snapshotDetails = SnapshotInfoConverter.convert(
 			elasticsearchCreateSnapshotResponse.getSnapshotInfo());
 
-		return new com.liferay.portal.search.engine.adapter.snapshot.
-			CreateSnapshotResponse(snapshotDetails);
+		return new CreateSnapshotResponse(snapshotDetails);
 	}
 
-	protected CreateSnapshotRequest createCreateSnapshotRequest(
-		com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRequest
-			createSnapshotRequest) {
+	protected CreateSnapshotRequestBuilder createCreateSnapshotRequestBuilder(
+		CreateSnapshotRequest createSnapshotRequest) {
 
-		CreateSnapshotRequest elasticsearchCreateSnapshotRequest =
-			new CreateSnapshotRequest();
+		CreateSnapshotRequestBuilder createSnapshotRequestBuilder =
+			new CreateSnapshotRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				CreateSnapshotAction.INSTANCE);
 
 		if (ArrayUtil.isNotEmpty(createSnapshotRequest.getIndexNames())) {
-			elasticsearchCreateSnapshotRequest.indices(
+			createSnapshotRequestBuilder.setIndices(
 				createSnapshotRequest.getIndexNames());
 		}
 
-		elasticsearchCreateSnapshotRequest.repository(
+		createSnapshotRequestBuilder.setRepository(
 			createSnapshotRequest.getRepositoryName());
-		elasticsearchCreateSnapshotRequest.snapshot(
+		createSnapshotRequestBuilder.setSnapshot(
 			createSnapshotRequest.getSnapshotName());
-		elasticsearchCreateSnapshotRequest.waitForCompletion(
+		createSnapshotRequestBuilder.setWaitForCompletion(
 			createSnapshotRequest.isWaitForCompletion());
 
-		return elasticsearchCreateSnapshotRequest;
-	}
-
-	protected CreateSnapshotResponse getCreateSnapshotResponse(
-		CreateSnapshotRequest createSnapshotRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
-
-		try {
-			return snapshotClient.create(
-				createSnapshotRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return createSnapshotRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

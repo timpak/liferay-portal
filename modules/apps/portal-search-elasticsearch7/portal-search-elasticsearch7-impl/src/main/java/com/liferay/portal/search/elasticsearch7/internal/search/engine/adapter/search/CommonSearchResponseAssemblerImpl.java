@@ -34,6 +34,7 @@ import java.util.Map;
 import org.apache.lucene.search.FuzzyQuery;
 
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.unit.TimeValue;
@@ -44,7 +45,6 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.profile.ProfileShardResult;
 import org.elasticsearch.search.profile.query.QueryProfileShardResult;
 
@@ -60,14 +60,14 @@ public class CommonSearchResponseAssemblerImpl
 
 	@Override
 	public void assemble(
-		SearchSourceBuilder searchSourceBuilder, SearchResponse searchResponse,
-		BaseSearchRequest baseSearchRequest,
+		SearchRequestBuilder searchRequestBuilder,
+		SearchResponse searchResponse, BaseSearchRequest baseSearchRequest,
 		BaseSearchResponse baseSearchResponse) {
 
 		setExecutionProfile(searchResponse, baseSearchResponse);
 		setExecutionTime(searchResponse, baseSearchResponse);
 		setSearchRequestString(
-			searchSourceBuilder, baseSearchRequest, baseSearchResponse);
+			searchRequestBuilder, baseSearchRequest, baseSearchResponse);
 		setSearchResponseString(
 			searchResponse, baseSearchRequest, baseSearchResponse);
 		setTerminatedEarly(searchResponse, baseSearchResponse);
@@ -146,13 +146,13 @@ public class CommonSearchResponseAssemblerImpl
 	}
 
 	protected void setSearchRequestString(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		BaseSearchRequest baseSearchRequest,
 		BaseSearchResponse baseSearchResponse) {
 
 		baseSearchResponse.setSearchRequestString(
 			StringUtil.removeSubstrings(
-				toString(searchSourceBuilder), ADJUST_PURE_NEGATIVE_STRING,
+				toString(searchRequestBuilder), ADJUST_PURE_NEGATIVE_STRING,
 				AUTO_GENERATE_SYNONYMS_PHRASE_QUERY_STRING, BOOST_STRING,
 				FUZZY_TRANSPOSITIONS_STRING, LENIENT_STRING,
 				MAX_EXPANSIONS_STRING, OPERATOR_STRING, PREFIX_LENGTH_STRING,
@@ -187,9 +187,9 @@ public class CommonSearchResponseAssemblerImpl
 		baseSearchResponse.setTimedOut(searchResponse.isTimedOut());
 	}
 
-	protected String toString(SearchSourceBuilder searchSourceBuilder) {
+	protected String toString(SearchRequestBuilder searchRequestBuilder) {
 		try {
-			return searchSourceBuilder.toString();
+			return searchRequestBuilder.toString();
 		}
 		catch (ElasticsearchException ee) {
 			if (_log.isDebugEnabled()) {

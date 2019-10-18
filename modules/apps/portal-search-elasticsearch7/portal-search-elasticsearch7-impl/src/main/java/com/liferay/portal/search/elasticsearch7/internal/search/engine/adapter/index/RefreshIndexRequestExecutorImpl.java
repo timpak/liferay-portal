@@ -20,14 +20,12 @@ import com.liferay.portal.search.engine.adapter.index.IndexRequestShardFailure;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexResponse;
 
-import java.io.IOException;
-
 import org.elasticsearch.action.ShardOperationFailedException;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,10 +41,10 @@ public class RefreshIndexRequestExecutorImpl
 	public RefreshIndexResponse execute(
 		RefreshIndexRequest refreshIndexRequest) {
 
-		RefreshRequest refreshRequest = createRefreshRequest(
-			refreshIndexRequest);
+		RefreshRequestBuilder refreshRequestBuilder =
+			createRefreshRequestBuilder(refreshIndexRequest);
 
-		RefreshResponse refreshResponse = getRefreshResponse(refreshRequest);
+		RefreshResponse refreshResponse = refreshRequestBuilder.get();
 
 		RefreshIndexResponse refreshIndexResponse = new RefreshIndexResponse();
 
@@ -74,27 +72,17 @@ public class RefreshIndexRequestExecutorImpl
 		return refreshIndexResponse;
 	}
 
-	protected RefreshRequest createRefreshRequest(
+	protected RefreshRequestBuilder createRefreshRequestBuilder(
 		RefreshIndexRequest refreshIndexRequest) {
 
-		return new RefreshRequest(refreshIndexRequest.getIndexNames());
-	}
+		Client client = _elasticsearchClientResolver.getClient();
 
-	protected RefreshResponse getRefreshResponse(
-		RefreshRequest refreshRequest) {
+		AdminClient adminClient = client.admin();
 
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
 
-		IndicesClient indicesClient = restHighLevelClient.indices();
-
-		try {
-			return indicesClient.refresh(
-				refreshRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return indicesAdminClient.prepareRefresh(
+			refreshIndexRequest.getIndexNames());
 	}
 
 	@Reference(unbind = "-")

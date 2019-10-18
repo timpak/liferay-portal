@@ -18,13 +18,11 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.PutMappingIndexResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import org.osgi.service.component.annotations.Component;
@@ -41,44 +39,35 @@ public class PutMappingIndexRequestExecutorImpl
 	public PutMappingIndexResponse execute(
 		PutMappingIndexRequest putMappingIndexRequest) {
 
-		PutMappingRequest putMappingRequest = createPutMappingRequest(
-			putMappingIndexRequest);
+		PutMappingRequestBuilder putMappingRequestBuilder =
+			createPutMappingRequestBuilder(putMappingIndexRequest);
 
-		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			putMappingRequest);
+		AcknowledgedResponse acknowledgedResponse =
+			putMappingRequestBuilder.get();
 
 		return new PutMappingIndexResponse(
 			acknowledgedResponse.isAcknowledged());
 	}
 
-	protected PutMappingRequest createPutMappingRequest(
+	protected PutMappingRequestBuilder createPutMappingRequestBuilder(
 		PutMappingIndexRequest putMappingIndexRequest) {
 
-		PutMappingRequest putMappingRequest = new PutMappingRequest(
-			putMappingIndexRequest.getIndexNames());
+		Client client = _elasticsearchClientResolver.getClient();
 
-		putMappingRequest.source(
+		AdminClient adminClient = client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		PutMappingRequestBuilder putMappingRequestBuilder =
+			indicesAdminClient.preparePutMapping(
+				putMappingIndexRequest.getIndexNames());
+
+		putMappingRequestBuilder.setSource(
 			putMappingIndexRequest.getMapping(), XContentType.JSON);
-		putMappingRequest.type(putMappingIndexRequest.getMappingName());
+		putMappingRequestBuilder.setType(
+			putMappingIndexRequest.getMappingName());
 
-		return putMappingRequest;
-	}
-
-	protected AcknowledgedResponse getAcknowledgedResponse(
-		PutMappingRequest putMappingRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		IndicesClient indicesClient = restHighLevelClient.indices();
-
-		try {
-			return indicesClient.putMapping(
-				putMappingRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return putMappingRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

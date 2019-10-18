@@ -16,19 +16,14 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 
 import com.liferay.portal.search.document.DocumentBuilder;
 import com.liferay.portal.search.document.DocumentBuilderFactory;
-import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.elasticsearch7.internal.document.DocumentFieldsTranslator;
 import com.liferay.portal.search.engine.adapter.document.BulkableDocumentRequestTranslator;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
 import com.liferay.portal.search.geolocation.GeoBuilders;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,10 +37,10 @@ public class GetDocumentRequestExecutorImpl
 
 	@Override
 	public GetDocumentResponse execute(GetDocumentRequest getDocumentRequest) {
-		GetRequest getRequest = _bulkableDocumentRequestTranslator.translate(
-			getDocumentRequest);
+		GetRequestBuilder getRequestBuilder =
+			_bulkableDocumentRequestTranslator.translate(getDocumentRequest);
 
-		GetResponse getResponse = getGetResponse(getRequest);
+		GetResponse getResponse = getRequestBuilder.get();
 
 		GetDocumentResponse getDocumentResponse = new GetDocumentResponse(
 			getResponse.isExists());
@@ -70,18 +65,6 @@ public class GetDocumentRequestExecutorImpl
 		return getDocumentResponse;
 	}
 
-	protected GetResponse getGetResponse(GetRequest getRequest) {
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		try {
-			return restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-	}
-
 	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	protected void setBulkableDocumentRequestTranslator(
 		BulkableDocumentRequestTranslator bulkableDocumentRequestTranslator) {
@@ -97,13 +80,6 @@ public class GetDocumentRequestExecutorImpl
 	}
 
 	@Reference(unbind = "-")
-	protected void setElasticsearchClientResolver(
-		ElasticsearchClientResolver elasticsearchClientResolver) {
-
-		_elasticsearchClientResolver = elasticsearchClientResolver;
-	}
-
-	@Reference(unbind = "-")
 	protected void setGeoBuilders(GeoBuilders geoBuilders) {
 		_geoBuilders = geoBuilders;
 	}
@@ -111,7 +87,6 @@ public class GetDocumentRequestExecutorImpl
 	private BulkableDocumentRequestTranslator
 		_bulkableDocumentRequestTranslator;
 	private DocumentBuilderFactory _documentBuilderFactory;
-	private ElasticsearchClientResolver _elasticsearchClientResolver;
 	private GeoBuilders _geoBuilders;
 
 }

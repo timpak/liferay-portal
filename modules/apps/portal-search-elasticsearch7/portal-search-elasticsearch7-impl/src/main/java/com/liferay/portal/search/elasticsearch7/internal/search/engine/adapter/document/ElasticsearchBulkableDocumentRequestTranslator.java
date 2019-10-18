@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
+import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.elasticsearch7.internal.document.ElasticsearchDocumentFactory;
 import com.liferay.portal.search.engine.adapter.document.BulkableDocumentRequestTranslator;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
@@ -24,14 +25,15 @@ import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
 
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.delete.DeleteRequestBuilder;
+import org.elasticsearch.action.get.GetRequestBuilder;
+import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.support.WriteRequestBuilder;
+import org.elasticsearch.action.update.UpdateRequestBuilder;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -47,68 +49,94 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 	implements BulkableDocumentRequestTranslator {
 
 	@Override
-	public DeleteRequest translate(
+	public DeleteRequestBuilder translate(
 		DeleteDocumentRequest deleteDocumentRequest) {
 
-		DeleteRequest deleteRequest = new DeleteRequest();
+		Client client = _elasticsearchClientResolver.getClient();
 
-		_setRefreshPolicy(deleteRequest, deleteDocumentRequest.isRefresh());
+		DeleteRequestBuilder deleteRequestBuilder = client.prepareDelete();
 
-		deleteRequest.id(deleteDocumentRequest.getUid());
-		deleteRequest.index(deleteDocumentRequest.getIndexName());
-		deleteRequest.type(deleteDocumentRequest.getType());
+		_setRefreshPolicy(
+			deleteRequestBuilder, deleteDocumentRequest.isRefresh());
 
-		return deleteRequest;
+		return deleteRequestBuilder.setId(
+			deleteDocumentRequest.getUid()
+		).setIndex(
+			deleteDocumentRequest.getIndexName()
+		).setType(
+			_getType(deleteDocumentRequest.getType())
+		);
 	}
 
 	@Override
-	public GetRequest translate(GetDocumentRequest getDocumentRequest) {
-		GetRequest getRequest = new GetRequest();
+	public GetRequestBuilder translate(GetDocumentRequest getDocumentRequest) {
+		Client client = _elasticsearchClientResolver.getClient();
 
-		FetchSourceContext fetchSourceContext = new FetchSourceContext(
-			getDocumentRequest.isFetchSource(),
+		GetRequestBuilder getRequestBuilder = client.prepareGet();
+
+		return getRequestBuilder.setId(
+			getDocumentRequest.getId()
+		).setIndex(
+			getDocumentRequest.getIndexName()
+		).setRefresh(
+			getDocumentRequest.isRefresh()
+		).setFetchSource(
 			getDocumentRequest.getFetchSourceIncludes(),
-			getDocumentRequest.getFetchSourceExcludes());
-
-		getRequest.fetchSourceContext(fetchSourceContext);
-
-		getRequest.id(getDocumentRequest.getId());
-		getRequest.index(getDocumentRequest.getIndexName());
-		getRequest.refresh(getDocumentRequest.isRefresh());
-		getRequest.storedFields(getDocumentRequest.getStoredFields());
-		getRequest.type(_getType(getDocumentRequest.getType()));
-
-		return getRequest;
+			getDocumentRequest.getFetchSourceExcludes()
+		).setStoredFields(
+			getDocumentRequest.getStoredFields()
+		).setType(
+			_getType(getDocumentRequest.getType())
+		);
 	}
 
 	@Override
-	public IndexRequest translate(IndexDocumentRequest indexDocumentRequest) {
-		IndexRequest indexRequest = new IndexRequest();
+	public IndexRequestBuilder translate(
+		IndexDocumentRequest indexDocumentRequest) {
 
-		_setRefreshPolicy(indexRequest, indexDocumentRequest.isRefresh());
-		_setSource(indexRequest, indexDocumentRequest);
+		Client client = _elasticsearchClientResolver.getClient();
 
-		indexRequest.id(_getUid(indexDocumentRequest));
-		indexRequest.index(indexDocumentRequest.getIndexName());
-		indexRequest.type(_getType(indexDocumentRequest.getType()));
+		IndexRequestBuilder indexRequestBuilder = client.prepareIndex();
 
-		return indexRequest;
+		_setRefreshPolicy(
+			indexRequestBuilder, indexDocumentRequest.isRefresh());
+		_setSource(indexRequestBuilder, indexDocumentRequest);
+
+		return indexRequestBuilder.setId(
+			_getUid(indexDocumentRequest)
+		).setIndex(
+			indexDocumentRequest.getIndexName()
+		).setType(
+			_getType(indexDocumentRequest.getType())
+		);
 	}
 
 	@Override
-	public UpdateRequest translate(
+	public UpdateRequestBuilder translate(
 		UpdateDocumentRequest updateDocumentRequest) {
 
-		UpdateRequest updateRequest = new UpdateRequest();
+		Client client = _elasticsearchClientResolver.getClient();
 
-		_setDoc(updateRequest, updateDocumentRequest);
-		_setRefreshPolicy(updateRequest, updateDocumentRequest.isRefresh());
+		UpdateRequestBuilder updateRequestBuilder = client.prepareUpdate();
 
-		updateRequest.id(_getUid(updateDocumentRequest));
-		updateRequest.index(updateDocumentRequest.getIndexName());
-		updateRequest.type(_getType(updateDocumentRequest.getType()));
+		_setDoc(updateRequestBuilder, updateDocumentRequest);
+		_setRefreshPolicy(
+			updateRequestBuilder, updateDocumentRequest.isRefresh());
 
-		return updateRequest;
+		return updateRequestBuilder.setId(
+			_getUid(updateDocumentRequest)
+		).setIndex(
+			updateDocumentRequest.getIndexName()
+		).setType(
+			_getType(updateDocumentRequest.getType())
+		);
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchClientResolver(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		_elasticsearchClientResolver = elasticsearchClientResolver;
 	}
 
 	@Reference(unbind = "-")
@@ -179,7 +207,7 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 	}
 
 	private void _setDoc(
-		UpdateRequest updateRequest,
+		UpdateRequestBuilder updateRequestBuilder,
 		UpdateDocumentRequest updateDocumentRequest) {
 
 		if (updateDocumentRequest.getDocument() != null) {
@@ -187,7 +215,7 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 				_elasticsearchDocumentFactory.getElasticsearchDocument(
 					updateDocumentRequest.getDocument());
 
-			updateRequest.doc(xContentBuilder);
+			updateRequestBuilder.setDoc(xContentBuilder);
 		}
 		else {
 			@SuppressWarnings("deprecation")
@@ -195,25 +223,30 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 				_elasticsearchDocumentFactory.getElasticsearchDocument(
 					updateDocumentRequest.getDocument71());
 
-			updateRequest.doc(elasticsearchDocument, XContentType.JSON);
+			updateRequestBuilder.setDoc(
+				elasticsearchDocument, XContentType.JSON);
 		}
 	}
 
-	private void _setRefreshPolicy(WriteRequest writeRequest, boolean refresh) {
+	private void _setRefreshPolicy(
+		WriteRequestBuilder writeRequestBuilder, boolean refresh) {
+
 		if (refresh) {
-			writeRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+			writeRequestBuilder.setRefreshPolicy(
+				WriteRequest.RefreshPolicy.IMMEDIATE);
 		}
 	}
 
 	private void _setSource(
-		IndexRequest indexRequest, IndexDocumentRequest indexDocumentRequest) {
+		IndexRequestBuilder indexRequestBuilder,
+		IndexDocumentRequest indexDocumentRequest) {
 
 		if (indexDocumentRequest.getDocument() != null) {
 			XContentBuilder xContentBuilder =
 				_elasticsearchDocumentFactory.getElasticsearchDocument(
 					indexDocumentRequest.getDocument());
 
-			indexRequest.source(xContentBuilder);
+			indexRequestBuilder.setSource(xContentBuilder);
 		}
 		else {
 			@SuppressWarnings("deprecation")
@@ -221,10 +254,12 @@ public class ElasticsearchBulkableDocumentRequestTranslator
 				_elasticsearchDocumentFactory.getElasticsearchDocument(
 					indexDocumentRequest.getDocument71());
 
-			indexRequest.source(elasticsearchDocument, XContentType.JSON);
+			indexRequestBuilder.setSource(
+				elasticsearchDocument, XContentType.JSON);
 		}
 	}
 
+	private ElasticsearchClientResolver _elasticsearchClientResolver;
 	private ElasticsearchDocumentFactory _elasticsearchDocumentFactory;
 
 }

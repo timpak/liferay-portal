@@ -19,13 +19,9 @@ import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsAction;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequestBuilder;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import org.osgi.service.component.annotations.Component;
@@ -42,51 +38,39 @@ public class UpdateIndexSettingsIndexRequestExecutorImpl
 	public UpdateIndexSettingsIndexResponse execute(
 		UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest) {
 
-		UpdateSettingsRequest updateSettingsRequest =
-			createUpdateSettingsRequest(updateIndexSettingsIndexRequest);
+		UpdateSettingsRequestBuilder updateSettingsRequestBuilder =
+			createUpdateSettingsRequestBuilder(updateIndexSettingsIndexRequest);
 
-		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			updateSettingsRequest);
+		AcknowledgedResponse acknowledgedResponse =
+			updateSettingsRequestBuilder.get();
 
 		return new UpdateIndexSettingsIndexResponse(
 			acknowledgedResponse.isAcknowledged());
 	}
 
-	protected UpdateSettingsRequest createUpdateSettingsRequest(
+	protected UpdateSettingsRequestBuilder createUpdateSettingsRequestBuilder(
 		UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest) {
 
-		UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(
+		UpdateSettingsRequestBuilder updateSettingsRequestBuilder =
+			new UpdateSettingsRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				UpdateSettingsAction.INSTANCE);
+
+		updateSettingsRequestBuilder.setIndices(
 			updateIndexSettingsIndexRequest.getIndexNames());
 
-		updateSettingsRequest.settings(
+		updateSettingsRequestBuilder.setSettings(
 			updateIndexSettingsIndexRequest.getSettings(), XContentType.JSON);
 
 		IndicesOptions indicesOptions =
 			updateIndexSettingsIndexRequest.getIndicesOptions();
 
 		if (indicesOptions != null) {
-			updateSettingsRequest.indicesOptions(
+			updateSettingsRequestBuilder.setIndicesOptions(
 				_indicesOptionsTranslator.translate(indicesOptions));
 		}
 
-		return updateSettingsRequest;
-	}
-
-	protected AcknowledgedResponse getAcknowledgedResponse(
-		UpdateSettingsRequest updateSettingsRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		IndicesClient indicesClient = restHighLevelClient.indices();
-
-		try {
-			return indicesClient.putSettings(
-				updateSettingsRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return updateSettingsRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

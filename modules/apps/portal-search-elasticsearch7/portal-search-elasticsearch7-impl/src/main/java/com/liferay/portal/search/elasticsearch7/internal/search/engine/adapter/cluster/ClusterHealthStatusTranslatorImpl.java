@@ -72,20 +72,4 @@ public class ClusterHealthStatusTranslatorImpl
 			"Unknown status: " + clusterHealthStatus);
 	}
 
-	public ClusterHealthStatus translate(String status) {
-		if (status.equals("green")) {
-			return ClusterHealthStatus.GREEN;
-		}
-
-		if (status.equals("red")) {
-			return ClusterHealthStatus.RED;
-		}
-
-		if (status.equals("yellow")) {
-			return ClusterHealthStatus.YELLOW;
-		}
-
-		throw new IllegalArgumentException("Unknown status: " + status);
-	}
-
 }

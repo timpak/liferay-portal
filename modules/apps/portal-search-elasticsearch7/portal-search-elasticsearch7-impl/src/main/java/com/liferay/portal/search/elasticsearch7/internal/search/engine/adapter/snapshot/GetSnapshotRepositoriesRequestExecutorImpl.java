@@ -21,15 +21,11 @@ import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotRepositories
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotRepositoriesResponse;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRepositoryDetails;
 
-import java.io.IOException;
-
 import java.util.List;
 
-import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequest;
+import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesAction;
+import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequestBuilder;
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.SnapshotClient;
 import org.elasticsearch.cluster.metadata.RepositoryMetaData;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.repositories.RepositoryMissingException;
@@ -48,15 +44,15 @@ public class GetSnapshotRepositoriesRequestExecutorImpl
 	public GetSnapshotRepositoriesResponse execute(
 		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest) {
 
-		GetRepositoriesRequest getRepositoriesRequest =
-			createGetRepositoriesRequest(getSnapshotRepositoriesRequest);
+		GetRepositoriesRequestBuilder getRepositoriesRequestBuilder =
+			createGetRepositoriesRequestBuilder(getSnapshotRepositoriesRequest);
 
 		GetSnapshotRepositoriesResponse getSnapshotRepositoriesResponse =
 			new GetSnapshotRepositoriesResponse();
 
 		try {
 			GetRepositoriesResponse elasticsearchGetRepositoriesResponse =
-				getGetRepositoriesResponse(getRepositoriesRequest);
+				getRepositoriesRequestBuilder.get();
 
 			List<RepositoryMetaData> repositoriesMetaDatas =
 				elasticsearchGetRepositoriesResponse.repositories();
@@ -87,33 +83,18 @@ public class GetSnapshotRepositoriesRequestExecutorImpl
 		}
 	}
 
-	protected GetRepositoriesRequest createGetRepositoriesRequest(
+	protected GetRepositoriesRequestBuilder createGetRepositoriesRequestBuilder(
 		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest) {
 
-		GetRepositoriesRequest getRepositoriesRequest =
-			new GetRepositoriesRequest();
+		GetRepositoriesRequestBuilder getRepositoriesRequestBuilder =
+			new GetRepositoriesRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				GetRepositoriesAction.INSTANCE);
 
-		getRepositoriesRequest.repositories(
+		getRepositoriesRequestBuilder.addRepositories(
 			getSnapshotRepositoriesRequest.getRepositoryNames());
 
-		return getRepositoriesRequest;
-	}
-
-	protected GetRepositoriesResponse getGetRepositoriesResponse(
-		GetRepositoriesRequest getRepositoriesRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
-
-		try {
-			return snapshotClient.getRepository(
-				getRepositoriesRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return getRepositoriesRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

@@ -18,13 +18,9 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRepositoryRequest;
 import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRepositoryResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest;
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryAction;
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.SnapshotClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.repositories.fs.FsRepository;
 
@@ -42,20 +38,25 @@ public class CreateSnapshotRepositoryRequestExecutorImpl
 	public CreateSnapshotRepositoryResponse execute(
 		CreateSnapshotRepositoryRequest createSnapshotRepositoryRequest) {
 
-		PutRepositoryRequest putRepositoryRequest = createPutRepositoryRequest(
-			createSnapshotRepositoryRequest);
+		PutRepositoryRequestBuilder putRepositoryRequestBuilder =
+			createPutRepositoryRequestBuilder(createSnapshotRepositoryRequest);
 
-		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			putRepositoryRequest);
+		AcknowledgedResponse acknowledgedResponse =
+			putRepositoryRequestBuilder.get();
 
 		return new CreateSnapshotRepositoryResponse(
 			acknowledgedResponse.isAcknowledged());
 	}
 
-	protected PutRepositoryRequest createPutRepositoryRequest(
+	protected PutRepositoryRequestBuilder createPutRepositoryRequestBuilder(
 		CreateSnapshotRepositoryRequest createSnapshotRepositoryRequest) {
 
-		PutRepositoryRequest putRepositoryRequest = new PutRepositoryRequest(
+		PutRepositoryRequestBuilder putRepositoryRequestBuilder =
+			new PutRepositoryRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				PutRepositoryAction.INSTANCE);
+
+		putRepositoryRequestBuilder.setName(
 			createSnapshotRepositoryRequest.getName());
 
 		Settings.Builder builder = Settings.builder();
@@ -68,29 +69,14 @@ public class CreateSnapshotRepositoryRequestExecutorImpl
 			FsRepository.LOCATION_SETTING.getKey(),
 			createSnapshotRepositoryRequest.getLocation());
 
-		putRepositoryRequest.settings(builder);
+		putRepositoryRequestBuilder.setSettings(builder);
 
-		putRepositoryRequest.type(createSnapshotRepositoryRequest.getType());
-		putRepositoryRequest.verify(createSnapshotRepositoryRequest.isVerify());
+		putRepositoryRequestBuilder.setType(
+			createSnapshotRepositoryRequest.getType());
+		putRepositoryRequestBuilder.setVerify(
+			createSnapshotRepositoryRequest.isVerify());
 
-		return putRepositoryRequest;
-	}
-
-	protected AcknowledgedResponse getAcknowledgedResponse(
-		PutRepositoryRequest putRepositoryRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
-
-		try {
-			return snapshotClient.createRepository(
-				putRepositoryRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return putRepositoryRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

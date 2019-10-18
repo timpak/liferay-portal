@@ -19,13 +19,10 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.snapshot.RestoreSnapshotRequest;
 import com.liferay.portal.search.engine.adapter.snapshot.RestoreSnapshotResponse;
 
-import java.io.IOException;
-
 import java.util.List;
 
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.SnapshotClient;
+import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotAction;
+import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotRequestBuilder;
 import org.elasticsearch.snapshots.RestoreInfo;
 
 import org.osgi.service.component.annotations.Component;
@@ -42,13 +39,12 @@ public class RestoreSnapshotRequestExecutorImpl
 	public RestoreSnapshotResponse execute(
 		RestoreSnapshotRequest restoreSnapshotRequest) {
 
-		org.elasticsearch.action.admin.cluster.snapshots.restore.
-			RestoreSnapshotRequest elasticsearchRestoreSnapshotRequest =
-				createRestoreSnapshotRequest(restoreSnapshotRequest);
+		RestoreSnapshotRequestBuilder restoreSnapshotRequestBuilder =
+			createRestoreSnapshotRequestBuilder(restoreSnapshotRequest);
 
 		org.elasticsearch.action.admin.cluster.snapshots.restore.
 			RestoreSnapshotResponse elasticsearchRestoreSnapshotResponse =
-				getRestoreSnapshotResponse(elasticsearchRestoreSnapshotRequest);
+				restoreSnapshotRequestBuilder.get();
 
 		RestoreInfo restoreInfo =
 			elasticsearchRestoreSnapshotResponse.getRestoreInfo();
@@ -60,63 +56,43 @@ public class RestoreSnapshotRequestExecutorImpl
 			restoreInfo.totalShards(), restoreInfo.failedShards());
 	}
 
-	protected org.elasticsearch.action.admin.cluster.snapshots.restore.
-		RestoreSnapshotRequest createRestoreSnapshotRequest(
-			RestoreSnapshotRequest restoreSnapshotRequest) {
+	protected RestoreSnapshotRequestBuilder createRestoreSnapshotRequestBuilder(
+		RestoreSnapshotRequest restoreSnapshotRequest) {
 
-		org.elasticsearch.action.admin.cluster.snapshots.restore.
-			RestoreSnapshotRequest elasticsearchRestoreSnapshotRequest =
-				new org.elasticsearch.action.admin.cluster.snapshots.restore.
-					RestoreSnapshotRequest();
+		RestoreSnapshotRequestBuilder restoreSnapshotRequestBuilder =
+			new RestoreSnapshotRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				RestoreSnapshotAction.INSTANCE);
 
-		elasticsearchRestoreSnapshotRequest.includeAliases(
+		restoreSnapshotRequestBuilder.setIncludeAliases(
 			restoreSnapshotRequest.isIncludeAliases());
-		elasticsearchRestoreSnapshotRequest.indices(
+		restoreSnapshotRequestBuilder.setIndices(
 			restoreSnapshotRequest.getIndexNames());
-		elasticsearchRestoreSnapshotRequest.partial(
+		restoreSnapshotRequestBuilder.setPartial(
 			restoreSnapshotRequest.isPartialRestore());
 
 		if (Validator.isNotNull(
 				restoreSnapshotRequest.getRenameReplacement())) {
 
-			elasticsearchRestoreSnapshotRequest.renameReplacement(
+			restoreSnapshotRequestBuilder.setRenameReplacement(
 				restoreSnapshotRequest.getRenameReplacement());
 		}
 
 		if (Validator.isNotNull(restoreSnapshotRequest.getRenamePattern())) {
-			elasticsearchRestoreSnapshotRequest.renamePattern(
+			restoreSnapshotRequestBuilder.setRenamePattern(
 				restoreSnapshotRequest.getRenamePattern());
 		}
 
-		elasticsearchRestoreSnapshotRequest.repository(
+		restoreSnapshotRequestBuilder.setRepository(
 			restoreSnapshotRequest.getRepositoryName());
-		elasticsearchRestoreSnapshotRequest.includeGlobalState(
+		restoreSnapshotRequestBuilder.setRestoreGlobalState(
 			restoreSnapshotRequest.isRestoreGlobalState());
-		elasticsearchRestoreSnapshotRequest.snapshot(
+		restoreSnapshotRequestBuilder.setSnapshot(
 			restoreSnapshotRequest.getSnapshotName());
-		elasticsearchRestoreSnapshotRequest.waitForCompletion(
+		restoreSnapshotRequestBuilder.setWaitForCompletion(
 			restoreSnapshotRequest.isWaitForCompletion());
 
-		return elasticsearchRestoreSnapshotRequest;
-	}
-
-	protected org.elasticsearch.action.admin.cluster.snapshots.restore.
-		RestoreSnapshotResponse getRestoreSnapshotResponse(
-			org.elasticsearch.action.admin.cluster.snapshots.restore.
-				RestoreSnapshotRequest elasticsearchRestoreSnapshotRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		SnapshotClient snapshotClient = restHighLevelClient.snapshot();
-
-		try {
-			return snapshotClient.restore(
-				elasticsearchRestoreSnapshotRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return restoreSnapshotRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

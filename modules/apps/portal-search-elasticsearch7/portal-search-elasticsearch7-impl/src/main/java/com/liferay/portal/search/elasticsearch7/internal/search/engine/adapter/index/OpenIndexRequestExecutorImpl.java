@@ -19,12 +19,9 @@ import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
 import com.liferay.portal.search.engine.adapter.index.OpenIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.OpenIndexResponse;
 
-import java.io.IOException;
-
+import org.elasticsearch.action.admin.indices.open.OpenIndexAction;
+import org.elasticsearch.action.admin.indices.open.OpenIndexRequestBuilder;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 
 import org.osgi.service.component.annotations.Component;
@@ -38,30 +35,29 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 
 	@Override
 	public OpenIndexResponse execute(OpenIndexRequest openIndexRequest) {
-		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-			elasticsearchOpenIndexRequest = createOpenIndexRequest(
-				openIndexRequest);
+		OpenIndexRequestBuilder openIndexRequestBuilder =
+			createOpenIndexRequestBuilder(openIndexRequest);
 
-		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			elasticsearchOpenIndexRequest);
+		AcknowledgedResponse acknowledgedResponse =
+			openIndexRequestBuilder.get();
 
 		return new OpenIndexResponse(acknowledgedResponse.isAcknowledged());
 	}
 
-	protected org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-		createOpenIndexRequest(OpenIndexRequest openIndexRequest) {
+	protected OpenIndexRequestBuilder createOpenIndexRequestBuilder(
+		OpenIndexRequest openIndexRequest) {
 
-		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-			elasticsearchOpenIndexRequest =
-				new org.elasticsearch.action.admin.indices.open.
-					OpenIndexRequest();
+		OpenIndexRequestBuilder openIndexRequestBuilder =
+			new OpenIndexRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				OpenIndexAction.INSTANCE);
 
-		elasticsearchOpenIndexRequest.indices(openIndexRequest.getIndexNames());
+		openIndexRequestBuilder.setIndices(openIndexRequest.getIndexNames());
 
 		IndicesOptions indicesOptions = openIndexRequest.getIndicesOptions();
 
 		if (indicesOptions != null) {
-			elasticsearchOpenIndexRequest.indicesOptions(
+			openIndexRequestBuilder.setIndicesOptions(
 				_indicesOptionsTranslator.translate(indicesOptions));
 		}
 
@@ -69,34 +65,16 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 			TimeValue timeValue = TimeValue.timeValueMillis(
 				openIndexRequest.getTimeout());
 
-			elasticsearchOpenIndexRequest.masterNodeTimeout(timeValue);
-			elasticsearchOpenIndexRequest.timeout(timeValue);
+			openIndexRequestBuilder.setMasterNodeTimeout(timeValue);
+			openIndexRequestBuilder.setTimeout(timeValue);
 		}
 
 		if (openIndexRequest.getWaitForActiveShards() > 0) {
-			elasticsearchOpenIndexRequest.waitForActiveShards(
+			openIndexRequestBuilder.setWaitForActiveShards(
 				openIndexRequest.getWaitForActiveShards());
 		}
 
-		return elasticsearchOpenIndexRequest;
-	}
-
-	protected AcknowledgedResponse getAcknowledgedResponse(
-		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
-			elasticsearchOpenIndexRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		IndicesClient indicesClient = restHighLevelClient.indices();
-
-		try {
-			return indicesClient.open(
-				elasticsearchOpenIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return openIndexRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

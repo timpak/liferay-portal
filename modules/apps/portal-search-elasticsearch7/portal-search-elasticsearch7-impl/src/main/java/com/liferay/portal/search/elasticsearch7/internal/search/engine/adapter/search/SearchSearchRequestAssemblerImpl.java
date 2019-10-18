@@ -39,8 +39,7 @@ import com.liferay.portal.search.stats.StatsRequestBuilder;
 import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 
 import org.osgi.service.component.annotations.Component;
@@ -55,25 +54,23 @@ public class SearchSearchRequestAssemblerImpl
 
 	@Override
 	public void assemble(
-		SearchSourceBuilder searchSourceBuilder,
-		SearchSearchRequest searchSearchRequest, SearchRequest searchRequest) {
+		SearchRequestBuilder searchRequestBuilder,
+		SearchSearchRequest searchSearchRequest) {
 
 		_commonSearchRequestBuilderAssembler.assemble(
-			searchSourceBuilder, searchSearchRequest, searchRequest);
+			searchRequestBuilder, searchSearchRequest);
 
-		setFetchSource(searchSourceBuilder, searchSearchRequest);
-		setGroupBy(searchSourceBuilder, searchSearchRequest);
-		setGroupByRequests(searchSourceBuilder, searchSearchRequest);
-		setHighlighter(searchSourceBuilder, searchSearchRequest);
-		setPagination(searchSourceBuilder, searchSearchRequest);
-		setPreference(searchRequest, searchSearchRequest);
-		setSorts(searchSourceBuilder, searchSearchRequest);
-		setStats(searchSourceBuilder, searchSearchRequest);
-		setStoredFields(searchSourceBuilder, searchSearchRequest);
-		setTrackScores(searchSourceBuilder, searchSearchRequest);
-		setVersion(searchSourceBuilder, searchSearchRequest);
-
-		searchRequest.source(searchSourceBuilder);
+		setFetchSource(searchRequestBuilder, searchSearchRequest);
+		setGroupBy(searchRequestBuilder, searchSearchRequest);
+		setGroupByRequests(searchRequestBuilder, searchSearchRequest);
+		setHighlighter(searchRequestBuilder, searchSearchRequest);
+		setPagination(searchRequestBuilder, searchSearchRequest);
+		setPreference(searchRequestBuilder, searchSearchRequest);
+		setSorts(searchRequestBuilder, searchSearchRequest);
+		setStats(searchRequestBuilder, searchSearchRequest);
+		setStoredFields(searchRequestBuilder, searchSearchRequest);
+		setTrackScores(searchRequestBuilder, searchSearchRequest);
+		setVersion(searchRequestBuilder, searchSearchRequest);
 	}
 
 	@Reference(unbind = "-")
@@ -86,22 +83,22 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setFetchSource(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getFetchSource() != null) {
-			searchSourceBuilder.fetchSource(
+			searchRequestBuilder.setFetchSource(
 				searchSearchRequest.getFetchSource());
 		}
 	}
 
 	protected void setGroupBy(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getGroupBy() != null) {
 			_groupByTranslator.translate(
-				searchSourceBuilder,
+				searchRequestBuilder,
 				translate(searchSearchRequest.getGroupBy()),
 				searchSearchRequest.getLocale(),
 				searchSearchRequest.getSelectedFieldNames(),
@@ -121,7 +118,7 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setGroupByRequests(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		List<GroupByRequest> groupByRequests =
@@ -130,7 +127,7 @@ public class SearchSearchRequestAssemblerImpl
 		if (ListUtil.isNotEmpty(groupByRequests)) {
 			groupByRequests.forEach(
 				groupByRequest -> _groupByTranslator.translate(
-					searchSourceBuilder, groupByRequest,
+					searchRequestBuilder, groupByRequest,
 					searchSearchRequest.getLocale(),
 					searchSearchRequest.getSelectedFieldNames(),
 					searchSearchRequest.getHighlightFieldNames(),
@@ -147,18 +144,18 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setHighlighter(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getHighlight() != null) {
-			searchSourceBuilder.highlighter(
+			searchRequestBuilder.highlighter(
 				_highlightTranslator.translate(
 					searchSearchRequest.getHighlight(),
 					_queryToQueryBuilderTranslator));
 		}
 		else if (searchSearchRequest.isHighlightEnabled()) {
 			_highlighterTranslator.translate(
-				searchSourceBuilder,
+				searchRequestBuilder,
 				searchSearchRequest.getHighlightFieldNames(),
 				searchSearchRequest.isHighlightRequireFieldMatch(),
 				searchSearchRequest.getHighlightFragmentSize(),
@@ -175,25 +172,26 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setPagination(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getStart() != null) {
-			searchSourceBuilder.from(searchSearchRequest.getStart());
+			searchRequestBuilder.setFrom(searchSearchRequest.getStart());
 		}
 
 		if (searchSearchRequest.getSize() != null) {
-			searchSourceBuilder.size(searchSearchRequest.getSize());
+			searchRequestBuilder.setSize(searchSearchRequest.getSize());
 		}
 	}
 
 	protected void setPreference(
-		SearchRequest searchRequest, SearchSearchRequest searchSearchRequest) {
+		SearchRequestBuilder searchRequestBuilder,
+		SearchSearchRequest searchSearchRequest) {
 
 		String preference = searchSearchRequest.getPreference();
 
 		if (!Validator.isBlank(preference)) {
-			searchRequest.preference(preference);
+			searchRequestBuilder.setPreference(preference);
 		}
 	}
 
@@ -212,15 +210,15 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setSorts(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		for (Sort sort : searchSearchRequest.getSorts()) {
-			searchSourceBuilder.sort(_sortFieldTranslator.translate(sort));
+			searchRequestBuilder.addSort(_sortFieldTranslator.translate(sort));
 		}
 
 		_sortTranslator.translate(
-			searchSourceBuilder, searchSearchRequest.getSorts71());
+			searchRequestBuilder, searchSearchRequest.getSorts71());
 	}
 
 	@Reference(unbind = "-")
@@ -229,7 +227,7 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setStats(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		Map<String, Stats> statsMap = searchSearchRequest.getStats();
@@ -237,7 +235,7 @@ public class SearchSearchRequestAssemblerImpl
 		if (!MapUtil.isEmpty(statsMap)) {
 			statsMap.forEach(
 				(key, stats) -> _statsTranslator.populateRequest(
-					searchSourceBuilder, translate(stats)));
+					searchRequestBuilder, translate(stats)));
 		}
 	}
 
@@ -254,37 +252,36 @@ public class SearchSearchRequestAssemblerImpl
 	}
 
 	protected void setStoredFields(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		String[] selectedFieldNames =
 			searchSearchRequest.getSelectedFieldNames();
 
 		if (!ArrayUtil.isEmpty(selectedFieldNames)) {
-			searchSourceBuilder.storedFields(
-				ListUtil.fromArray(selectedFieldNames));
+			searchRequestBuilder.storedFields(selectedFieldNames);
 		}
 		else {
-			searchSourceBuilder.storedField(StringPool.STAR);
+			searchRequestBuilder.addStoredField(StringPool.STAR);
 		}
 	}
 
 	protected void setTrackScores(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getScoreEnabled() != null) {
-			searchSourceBuilder.trackScores(
+			searchRequestBuilder.setTrackScores(
 				searchSearchRequest.getScoreEnabled());
 		}
 	}
 
 	protected void setVersion(
-		SearchSourceBuilder searchSourceBuilder,
+		SearchRequestBuilder searchRequestBuilder,
 		SearchSearchRequest searchSearchRequest) {
 
 		if (searchSearchRequest.getVersion() != null) {
-			searchSourceBuilder.version(searchSearchRequest.getVersion());
+			searchRequestBuilder.setVersion(searchSearchRequest.getVersion());
 		}
 	}
 

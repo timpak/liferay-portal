@@ -22,13 +22,9 @@ import com.liferay.portal.search.elasticsearch7.internal.util.JSONUtil;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchAction;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -44,31 +40,25 @@ public class SearchSearchRequestExecutorImpl
 	public SearchSearchResponse execute(
 		SearchSearchRequest searchSearchRequest) {
 
-		SearchRequest searchRequest = new SearchRequest(
-			searchSearchRequest.getIndexNames());
-
-		if (searchSearchRequest.isRequestCache()) {
-			searchRequest.requestCache(searchSearchRequest.isRequestCache());
-		}
-
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		SearchRequestBuilder searchRequestBuilder = new SearchRequestBuilder(
+			_elasticsearchClientResolver.getClient(), SearchAction.INSTANCE);
 
 		_searchSearchRequestAssembler.assemble(
-			searchSourceBuilder, searchSearchRequest, searchRequest);
+			searchRequestBuilder, searchSearchRequest);
 
 		if (_log.isTraceEnabled()) {
 			String prettyPrintedRequestString = _getPrettyPrintedRequestString(
-				searchSourceBuilder);
+				searchRequestBuilder);
 
 			_log.trace("Search query: " + prettyPrintedRequestString);
 		}
 
-		SearchResponse searchResponse = getSearchResponse(searchRequest);
+		SearchResponse searchResponse = searchRequestBuilder.get();
 
 		SearchSearchResponse searchSearchResponse = new SearchSearchResponse();
 
 		_searchSearchResponseAssembler.assemble(
-			searchSourceBuilder, searchResponse, searchSearchRequest,
+			searchRequestBuilder, searchResponse, searchSearchRequest,
 			searchSearchResponse);
 
 		if (_log.isDebugEnabled()) {
@@ -80,19 +70,6 @@ public class SearchSearchRequestExecutorImpl
 		}
 
 		return searchSearchResponse;
-	}
-
-	protected SearchResponse getSearchResponse(SearchRequest searchRequest) {
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		try {
-			return restHighLevelClient.search(
-				searchRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
 	}
 
 	@Reference(unbind = "-")
@@ -117,10 +94,10 @@ public class SearchSearchRequestExecutorImpl
 	}
 
 	private String _getPrettyPrintedRequestString(
-		SearchSourceBuilder searchSourceBuilder) {
+		SearchRequestBuilder searchRequestBuilder) {
 
 		try {
-			return JSONUtil.getPrettyPrintedJSONString(searchSourceBuilder);
+			return JSONUtil.getPrettyPrintedJSONString(searchRequestBuilder);
 		}
 		catch (Exception e) {
 			return e.getMessage();

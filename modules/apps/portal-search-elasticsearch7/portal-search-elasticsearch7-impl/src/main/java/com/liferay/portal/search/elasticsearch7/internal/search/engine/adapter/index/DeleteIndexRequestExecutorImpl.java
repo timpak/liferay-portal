@@ -18,13 +18,12 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexResponse;
 
-import java.io.IOException;
-
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
 import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,48 +37,34 @@ public class DeleteIndexRequestExecutorImpl
 
 	@Override
 	public DeleteIndexResponse execute(DeleteIndexRequest deleteIndexRequest) {
-		org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-			elasticsearchDeleteIndexRequest = createDeleteIndexRequest(
-				deleteIndexRequest);
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			createDeleteIndexRequestBuilder(deleteIndexRequest);
 
-		AcknowledgedResponse acknowledgedResponse = getAcknowledgedResponse(
-			elasticsearchDeleteIndexRequest);
+		AcknowledgedResponse acknowledgedResponse =
+			deleteIndexRequestBuilder.get();
 
 		return new DeleteIndexResponse(acknowledgedResponse.isAcknowledged());
 	}
 
-	protected org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-		createDeleteIndexRequest(DeleteIndexRequest deleteIndexRequest) {
+	protected DeleteIndexRequestBuilder createDeleteIndexRequestBuilder(
+		DeleteIndexRequest deleteIndexRequest) {
 
-		org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-			elasticsearchDeleteIndexRequest =
-				new org.elasticsearch.action.admin.indices.delete.
-					DeleteIndexRequest(deleteIndexRequest.getIndexNames());
+		Client client = _elasticsearchClientResolver.getClient();
+
+		AdminClient adminClient = client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
+			indicesAdminClient.prepareDelete(
+				deleteIndexRequest.getIndexNames());
 
 		IndicesOptions indicesOptions = _indicesOptionsTranslator.translate(
 			deleteIndexRequest.getIndicesOptions());
 
-		elasticsearchDeleteIndexRequest.indicesOptions(indicesOptions);
+		deleteIndexRequestBuilder.setIndicesOptions(indicesOptions);
 
-		return elasticsearchDeleteIndexRequest;
-	}
-
-	protected AcknowledgedResponse getAcknowledgedResponse(
-		org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-			elasticsearchDeleteIndexRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		IndicesClient indicesClient = restHighLevelClient.indices();
-
-		try {
-			return indicesClient.delete(
-				elasticsearchDeleteIndexRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return deleteIndexRequestBuilder;
 	}
 
 	@Reference(unbind = "-")

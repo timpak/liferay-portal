@@ -19,14 +19,11 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.DeleteByQueryDocumentResponse;
 
-import java.io.IOException;
-
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -44,11 +41,11 @@ public class DeleteByQueryDocumentRequestExecutorImpl
 	public DeleteByQueryDocumentResponse execute(
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
-		DeleteByQueryRequest deleteByQueryRequest = createDeleteByQueryRequest(
-			deleteByQueryDocumentRequest);
+		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
+			createDeleteByQueryRequestBuilder(deleteByQueryDocumentRequest);
 
-		BulkByScrollResponse bulkByScrollResponse = getBulkByScrollResponse(
-			deleteByQueryRequest);
+		BulkByScrollResponse bulkByScrollResponse =
+			deleteByQueryRequestBuilder.get();
 
 		TimeValue timeValue = bulkByScrollResponse.getTook();
 
@@ -56,37 +53,25 @@ public class DeleteByQueryDocumentRequestExecutorImpl
 			bulkByScrollResponse.getDeleted(), timeValue.getMillis());
 	}
 
-	protected DeleteByQueryRequest createDeleteByQueryRequest(
+	protected DeleteByQueryRequestBuilder createDeleteByQueryRequestBuilder(
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest) {
 
-		DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest();
+		DeleteByQueryRequestBuilder deleteByQueryRequestBuilder =
+			new DeleteByQueryRequestBuilder(
+				_elasticsearchClientResolver.getClient(),
+				DeleteByQueryAction.INSTANCE);
 
 		QueryBuilder queryBuilder = _queryTranslator.translate(
 			deleteByQueryDocumentRequest.getQuery(), null);
 
-		deleteByQueryRequest.setQuery(queryBuilder);
+		deleteByQueryRequestBuilder.filter(queryBuilder);
 
-		deleteByQueryRequest.setRefresh(
+		deleteByQueryRequestBuilder.refresh(
 			deleteByQueryDocumentRequest.isRefresh());
-		deleteByQueryRequest.indices(
+		deleteByQueryRequestBuilder.source(
 			deleteByQueryDocumentRequest.getIndexNames());
 
-		return deleteByQueryRequest;
-	}
-
-	protected BulkByScrollResponse getBulkByScrollResponse(
-		DeleteByQueryRequest deleteByQueryRequest) {
-
-		RestHighLevelClient restHighLevelClient =
-			_elasticsearchClientResolver.getRestHighLevelClient();
-
-		try {
-			return restHighLevelClient.deleteByQuery(
-				deleteByQueryRequest, RequestOptions.DEFAULT);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		return deleteByQueryRequestBuilder;
 	}
 
 	@Reference(unbind = "-")
