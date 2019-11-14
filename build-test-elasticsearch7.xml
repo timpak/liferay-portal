@@ -150,6 +150,9 @@ transportSSLEnabled="true"</echo>
 	<macrodef name="configure-portal-x-pack-security-truststore">
 		<sequential>
 			<if>
+
+
+				
 				<os family="unix" />
 				<then>
 					<exec dir="${elasticsearch.dir}-1/bin" executable="/bin/bash">
