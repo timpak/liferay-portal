@@ -152,11 +152,13 @@ transportSSLEnabled="true"</echo>
 			<if>
 
 
-				
+
 				<os family="unix" />
 				<then>
 					<exec dir="${elasticsearch.dir}-1/bin" executable="/bin/bash">
 						<arg value="-c" />
+						
+
 						<arg value="./elasticsearch-certutil cert --ca-cert ${elasticsearch.dir}-1/config/certs/ca/ca.crt --ca-key ${elasticsearch.dir}-1/config/certs/ca/ca.key --pass liferay --ip 127.0.0.1 --dns localhost --name localhost --out ${elasticsearch.dir}-1/config/certs/localhost.p12" />
 					</exec>
 
