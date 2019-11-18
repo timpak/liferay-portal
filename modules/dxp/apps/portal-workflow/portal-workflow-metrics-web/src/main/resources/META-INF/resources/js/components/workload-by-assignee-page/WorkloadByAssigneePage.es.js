@@ -11,9 +11,10 @@
 
 import React from 'react';
 
-import FilterResultsBar from '../../shared/components/filter/FilterResultsBar.es';
 import {getFilterResults} from '../../shared/components/filter/util/filterUtil.es';
+import Search from '../../shared/components/pagination/Search.es';
 import PromisesResolver from '../../shared/components/request/PromisesResolver.es';
+import ResultsBar from '../../shared/components/results-bar/ResultsBar.es';
 import {useFilterItemKeys} from '../../shared/hooks/useFilterItemKeys.es';
 import {useFiltersReducer} from '../../shared/hooks/useFiltersReducer.es';
 import {useProcessTitle} from '../../shared/hooks/useProcessTitle.es';
@@ -28,25 +29,27 @@ import {
 } from './WorkloadByAssigneePageBody.es';
 import {Item, Table} from './WorkloadByAssigneePageTable.es';
 
-const filterKeys = {
-	processSteps: 'taskKeys',
-	roles: 'roleIds'
-};
-
-const filterTitles = {
-	processSteps: Liferay.Language.get('process-step'),
-	roles: Liferay.Language.get('roles')
-};
-
-const WorkloadByAssigneePage = ({page, pageSize, processId, sort}) => {
+const WorkloadByAssigneePage = ({page, pageSize, processId, search, sort}) => {
 	useProcessTitle(processId, Liferay.Language.get('workload-by-assignee'));
+
+	const filterKeys = {
+		processSteps: 'taskKeys',
+		roles: 'roleIds'
+	};
 
 	const [filterValues, dispatch] = useFiltersReducer(filterKeys);
 	const {roleIds, taskKeys} = useFilterItemKeys(filterKeys, filterValues);
 
+	let keywords;
+
+	if (typeof search === 'string' && search) {
+		keywords = decodeURIComponent(search);
+	}
+
 	const {data, promises} = useResource(
 		`/processes/${processId}/assignee-users`,
 		{
+			keywords,
 			page,
 			pageSize,
 			roleIds,
@@ -59,8 +62,13 @@ const WorkloadByAssigneePage = ({page, pageSize, processId, sort}) => {
 		<PromisesResolver promises={promises}>
 			<WorkloadByAssigneePage.Filters
 				dispatch={dispatch}
+				filterKeys={filterKeys}
 				filterValues={filterValues}
+				page={page}
+				pageSize={pageSize}
 				processId={processId}
+				search={search}
+				sort={sort}
 				totalCount={data.totalCount}
 			/>
 
@@ -75,12 +83,39 @@ const WorkloadByAssigneePage = ({page, pageSize, processId, sort}) => {
 	);
 };
 
-const Filters = ({dispatch, filterValues, processId, totalCount}) => {
+const Filters = ({
+	dispatch,
+	filterKeys,
+	filterValues,
+	page,
+	pageSize,
+	processId,
+	search,
+	sort,
+	totalCount
+}) => {
+	const filterTitles = {
+		processSteps: Liferay.Language.get('process-step'),
+		roles: Liferay.Language.get('roles')
+	};
+
 	const filterResults = getFilterResults(
 		filterKeys,
 		filterTitles,
 		filterValues
 	);
+
+	const routerParams = {page, pageSize, processId, sort};
+
+	const selectedFilters = filterResults.filter(filter => {
+		filter.items = filter.items
+			? filter.items.filter(item => item.active)
+			: [];
+
+		return !!filter.items.length;
+	});
+
+	const showFiltersResult = search || !!selectedFilters.length;
 
 	return (
 		<>
@@ -105,10 +140,37 @@ const Filters = ({dispatch, filterValues, processId, totalCount}) => {
 							processId={processId}
 						/>
 					</ul>
+
+					<div className="nav-form navbar-form-autofit">
+						<Search
+							disabled={false}
+							placeholder={Liferay.Language.get(
+								'search-for-assignee-name'
+							)}
+						/>
+					</div>
 				</div>
 			</nav>
 
-			<FilterResultsBar filters={filterResults} totalCount={totalCount} />
+			{showFiltersResult && (
+				<ResultsBar>
+					<ResultsBar.TotalCount
+						search={search}
+						totalCount={totalCount}
+					/>
+
+					<ResultsBar.FilterItems
+						filters={selectedFilters}
+						search={search}
+						{...routerParams}
+					/>
+
+					<ResultsBar.Clear
+						filters={selectedFilters}
+						{...routerParams}
+					/>
+				</ResultsBar>
+			)}
 		</>
 	);
 };

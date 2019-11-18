@@ -1,7 +1,7 @@
 definition {
 
 	macro addDepot {
-		Click(locator1 = "Button#PLUS");
+		LexiconEntry.gotoAdd();
 
 		Type(
 			locator1 = "TextInput#NAME",

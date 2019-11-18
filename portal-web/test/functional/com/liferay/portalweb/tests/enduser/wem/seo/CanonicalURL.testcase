@@ -50,15 +50,16 @@ definition {
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Canonical URL Test Page");
 
-		Navigator.gotoSEOPanel();
+		Navigator.gotoNavTab(navTab = "SEO");
 
-		Check.checkToggleSwitch(
-			key_toggleSwitchLabel = "Use Custom Canonical URL",
-			locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
+		var checkboxName = "Use Custom Canonical URL";
+
+		if (IsNotChecked(locator1 = "Checkbox#ANY_CHECKBOX")) {
+			Click(locator1 = "Checkbox#ANY_CHECKBOX");
+		}
 
 		Type(
-			key_fieldLabel = "Canonical URL",
-			locator1 = "TextInput#GENERIC_TEXT_INPUT",
+			locator1 = "TextInput#CUSTOM_CANONICAL_URL",
 			value1 = "http://mycustomizedurl.com/mydesiredurl");
 
 		PortletEntry.save();

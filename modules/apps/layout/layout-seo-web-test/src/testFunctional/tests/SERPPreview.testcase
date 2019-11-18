@@ -36,7 +36,7 @@ definition {
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Test Page");
 
-		Navigator.gotoSEOPanel();
+		Navigator.gotoNavTab(navTab = "SEO");
 
 		AssertElementPresent(locator1 = "SitePagesEditPage#PREVIEW_SERP");
 
@@ -60,7 +60,7 @@ definition {
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Test Page");
 
-		Navigator.gotoSEOPanel();
+		Navigator.gotoNavTab(navTab = "SEO");
 
 		Page.viewPreview(
 			description = "Page Description",
@@ -83,7 +83,7 @@ definition {
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Long Test Page Name To Check The Display Style Of The URL In The SERP Preview");
 
-		Navigator.gotoSEOPanel();
+		Navigator.gotoNavTab(navTab = "SEO");
 
 		PortletEntry.inputText(
 			fieldLabel = "HTML Title",
@@ -107,7 +107,7 @@ definition {
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Long Test Page Name To Check The Display Style Of The URL In The SERP Preview");
 
-		Navigator.gotoSEOPanel();
+		Navigator.gotoNavTab(navTab = "SEO");
 
 		Page.viewPreview(
 			description = "Liferay Portal provides an excellent platform for building web applications, websites, and portals, but it can additionally be used for a new category of web ap…",

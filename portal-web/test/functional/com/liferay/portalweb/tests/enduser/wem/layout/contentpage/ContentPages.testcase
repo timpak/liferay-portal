@@ -311,10 +311,7 @@ definition {
 	@description = "This is a test for LPS-78726. Discarding a draft will revert a content page back to its most recent published version."
 	@priority = "5"
 	test DiscardContentPageDraft {
-
-		// Ignore test from acceptance until LRQA-53550 resolved
-
-		property portal.acceptance = "false";
+		property portal.acceptance = "true";
 
 		task ("Add a content page") {
 			SitePages.openPagesAdmin(siteURLKey = "test-site-name");
@@ -322,14 +319,14 @@ definition {
 			ContentPages.addPage(pageName = "Test Content Page Name");
 		}
 
-		task ("Assert the Discard Draft and Publish buttons start off disabled") {
+		task ("Assert the Discard Draft button starts off disabled but Publish button starts off enabled") {
 			AssertVisible(
 				key_text = "Discard Draft",
 				locator1 = "Button#ANY_DISABLED");
 
 			AssertVisible(
 				key_text = "Publish",
-				locator1 = "Button#ANY_DISABLED");
+				locator1 = "Button#ANY_ENABLED");
 		}
 
 		task ("Add a Title fragment to the content page") {
@@ -350,14 +347,14 @@ definition {
 				locator1 = "Fragment#FRAGMENT");
 		}
 
-		task ("Assert the Discard Draft and Publish buttons are now disabled") {
+		task ("Assert the Discard Draft button is now disabled but Publish button still is enabled") {
 			AssertVisible(
 				key_text = "Discard Draft",
 				locator1 = "Button#ANY_DISABLED");
 
 			AssertVisible(
 				key_text = "Publish",
-				locator1 = "Button#ANY_DISABLED");
+				locator1 = "Button#ANY_ENABLED");
 		}
 
 		task ("Add a Title fragment to the content page") {
@@ -388,14 +385,14 @@ definition {
 			ContentPages.clickPencil();
 		}
 
-		task ("Assert the Discard Draft and Publish buttons are now disabled") {
+		task ("Assert the Discard Draft button is disabled but Publish button is enabled") {
 			AssertVisible(
 				key_text = "Discard Draft",
 				locator1 = "Button#ANY_DISABLED");
 
 			AssertVisible(
 				key_text = "Publish",
-				locator1 = "Button#ANY_DISABLED");
+				locator1 = "Button#ANY_ENABLED");
 		}
 
 		task ("Edit the Title fragment's editable text") {
@@ -427,14 +424,14 @@ definition {
 				locator1 = "Fragment#FRAGMENT");
 		}
 
-		task ("Assert the Discard Draft and Publish buttons are now disabled") {
+		task ("Assert the Discard Draft button is now disabled but Publish button still is enabled") {
 			AssertVisible(
 				key_text = "Discard Draft",
 				locator1 = "Button#ANY_DISABLED");
 
 			AssertVisible(
 				key_text = "Publish",
-				locator1 = "Button#ANY_DISABLED");
+				locator1 = "Button#ANY_ENABLED");
 		}
 
 		task ("Add a Rich Text fragment to the content page") {
@@ -465,14 +462,14 @@ definition {
 				locator1 = "Fragment#FRAGMENT");
 		}
 
-		task ("Assert the Discard Draft and Publish buttons are now disabled") {
+		task ("Assert the Discard Draft button is now disabled but Publish button still is enabled") {
 			AssertVisible(
 				key_text = "Discard Draft",
 				locator1 = "Button#ANY_DISABLED");
 
 			AssertVisible(
 				key_text = "Publish",
-				locator1 = "Button#ANY_DISABLED");
+				locator1 = "Button#ANY_ENABLED");
 		}
 	}
 
