@@ -186,6 +186,27 @@ definition {
 				value1 = "${displayTemplate}");
 		}
 
+		if (isSet(maximumItemDisplay)) {
+			Type(
+				key_maximumItems = "Maximum Item Display",
+				locator1 = "Search#SIMILAR_RESULTS_MAXIMUM_ITEM_DISPLAY",
+				value1 = "${maximumItemDisplay}");
+		}
+
+		if (isSet(fields)) {
+			Type(
+				key_fieldLabel = "Fields",
+				locator1 = "TextInput#GENERIC_TEXT_INPUT",
+				value1 = "${fields}");
+		}
+
+		if (isSet(maximumQueryTerms)) {
+			Type(
+				key_fieldLabel = "Maximum Query Terms",
+				locator1 = "TextInput#GENERIC_TEXT_INPUT",
+				value1 = "${maximumQueryTerms}");
+		}
+
 		if (isSet(minimumDocumentFrequency)) {
 			Type(
 				key_fieldLabel = "Minimum Document Frequency",
