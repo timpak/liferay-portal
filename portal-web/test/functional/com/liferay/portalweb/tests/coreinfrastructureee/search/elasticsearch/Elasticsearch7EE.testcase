@@ -31,6 +31,108 @@ definition {
 		}
 	}
 
+	test AssertSimilarResultsConfigurationChanges {
+		property test.name.skip.portal.instance = "Elasticsearch6EE#AssertSimilarResultsConfigurationChanges";
+
+		for (var titleName : list "Alpha,Bravo,Charlie,Delta,Echo,Foxtrot") {
+			JSONWebcontent.addWebContent(
+				content =  "${titleName}",
+				groupName = "Guest",
+				title = "${titleName}");
+		}
+
+		JSONWebcontent.addWebContent(
+			content =  "Golf",
+			groupName = "Guest",
+			title = "Alpha Bravo Charlie Delta Echo Foxtrot");
+
+		JSONWebcontent.addWebContent(
+			content =  "Matching Content",
+			groupName = "Guest",
+			title = "Similar Results Web Content 1");
+
+		JSONWebcontent.addWebContent(
+			content = "Matching Content",
+			groupName = "Guest",
+			title = "Similar Results Web Content 2");
+
+		JSONWebcontent.addWebContent(
+			content = "No Match",
+			groupName = "Guest",
+			title = "Similar Results Web Content 3");
+
+		JSONLayout.addPublicLayout(
+			groupName = "Guest",
+			layoutName = "Similar Results Page");
+
+		JSONLayout.addWidgetToPublicLayout(
+			column = "1",
+			groupName = "Guest",
+			layoutName = "Similar Results Page",
+			widgetName = "Asset Publisher");
+
+		Navigator.gotoPage(pageName = "Similar Results Page");
+
+		Portlet.addPG(portletName = "Similar Results");
+
+		SearchPortlets.configureSimilarResults(
+			displayTemplate = "Compact Layout",
+			minimumDocumentFrequency = "1",
+			minimumTermFrequency = "1");
+
+		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Alpha Bravo Charlie Delta Echo Foxtrot");
+
+		for (var titleName : list "Alpha,Bravo,Charlie,Delta,Echo,Foxtrot") {
+			AssertElementPresent(
+				key_linkResultTitle = "${titleName}",
+				locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
+		}
+
+		SearchPortlets.configureSimilarResults(maximumItemDisplay = "5");
+
+		AssertElementPresent(
+			key_resultPosition = "5",
+			locator1 = "Search#SIMILAR_RESULTS_SPECIFIC_POSITION");
+
+		AssertElementNotPresent(
+			key_resultPosition = "6",
+			locator1 = "Search#SIMILAR_RESULTS_SPECIFIC_POSITION");
+
+		SearchPortlets.configureSimilarResults(maximumQueryTerms = "3");
+
+		AssertElementPresent(
+			key_resultPosition = "3",
+			locator1 = "Search#SIMILAR_RESULTS_SPECIFIC_POSITION");
+
+		AssertElementNotPresent(
+			key_resultPosition = "4",
+			locator1 = "Search#SIMILAR_RESULTS_SPECIFIC_POSITION");
+
+		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
+
+		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results Web Content 1");
+
+		AssertElementPresent(
+			key_linkResultTitle = "Similar Results Web Content 2",
+			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
+
+		AssertElementPresent(
+			key_linkResultTitle = "Similar Results Web Content 3",
+			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
+
+		SearchPortlets.configureSimilarResults(
+			fields = "Content",
+			maximumQueryTerms = "3");
+
+		AssertElementPresent(
+			key_linkResultTitle = "Similar Results Web Content 3",
+			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
+
+		AssertElementNotPresent(
+			key_linkResultTitle = "Similar Results Web Content 2",
+			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
+	}
+
 	@ignore = "true"
 	test AssertSimilarResultsDisplayTemplate {
 		property test.name.skip.portal.instance = "Elasticsearch7EE#AssertSimilarResultsDisplayTemplate";
