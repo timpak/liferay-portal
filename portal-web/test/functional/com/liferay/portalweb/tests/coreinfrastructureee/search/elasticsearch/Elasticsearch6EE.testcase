@@ -226,6 +226,69 @@ definition {
 			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
 	}
 
+	test AssertSimilarResultsWithContentPages {
+		property test.name.skip.portal.instance = "Elasticsearch6EE#AssertSimilarResultsWithContentPages";
+
+		JSONWebcontent.addWebContent(
+			content = "WC Content",
+			groupName = "Guest",
+			title = "Similar Results WC Title 1");
+
+		JSONWebcontent.addWebContent(
+			content = "WC Content",
+			groupName = "Guest",
+			title = "Similar Results WC Title 2");
+
+		SitePages.openPagesAdmin(siteURLKey = "guest");
+
+		ContentPages.addPage(pageName = "Similar Results Page");
+
+		PageEditor.addWidget(portletName = "Asset Publisher");
+
+		PageEditor.addWidget(portletName = "Similar Results");
+
+		MouseOver.mouseOverNotVisible(locator1 = "Search#SIMILAR_RESULTS_CONFIGURATION_CONTENT_PAGE");
+
+		Click(locator1 = "Search#SIMILAR_RESULTS_CONFIGURATION_CONTENT_PAGE");
+
+		SelectFrame(locator1 = "IFrame#CONFIGURATION");
+
+		Type(
+			key_fieldLabel = "Minimum Document Frequency",
+			locator1 = "TextInput#GENERIC_TEXT_INPUT",
+			value1 = "1");
+
+		Type(
+			key_fieldLabel = "Minimum Term Frequency",
+			locator1 = "TextInput#GENERIC_TEXT_INPUT",
+			value1 = "1");
+
+		PortletEntry.save();
+
+		IFrame.closeFrame();
+
+		PageEditor.clickPublish();
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/similar-results-page");
+
+		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results WC Title 1");
+
+		AssertTextEquals.assertPartialText(
+			key_assetTitle = "Similar Results WC Title 1",
+			locator1 = "APAsset#ASSET_TITLE",
+			value1 = "Similar Results WC Title 1");
+
+		AssertClick.assertPartialTextClickAt(
+			key_linkResultTitle = "Similar Results WC Title 2",
+			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE",
+			value1 = "Similar Results WC Title 2");
+
+		AssertTextEquals.assertPartialText(
+			key_assetTitle = "Similar Results WC Title 2",
+			locator1 = "APAsset#ASSET_TITLE",
+			value1 = "Similar Results WC Title 2");
+	}
+
 	@priority = "5"
 	test LearningToRankSmoke {
 		property osgi.module.configuration.file.names = "com.liferay.portal.search.learning.to.rank.configuration.LearningToRankConfiguration.config";
