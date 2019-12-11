@@ -285,7 +285,18 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 					</c:if>
 
 					<%
-					PortletURL viewFullContentURL = assetPublisherHelper.getBaseAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, assetPublisherDisplayContext.isAssetLinkBehaviorViewInPortlet());
+					PortletURL viewFullContentURL = renderResponse.createRenderURL();
+
+					viewFullContentURL.setParameter("mvcPath", "/view_content.jsp");
+					viewFullContentURL.setParameter("type", assetRendererFactory.getType());
+
+					if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
+						if (assetRenderer.getGroupId() != scopeGroupId) {
+							viewFullContentURL.setParameter("groupId", String.valueOf(assetRenderer.getGroupId()));
+						}
+
+						viewFullContentURL.setParameter("urlTitle", assetRenderer.getUrlTitle());
+					}
 					%>
 
 					<div class="autofit-col">
