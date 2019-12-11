@@ -89,6 +89,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SIMILAR_RESULTS_CONFIGURATION_CONTENT_PAGE</td>
+	<td>//section[contains(@id,'SimilarResultsPortlet')]//*[*[name()='svg'][contains(@class,'lexicon-icon-cog')]]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SIMILAR_RESULTS_LINK_TITLE</td>
 	<td>//li/a[contains(.,'${key_linkResultTitle}')]</td>
 	<td></td>
