@@ -546,7 +546,7 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 		PortletURL viewFullContentURL = getBaseAssetViewURL(
 			liferayPortletRequest, liferayPortletResponse, assetRenderer,
-			assetEntry);
+			assetEntry, viewInContext);
 
 		PortletURL redirectURL = liferayPortletResponse.createRenderURL();
 
@@ -600,7 +600,8 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 	public PortletURL getBaseAssetViewURL(
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		AssetRenderer<?> assetRenderer, AssetEntry assetEntry) {
+		AssetRenderer<?> assetRenderer, AssetEntry assetEntry,
+		boolean viewInContext) {
 
 		PortletURL baseAssetViewURL = liferayPortletResponse.createRenderURL();
 

@@ -136,7 +136,8 @@ public interface AssetPublisherHelper {
 	public PortletURL getBaseAssetViewURL(
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		AssetRenderer<?> assetRenderer, AssetEntry assetEntry);
+		AssetRenderer<?> assetRenderer, AssetEntry assetEntry,
+		boolean viewInContext);
 
 	public long[] getClassNameIds(
 		PortletPreferences portletPreferences, long[] availableClassNameIds);
