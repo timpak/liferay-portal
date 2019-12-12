@@ -120,7 +120,7 @@ definition {
 			column = "1",
 			groupName = "Guest",
 			layoutName = "Similar Results Page",
-			widgetName = "Asset Publisher");
+			widgetName = "Blogs");
 
 		Navigator.gotoPage(pageName = "Similar Results Page");
 
@@ -131,7 +131,9 @@ definition {
 			minimumDocumentFrequency = "1",
 			minimumTermFrequency = "1");
 
-		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results Blogs Title 1");
+		BlogsNavigator.gotoEntryPG(
+			entryContent = "Blogs Content",
+			entryTitle = "Similar Results Blogs Title 1");
 
 		AssertElementPresent(
 			key_linkResultTitle = "Similar Results Blogs Title 2",
@@ -151,78 +153,6 @@ definition {
 
 		AssertElementNotPresent(
 			key_linkResultTitle = "Similar Results WC Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
-
-		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results DM Title 1");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results DM Title 2",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results DM Title 3",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results Blogs Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results MB Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results WC Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
-
-		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results MB Title 1");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results MB Title 2",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results MB Title 3",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results Blogs Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results DM Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results WC Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
-
-		AssetPublisherPortlet.clickAssetTitle(assetTitle = "Similar Results WC Title 1");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results WC Title 2",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementPresent(
-			key_linkResultTitle = "Similar Results WC Title 3",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results Blogs Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results DM Title",
-			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
-
-		AssertElementNotPresent(
-			key_linkResultTitle = "Similar Results MB Title",
 			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
 	}
 
