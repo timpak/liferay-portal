@@ -1096,6 +1096,7 @@ xpack.monitoring.collection.enabled: true</echo>
 		<lstopwatch action="total" name="start.kibana" />
 	</target>
 
+
 	<target name="stop-elasticsearch">
 		<configure-elasticsearch7-test-properties />
 
