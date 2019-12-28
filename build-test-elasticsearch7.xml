@@ -178,6 +178,7 @@ kibanaURL="https://localhost:5601"
 proxyServletLogEnable="true"</echo>
 
 			<echo append="true" file="${liferay.home}/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConnectionConfiguration.config">${line.separator}authenticationEnabled="true"
+connectionId="remote
 httpSSLEnabled="true"
 networkHostAddresses="https://localhost:9200"
 password="${osgi.config.elastic.user.password}"
