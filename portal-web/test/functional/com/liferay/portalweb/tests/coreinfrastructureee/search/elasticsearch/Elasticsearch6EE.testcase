@@ -227,6 +227,7 @@ definition {
 	}
 
 	test AssertSimilarResultsWithContentPages {
+		property portal.acceptance = "timpak";
 		property test.name.skip.portal.instance = "Elasticsearch6EE#AssertSimilarResultsWithContentPages";
 
 		JSONWebcontent.addWebContent(
