@@ -34,7 +34,7 @@ xpack.security.transport.ssl.verification_mode: certificate</echo>
 			<var name="elasticsearch.ltr.version" unset="true" />
 			<var name="elasticsearch.ltr.zip.nam" unset="true" />
 
-			<property name="elasticsearch.version" value="7.3.1" />
+			<property name="elasticsearch.version" value="7.4.2" />
 			<property name="elasticsearch.ltr.version" value="1.1.2" />
 			<property name="elasticsearch.ltr-linear-regression-model.zip.name" value="ltr-linear-regression-model.zip" />
 			<property name="elasticsearch.ltr-linear-regression-model.zip.url" value="http://files.liferay.com/private/apps/elastic/elasticsearch/${elasticsearch.ltr-linear-regression-model.zip.name}" />
