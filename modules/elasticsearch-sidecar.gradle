@@ -1,0 +1,202 @@
+import com.liferay.gradle.util.FileUtil
+import com.liferay.gradle.util.OSDetector
+import com.liferay.gradle.util.StringUtil
+
+import groovy.io.FileType
+
+import java.util.concurrent.TimeUnit
+
+buildscript {
+	apply from: file("build-buildscript.gradle"), to: buildscript
+}
+
+ext {
+	elasticsearchOSGiConfigs = ["operationMode=\"REMOTE\""]
+	elasticsearchSidecarConfigs = [
+		"bootstrap.system_call_filter: false",
+		"cluster.name: LiferayElasticsearchCluster",
+		"discovery.zen.minimum_master_nodes: " + ((("${project.'elasticsearch.sidecar.cluster.size'}" as int) / 2 as int) + 1),
+		"path.repo: " + file("${project.'liferay.home'}/data/elasticsearch${project.'elasticsearch.sidecar.major.version'}/repo").absolutePath.replace(File.separatorChar, '/' as char),
+		"xpack.ml.enabled: false",
+		"xpack.monitoring.collection.enabled: true"
+	]
+}
+
+task downloadElasticsearch
+task setupElasticsearch
+task startElasticsearch
+task stopElasticsearch
+
+String liferayHome = project.properties["liferay.home"]
+
+int elasticsearchSidecarClusterSize = project.properties["elasticsearch.sidecar.cluster.size"] as int
+File elasticsearchSidecarDataDir = file("${liferayHome}/data/elasticsearch${project.'elasticsearch.sidecar.major.version'}/repo")
+File elasticsearchSidecarClusterDir = file("${liferayHome}/elasticsearch-${project.'elasticsearch.sidecar.major.version'}")
+File elasticsearchSidecarDir = file("${liferayHome}/elasticsearch-${project.'elasticsearch.sidecar.version'}")
+String elasticsearchSidecarURL = "http://localhost:9200/"
+
+downloadElasticsearch {
+	doFirst {
+		logger.lifecycle "Deleting {}", elasticsearchSidecarDataDir
+
+		delete elasticsearchSidecarDataDir
+
+		file(liferayHome).traverse(type: FileType.ANY, maxDepth: 0) {
+			if (it.name.startsWith("elasticsearch-")) {
+				delete it
+			}
+		}
+	}
+
+	doLast {
+		File destinationFile = file("${liferayHome}/${project.'elasticsearch.sidecar.zip.name'}")
+
+		FileUtil.get(project, project.properties["elasticsearch.sidecar.zip.url"], destinationFile, false, true)
+
+		project.copy {
+			from zipTree(destinationFile)
+			into liferayHome
+		}
+	}
+}
+
+setupElasticsearch {
+	dependsOn downloadElasticsearch
+
+	doFirst {
+		project.mkdir elasticsearchSidecarDataDir
+
+		File configFile = file("${liferayHome}/osgi/configs/com.liferay.portal.search.elasticsearch${project.'elasticsearch.sidecar.major.version'}.configuration.ElasticsearchConfiguration.config")
+
+		configFile.text = project.elasticsearchOSGiConfigs.sort().join('\n')
+
+		File ymlFile = file("${elasticsearchSidecarDir}/config/elasticsearch.yml")
+
+		ymlFile.append '\n' + project.elasticsearchSidecarConfigs.sort().join('\n')
+	}
+
+	doLast {
+		for (int i = 1; i <= elasticsearchSidecarClusterSize; i++) {
+			project.copy {
+				from elasticsearchSidecarDir
+				into new File(elasticsearchSidecarClusterDir, "node-${i}")
+			}
+		}
+
+		delete elasticsearchSidecarDir
+	}
+}
+
+startElasticsearch {
+	doFirst {
+		for (int i = 1; i <= elasticsearchSidecarClusterSize; i++) {
+			if (OSDetector.isWindows()) {
+				ant.exec(dir: new File(elasticsearchSidecarClusterDir, "node-${i}/bin"), executable: "cmd.exe", spawn: true) {
+					arg(value: "/c")
+					arg(value: "elasticsearch -d -p pid-elasticsearch")
+				}
+			}
+		}
+	}
+
+	doLast {
+		long startTime = System.currentTimeMillis()
+		long waitTime = TimeUnit.SECONDS.toMillis(60)
+
+		logger.lifecycle "Waiting for '{}'", elasticsearchSidecarURL
+
+		while ((System.currentTimeMillis() - startTime) < waitTime) {
+			URLConnection urlConnection = new URL(elasticsearchSidecarURL).openConnection()
+
+			urlConnection.requestMethod = "HEAD"
+
+			try {
+				if (urlConnection.responseCode == 200) {
+					println new File(elasticsearchSidecarClusterDir, "node-1/logs/LiferayElasticsearchCluster.log").text
+
+					return
+				}
+			}
+			catch (IOException ioe) {
+				sleep(500)
+			}
+		}
+
+		throw new GradleException("Unable to connect to Elasticsearch")
+	}
+}
+
+stopElasticsearch {
+	doLast {
+		for (int i = 1; i <= elasticsearchSidecarClusterSize; i++) {
+			project.exec {
+				workingDir = new File(elasticsearchSidecarClusterDir, "node-${i}")
+
+				if (OSDetector.isWindows()) {
+					args "/c for /f %x in (pid-elasticsearch) do taskkill /f /pid %x"
+					executable "cmd.exe"
+				}
+			}
+		}
+	}
+}
+
+_createPluginTasks(elasticsearchSidecarDir)
+
+private void _createPluginTasks(File elasticsearchSidecarDir) {
+	project.properties.each {
+		name, value ->
+
+		if (name.startsWith("elasticsearch.plugins.") && name.endsWith(".zip.name")) {
+			String url = project.properties[name.substring(0, name.length() - 4) + "url"]
+
+			if (url != null) {
+				String suffix = value.replaceAll(/[\.-](\w)/) {
+					return it[1].toUpperCase()
+				}
+
+				Task installPluginTask = tasks.create(name: "installPlugin" + StringUtil.capitalize(suffix), type: InstallPluginTask) {
+					pluginFile = file(project.properties["liferay.home"] + '/' + value)
+					pluginURL = url
+					workingDir = file("${elasticsearchSidecarDir}/bin")
+
+					if (name == "elasticsearch.plugins.ltr.zip.name") {
+						input = "y"
+					}
+				}
+
+				setupElasticsearch.dependsOn installPluginTask
+			}
+		}
+	}
+}
+
+class InstallPluginTask extends Exec {
+
+	@Override
+	void exec() {
+		FileUtil.get(project, pluginURL, pluginFile, false, true)
+
+		if (OSDetector.isWindows()) {
+			executable "cmd.exe"
+
+			args "/c elasticsearch-plugin install file:///" + pluginFile
+		}
+		else {
+			executable "/bin/sh"
+
+			args "-c ./elasticsearch-plugin install file:///" + pluginFile
+		}
+
+		if (input != null) {
+			standardInput = new ByteArrayInputStream(input.getBytes())
+		}
+
+		super.exec()
+	}
+
+	String input
+	File pluginFile
+	String pluginURL
+
+}
