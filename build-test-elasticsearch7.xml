@@ -401,7 +401,7 @@ ${line.separator}CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${el
 					<available file="${elasticsearch.dir}/${elasticsearch.ltr.zip.name}" />
 				</not>
 				<then>
-					<mirrors-get
+					<get
 						dest="${elasticsearch.dir}/${elasticsearch.ltr.zip.name}"
 						skipChecksum="true"
 						src="${elasticsearch.ltr.url}"
@@ -695,7 +695,7 @@ ${line.separator}CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${el
 					<available file="${liferay.home}/${elasticsearch.ltr-linear-regression-model.zip.name}" />
 				</not>
 				<then>
-					<mirrors-get
+					<get
 						dest="${liferay.home}/${elasticsearch.ltr-linear-regression-model.zip.name}"
 						skipChecksum="true"
 						src="${elasticsearch.ltr-linear-regression-model.zip.url}"
