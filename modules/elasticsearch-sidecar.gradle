@@ -90,9 +90,21 @@ setupElasticsearch {
 startElasticsearch {
 	doFirst {
 		for (int i = 1; i <= elasticsearchSidecarClusterSize; i++) {
-			if (OSDetector.isWindows()) {
+			if (OSDetector.isApple()) {
+				ant.exec(dir: new File(elasticsearchSidecarClusterDir, "node-${i}/bin"), executable: "/bin/bash", spawn: true) {
+					arg(value: "-c")
+					arg(value: "elasticsearch -d -p pid-elasticsearch")
+				}
+			}
+			else if (OSDetector.isWindows()) {
 				ant.exec(dir: new File(elasticsearchSidecarClusterDir, "node-${i}/bin"), executable: "cmd.exe", spawn: true) {
 					arg(value: "/c")
+					arg(value: "elasticsearch -d -p pid-elasticsearch")
+				}
+			}
+			else {
+				ant.exec(dir: new File(elasticsearchSidecarClusterDir, "node-${i}/bin"), executable: "/bin/bash", spawn: true) {
+					arg(value: "-c")
 					arg(value: "elasticsearch -d -p pid-elasticsearch")
 				}
 			}
@@ -135,6 +147,10 @@ stopElasticsearch {
 				if (OSDetector.isWindows()) {
 					args "/c for /f %x in (pid-elasticsearch) do taskkill /f /pid %x"
 					executable "cmd.exe"
+				}
+				else {
+					args "- kill ${pid-elasticsearch}"
+					executable "/bin/bash"
 				}
 			}
 		}
