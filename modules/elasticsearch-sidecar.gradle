@@ -71,9 +71,13 @@ setupElasticsearch {
 
 		configFile.text = project.properties["elasticsearch.configs.osgi"].split(',').sort().join('\n')
 
+		logger.lifecycle "#### {}", project.properties["elasticsearch.configs.osgi"]
+
 		File ymlFile = file("${elasticsearchSidecarDir}/config/elasticsearch.yml")
 
 		ymlFile.append '\n' + project.properties["elasticsearch.configs.sidecar"].split(',').sort().join('\n')
+
+		logger.lifecycle "#### {}", project.properties["elasticsearch.configs.sidecar"]
 	}
 
 	doLast {
