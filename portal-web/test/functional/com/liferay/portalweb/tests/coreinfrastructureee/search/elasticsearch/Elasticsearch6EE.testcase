@@ -74,6 +74,7 @@ definition {
 
 		SearchPortlets.configureSimilarResults(
 			displayTemplate = "Compact Layout",
+			fields = "title_en_US",
 			minimumDocumentFrequency = "1",
 			minimumTermFrequency = "1");
 
@@ -117,7 +118,7 @@ definition {
 			key_linkResultTitle = "Similar Results Web Content 3",
 			locator1 = "Search#SIMILAR_RESULTS_LINK_TITLE");
 
-		SearchPortlets.configureSimilarResults(fields = "Content");
+		SearchPortlets.configureSimilarResults(fields = "content_en_US");
 
 		AssertElementPresent(
 			key_linkResultTitle = "Similar Results Web Content 2",
@@ -154,6 +155,7 @@ definition {
 
 		SearchPortlets.configureSimilarResults(
 			displayTemplate = "Compact Layout",
+			fields = "title_en_US",
 			minimumDocumentFrequency = "1",
 			minimumTermFrequency = "1");
 
@@ -228,6 +230,7 @@ definition {
 
 		SearchPortlets.configureSimilarResults(
 			displayTemplate = "Compact Layout",
+			fields = "localized_title_en_US",
 			minimumDocumentFrequency = "1",
 			minimumTermFrequency = "1");
 
