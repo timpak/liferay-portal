@@ -889,7 +889,7 @@ xpack.monitoring.collection.enabled: true</echo>
 		<echo></echo>
 	</target>
 
-	<target name="replicate-indices">
+	<target name="create-follower-indices">
 		<exec executable="curl" outputproperty="companyId">
 			<arg value="http://localhost:8080/api/jsonws/company/get-company-by-virtual-host/virtual-host/localhost" />
 			<arg value="-u" />
@@ -1312,7 +1312,7 @@ xpack.monitoring.collection.enabled: true</echo>
 		</if>
 	</target>
 
-	<target name="stop-follower-elasticsearch">
+	<target name="stop-elasticsearch-local-cluster">
 		<configure-elasticsearch7-test-properties />
 
 		<if>
