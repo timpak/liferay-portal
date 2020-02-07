@@ -12417,6 +12417,7 @@ url=${env.HOSTNAME}:8080</echo>
 		</if>
 
 		<get-testcase-property property.name="portal.suite.search.engine" />
+		<get-testcase-property property.name="remote.elasticsearch.ccr.enabled" />
 		<get-testcase-property property.name="remote.elasticsearch.enabled" />
 
 		<if>
@@ -12426,6 +12427,13 @@ url=${env.HOSTNAME}:8080</echo>
 					<contains string="${portal.suite.search.engine}" substring="elasticsearch7" />
 					<then>
 						<ant antfile="build-test-elasticsearch7.xml" target="stop-elasticsearch" />
+
+						<if>
+							<equals arg1="${remote.elasticsearch.ccr.enabled}" arg2="true" />
+							<then>
+								<ant antfile="build-test-elasticsearch7.xml" target="stop-elasticsearch-local-cluster" />
+							</then>
+						</if>
 					</then>
 					<else>
 						<ant antfile="build-test-elasticsearch6.xml" target="stop-elasticsearch" />
