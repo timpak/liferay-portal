@@ -886,7 +886,7 @@ xpack.monitoring.collection.enabled: true</echo>
 			<equals arg1="${remote.elasticsearch.ccr.enabled}" arg2="true" />
 			<then>
 				<antcall target="configure-elasticsearch-cluster-properties">
-					<param name="remote.elasticsearch.cluster.size" value="2" />
+					<param name="remote.elasticsearch.cluster.size" value="1" />
 				</antcall>
 
 				<antcall target="prepare-additional-elasticsearch-dirs">
@@ -975,15 +975,6 @@ xpack.monitoring.collection.enabled: true</echo>
 			<var name="elasticsearch.node.number" value="0" />
 
 			<get-java-jdk-home />
-
-			<get-testcase-property property.name="remote.elasticsearch.ccr.enabled" />
-
-			<if>
-				<equals arg1="${remote.elasticsearch.ccr.enabled}" arg2="true" />
-				<then>
-					<configure-elasticsearch7-test-properties />
-				</then>
-			</if>
 
 			<antelope:repeat count="${remote.elasticsearch.cluster.size}">
 				<math
@@ -1163,8 +1154,6 @@ xpack.monitoring.collection.enabled: true</echo>
 	</target>
 
 	<target name="stop-elasticsearch-local-cluster">
-		<configure-elasticsearch7-test-properties />
-
 		<if>
 			<os family="unix" />
 			<then>
