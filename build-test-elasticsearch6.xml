@@ -718,6 +718,42 @@ xpack.monitoring.collection.enabled: true</echo>
 			select="\1"
 		/>
 
+		<exec executable="curl" outputproperty="curl.output.create.temporary.synonyms.index">
+			<arg line="-X PUT &quot;localhost:9200/synonyms_temp&quot; -H &apos;Content-Type: application/json&apos; -d &apos;{&quot;settings&quot; : { &quot;index.soft_deletes.enabled&quot; : true }, &quot;mappings&quot;: {&quot;_doc&quot;: {&quot;properties&quot;: {&quot;index&quot;: {&quot;store&quot;: true, &quot;type&quot;: &quot;keyword&quot;}, &quot;synonyms&quot;: {&quot;fields&quot; : {&quot;keyword&quot; : {&quot;type&quot; : &quot;keyword&quot;}}, &quot;store&quot;: true, &quot;type&quot;: &quot;text&quot;}, &quot;uid&quot;: {&quot;store&quot;: true, &quot;type&quot;: &quot;keyword&quot;}}}}}&apos;" />
+		</exec>
+
+		<echo>${curl.output.create.temporary.synonyms.index}</echo>
+
+		<exec executable="curl" outputproperty="curl.output.reindex.temporary.synonyms.index">
+			<arg line="-X POST &quot;localhost:9200/_reindex&quot; -H &apos;Content-Type: application/json&apos; -d &apos;{&quot;source&quot;: {&quot;index&quot;: &quot;liferay-search-tuning-synonyms-liferay-${companyId}&quot;}, &quot;dest&quot;: {&quot;index&quot;: &quot;synonyms_temp&quot;}}&apos;" />
+		</exec>
+
+		<echo>${curl.output.reindex.temporary.synonyms.index}</echo>
+
+		<exec executable="curl" outputproperty="curl.output.delete.synonyms.index">
+			<arg line="-X DELETE &quot;localhost:9200/liferay-search-tuning-synonyms-liferay-${companyId}&quot;" />
+		</exec>
+
+		<echo>${curl.output.delete.synonyms.index}</echo>
+
+		<exec executable="curl" outputproperty="curl.output.create.synonyms.index">
+			<arg line="-X PUT &quot;localhost:9200/liferay-search-tuning-synonyms-liferay-${companyId}&quot; -H &apos;Content-Type: application/json&apos; -d &apos;{&quot;settings&quot; : { &quot;index.soft_deletes.enabled&quot; : true }, &quot;mappings&quot;: {&quot;_doc&quot;: {&quot;properties&quot;: {&quot;index&quot;: {&quot;store&quot;: true, &quot;type&quot;: &quot;keyword&quot;}, &quot;synonyms&quot;: {&quot;fields&quot; : {&quot;keyword&quot; : {&quot;type&quot; : &quot;keyword&quot;}}, &quot;store&quot;: true, &quot;type&quot;: &quot;text&quot;}, &quot;uid&quot;: {&quot;store&quot;: true, &quot;type&quot;: &quot;keyword&quot;}}}}}&apos;" />
+		</exec>
+
+		<echo>${curl.output.create.synonyms.index}</echo>
+
+		<exec executable="curl" outputproperty="curl.output.reindex.synonyms.index">
+			<arg line="-X POST &quot;localhost:9200/_reindex&quot; -H &apos;Content-Type: application/json&apos; -d &apos;{&quot;source&quot;: {&quot;index&quot;: &quot;synonyms_temp&quot;}, &quot;dest&quot;: {&quot;index&quot;: &quot;liferay-search-tuning-synonyms-liferay-${companyId}&quot;}}&apos;" />
+		</exec>
+
+		<echo>${curl.output.reindex.synonyms.index}</echo>
+
+		<exec executable="curl" outputproperty="curl.output.delete.temporary.synonyms.index">
+			<arg line="-X DELETE &quot;localhost:9200/synonyms_temp&quot;" />
+		</exec>
+
+		<echo>${curl.output.delete.temporary.synonyms.index}</echo>
+
 		<exec executable="curl" outputproperty="curl.output.companyId">
 			<arg line="-X PUT &quot;localhost:9202/_cluster/settings&quot; -H &apos;Content-Type: application/json&apos; -d &apos;{&quot;persistent&quot;:{&quot;cluster&quot;:{&quot;remote&quot;:{&quot;leader&quot;:{&quot;seeds&quot;:[&quot;127.0.0.1:9300&quot;]}}}}}&apos;" />
 		</exec>
