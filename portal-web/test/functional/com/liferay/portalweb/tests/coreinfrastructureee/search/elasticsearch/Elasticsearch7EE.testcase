@@ -969,7 +969,7 @@ definition {
 	}
 
 	test MultipleElasticsearchConnections {
-		property osgi.app.includes = "portal-search-elasticsearch7";
+		property osgi.app.includes = "portal-search-elasticsearch-cross-cluster-replication,portal-search-elasticsearch7";
 		property portal.acceptance = "timpak";
 		property remote.elasticsearch.enabled = "true";
 		property remote.elasticsearch.clusters.enabled = "true";
