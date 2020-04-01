@@ -1189,6 +1189,29 @@ xpack.monitoring.collection.enabled: true</echo>
 		<echo></echo>
 		<echo>${curl.output.elasticsearch.indices}</echo>
 		<echo></echo>
+
+		<get-testcase-property property.name="remote.elasticsearch.clusters.enabled" />
+
+		<if>
+			<equals arg1="${remote.elasticsearch.clusters.enabled}" arg2="true" />
+			<then>
+				<exec executable="curl" outputproperty="curl.output.elasticsearch.local.cluster.indices">
+					<arg value="-H" />
+					<arg value="Content-Type: application/json" />
+					<arg value="localhost:9202/liferay-${companyId}/_search?pretty" />
+					<arg value="-d" />
+					<arg value="${elasticsearch.print.query}" />
+				</exec>
+
+				<echo></echo>
+				<echo>##</echo>
+				<echo>## Elasticsearch Local Cluster Indices</echo>
+				<echo>##</echo>
+				<echo></echo>
+				<echo>${curl.output.elasticsearch.local.cluster.indices}</echo>
+				<echo></echo>
+			</then>
+		</if>
 	</target>
 
 	<target name="restore-backup">
