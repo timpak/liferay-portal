@@ -4648,6 +4648,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 	<macrodef name="stop-remote-search-engine">
 		<sequential>
 			<get-testcase-property property.name="osgi.app.includes" />
+			<get-testcase-property property.name="remote.elasticsearch.clusters.enabled" />
 			<get-testcase-property property.name="remote.elasticsearch.enabled" />
 
 			<if>
@@ -4657,6 +4658,13 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 						<contains string="${osgi.app.includes}" substring="portal-search-elasticsearch7" />
 						<then>
 							<ant antfile="build-test-elasticsearch7.xml" target="stop-elasticsearch" />
+
+							<if>
+								<equals arg1="${remote.elasticsearch.clusters.enabled}" arg2="true" />
+								<then>
+									<ant antfile="build-test-elasticsearch7.xml" target="stop-elasticsearch-local-cluster" />
+								</then>
+							</if>
 						</then>
 						<else>
 							<ant antfile="build-test-elasticsearch6.xml" target="stop-elasticsearch" />
