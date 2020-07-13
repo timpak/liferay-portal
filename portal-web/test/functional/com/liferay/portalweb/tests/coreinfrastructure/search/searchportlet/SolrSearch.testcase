@@ -2106,9 +2106,14 @@ definition {
 
 		Navigator.gotoPage(pageName = "${searchPage}");
 
-		SearchPortlets.addWidgets(searchPortletList = "Search Options,Category Facet,Folder Facet,Site Facet,Tag Facet,Type Facet,User Facet,Search Results,Search Bar");
+		SearchPortlets.addWidgets(searchPortletList = "Category Facet,Folder Facet,Site Facet,Tag Facet,Type Facet,User Facet,Search Results,Search Bar");
 
 		SearchPortlets.configureWidgetScope(searchScope = "Everything");
+
+		JSONLayout.addWidgetToPublicLayout(
+			groupName = "Guest",
+			layoutName = "Search Page",
+			widgetName = "Search Options");
 
 		SearchPortlets.configureSearchOptions(
 			allowEmptySearches = "true",
