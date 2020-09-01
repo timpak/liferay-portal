@@ -32,6 +32,8 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 
 	public static final Integer SLAVE_RAM_DEFAULT = 16;
 
+	public static final Integer SLAVES_PER_HOST_DEFAULT = 2;
+
 	public JenkinsMaster(String masterName) {
 		if (masterName.contains(".")) {
 			_masterName = masterName.substring(0, masterName.indexOf("."));
@@ -60,6 +62,21 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 			}
 
 			_slaveRAM = slaveRAM;
+
+			Integer slavesPerHost = SLAVES_PER_HOST_DEFAULT;
+
+			String slavesPerHostString = JenkinsResultsParserUtil.getProperty(
+				properties,
+				JenkinsResultsParserUtil.combine(
+					"master.property(", _masterName, "/slaves.per.host)"));
+
+			if ((slavesPerHostString != null) &&
+				slavesPerHostString.matches("\\d+")) {
+
+				slavesPerHost = Integer.valueOf(slavesPerHostString);
+			}
+
+			_slavesPerHost = slavesPerHost;
 		}
 		catch (Exception exception) {
 			throw new RuntimeException(
@@ -380,5 +397,6 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 	private List<String> _queuedBuildURLs = new ArrayList<>();
 	private int _reportedAvailableSlavesCount;
 	private final Integer _slaveRAM;
+	private final Integer _slavesPerHost;
 
 }
