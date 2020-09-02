@@ -218,6 +218,10 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 		return _slaveRAM;
 	}
 
+	public Integer getSlavesPerHost() {
+		return _slavesPerHost;
+	}
+
 	public String getURL() {
 		return _masterURL;
 	}
