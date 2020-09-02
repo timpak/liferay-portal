@@ -79,7 +79,7 @@ public abstract class BatchTestClassGroup extends BaseTestClassGroup {
 			"test.batch.minimum.slave.ram");
 
 		if (minimumSlaveRAM == null) {
-			return JenkinsMaster.SLAVE_RAM_DEFAULT;
+			return JenkinsMaster.getSlaveRAMMinimumDefault();
 		}
 
 		return Integer.valueOf(minimumSlaveRAM);

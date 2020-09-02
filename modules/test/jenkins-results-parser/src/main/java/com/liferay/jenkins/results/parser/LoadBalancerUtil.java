@@ -49,7 +49,8 @@ public class LoadBalancerUtil {
 
 		if (!_jenkinsMasters.containsKey(masterPrefix)) {
 			allJenkinsMasters = JenkinsResultsParserUtil.getJenkinsMasters(
-				properties, JenkinsMaster.SLAVE_RAM_DEFAULT, masterPrefix);
+				properties, JenkinsMaster.getSlaveRAMMinimumDefault(),
+				masterPrefix);
 
 			_jenkinsMasters.put(masterPrefix, allJenkinsMasters);
 		}
@@ -119,7 +120,7 @@ public class LoadBalancerUtil {
 
 				String blacklistString = properties.getProperty("blacklist");
 
-				Integer minimumRAM = JenkinsMaster.SLAVE_RAM_DEFAULT;
+				Integer minimumRAM = JenkinsMaster.getSlaveRAMMinimumDefault();
 
 				String minimumRAMString = properties.getProperty("minimum.ram");
 

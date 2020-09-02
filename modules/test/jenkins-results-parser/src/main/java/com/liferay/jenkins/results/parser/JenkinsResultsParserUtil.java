@@ -1538,7 +1538,7 @@ public class JenkinsResultsParserUtil {
 
 		return getMostAvailableMasterURL(
 			baseInvocationURL, null, invokedBatchSize,
-			JenkinsMaster.SLAVE_RAM_DEFAULT);
+			JenkinsMaster.getSlaveRAMMinimumDefault());
 	}
 
 	public static String getMostAvailableMasterURL(
