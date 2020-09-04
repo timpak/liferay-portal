@@ -31,28 +31,29 @@ import jodd.util.Base32;
  */
 public class AuthenticationUtil {
 
-	public static String generateTOTP(String encodedText) {
+	public static String generateTimeBasedOTP(String secretKey) {
 		String otpAlgorithm = "HmacSHA1";
 
-		byte[] secret = Base32.decode(encodedText);
+		byte[] secret = Base32.decode(secretKey);
 
 		long time = (System.currentTimeMillis() - 3000) / 30000;
 
-		String hex = StringUtil.toUpperCase(Long.toHexString(time));
+		String timeCountHex = StringUtil.toUpperCase(Long.toHexString(time));
 
-		if (hex.length() > 16) {
-			return hex;
+		if (timeCountHex.length() > 16) {
+			return timeCountHex;
 		}
 
-		hex = StringUtil.replace(
-			String.format("%16s", hex), CharPool.SPACE, CharPool.NUMBER_0);
+		timeCountHex = StringUtil.replace(
+			String.format("%16s", timeCountHex), CharPool.SPACE,
+			CharPool.NUMBER_0);
 
 		try {
 			Mac mac = Mac.getInstance(otpAlgorithm);
 
 			mac.init(new SecretKeySpec(secret, "RAW"));
 
-			BigInteger bigInteger = new BigInteger("10" + hex, 16);
+			BigInteger bigInteger = new BigInteger("10" + timeCountHex, 16);
 
 			byte[] byteArray = bigInteger.toByteArray();
 
@@ -65,9 +66,9 @@ public class AuthenticationUtil {
 				((hash[offset] & 0x7f) << 24) | ((hash[offset + 1] & 0xff) << 16) |
 				((hash[offset + 2] & 0xff) << 8) | (hash[offset + 3] & 0xff);
 
-			int totp = binary % (int)Math.pow(10, 6);
+			int timeBasedOTP = binary % (int)Math.pow(10, 6);
 
-			return String.format("%0" + 6 + "d", totp);
+			return String.format("%0" + 6 + "d", timeBasedOTP);
 		}
 		catch (InvalidKeyException invalidKeyException) {
 			throw new IllegalArgumentException(
