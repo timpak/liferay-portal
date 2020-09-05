@@ -51,7 +51,7 @@ public class LoadBalancerUtil {
 		if (!_jenkinsMasters.containsKey(masterPrefix)) {
 			allJenkinsMasters = JenkinsResultsParserUtil.getJenkinsMasters(
 				properties, JenkinsMaster.getSlaveRAMMinimumDefault(),
-				masterPrefix);
+				JenkinsMaster.getSlavesPerHostDefault(), masterPrefix);
 
 			_jenkinsMasters.put(masterPrefix, allJenkinsMasters);
 		}

@@ -1369,7 +1369,8 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static List<JenkinsMaster> getJenkinsMasters(
-		Properties buildProperties, int minimumRAM, String prefix) {
+		Properties buildProperties, int minimumRAM, int maximumSlavesPerHost,
+		String prefix) {
 
 		List<JenkinsMaster> jenkinsMasters = new ArrayList<>();
 
@@ -1380,7 +1381,9 @@ public class JenkinsResultsParserUtil {
 
 			JenkinsMaster jenkinsMaster = new JenkinsMaster(prefix + "-" + i);
 
-			if (jenkinsMaster.getSlaveRAM() >= minimumRAM) {
+			if ((jenkinsMaster.getSlaveRAM() >= minimumRAM) &&
+				(jenkinsMaster.getSlavesPerHost() <= maximumSlavesPerHost)) {
+
 				jenkinsMasters.add(jenkinsMaster);
 			}
 		}

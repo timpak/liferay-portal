@@ -155,7 +155,7 @@ public class LoadBalancerUtilTest
 		List<JenkinsMaster> jenkinsMasters =
 			JenkinsResultsParserUtil.getJenkinsMasters(
 				properties, JenkinsMaster.getSlaveRAMMinimumDefault(),
-				sampleKey);
+				JenkinsMaster.getSlavesPerHostDefault(), sampleKey);
 
 		File sampleDir = testSample.getSampleDir();
 
