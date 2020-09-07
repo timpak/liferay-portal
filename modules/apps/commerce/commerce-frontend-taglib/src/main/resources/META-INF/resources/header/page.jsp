@@ -376,7 +376,13 @@ String myWorkflowTasksPortletNamespace = PortalUtil.getPortletNamespace(PortletK
 	if (pageHeader) {
 		pageHeader.classList.add('sticky-header-menu');
 		updateMenuDistanceFromTop();
-	}
+		window.addEventListener('resize', debouncedUpdateMenuDistanceFromTop);
 
-	window.addEventListener('resize', debouncedUpdateMenuDistanceFromTop);
+		Liferay.once('beforeNavigate', function () {
+			window.removeEventListener(
+				'resize',
+				debouncedUpdateMenuDistanceFromTop
+			);
+		});
+	}
 </aui:script>
