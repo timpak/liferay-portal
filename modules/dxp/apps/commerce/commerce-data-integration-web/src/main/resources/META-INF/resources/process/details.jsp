@@ -65,9 +65,9 @@ if (commerceDataIntegrationProcess != null) {
 					String taglibSaveOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "saveProcess');";
 					%>
 
-					<aui:button onClick="<%= taglibSaveOnClick %>" value="save" />
+					<aui:button onClick="<%= taglibSaveOnClick %>" primary="<%= true %>" value="save" />
 
-					<aui:button cssClass="btn-lg" href="<%= backURL %>" type="cancel" />
+					<aui:button href="<%= backURL %>" type="cancel" />
 				</aui:button-row>
 			</div>
 		</aui:form>
