@@ -37,9 +37,9 @@ import org.osgi.service.component.annotations.Reference;
 		"osgi.command.function=exportPageDefinition",
 		"osgi.command.scope=layout"
 	},
-	service = LayoutCommands.class
+	service = LayoutOSGiCommands.class
 )
-public class LayoutCommands {
+public class LayoutOSGiCommands {
 
 	@Descriptor("Get page definition for a given page specified by its plid")
 	public String exportPageDefinition(long plid) throws PortalException {
