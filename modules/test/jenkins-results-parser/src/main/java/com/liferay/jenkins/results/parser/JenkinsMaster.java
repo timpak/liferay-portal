@@ -43,7 +43,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 	public static Integer getSlaveRAMMinimumDefault() {
 		try {
 			String propertyValue = JenkinsResultsParserUtil.getBuildProperty(
-				false, PROPERTY_SLAVE_RAM_MINIMUM_DEFAULT);
+				PROPERTY_SLAVE_RAM_MINIMUM_DEFAULT);
 
 			return Integer.valueOf(propertyValue);
 		}
@@ -67,7 +67,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 	public static Integer getSlavesPerHostDefault() {
 		try {
 			String propertyValue = JenkinsResultsParserUtil.getBuildProperty(
-				false, PROPERTY_SLAVES_PER_HOST_DEFAULT);
+				PROPERTY_SLAVES_PER_HOST_DEFAULT);
 
 			return Integer.valueOf(propertyValue);
 		}
