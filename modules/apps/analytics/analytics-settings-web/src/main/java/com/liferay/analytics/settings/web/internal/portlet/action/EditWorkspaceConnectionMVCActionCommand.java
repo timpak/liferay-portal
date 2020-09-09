@@ -80,12 +80,12 @@ public class EditWorkspaceConnectionMVCActionCommand
 			return;
 		}
 
+		boolean upgrade = false;
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		long companyId = themeDisplay.getCompanyId();
-
-		boolean upgrade = false;
 
 		if (AnalyticsSettingsUtil.isAnalyticsEnabled(companyId) &&
 			Validator.isBlank(
