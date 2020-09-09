@@ -122,7 +122,6 @@ if (Validator.isNotNull(backURL)) {
 			form[
 				'<portlet:namespace />commerceInventoryWarehouseItemId'
 			].value = commerceInventoryWarehouseItemId;
-			form['<portlet:namespace />mvccVersion'].value = mvccVersion;
 
 			var quantityInputId =
 				'#<portlet:namespace />commerceInventoryWarehouseItemQuantity' + index;
@@ -130,6 +129,8 @@ if (Validator.isNotNull(backURL)) {
 			var quantityInput = window.document.querySelector(quantityInputId);
 
 			form['<portlet:namespace />quantity'].value = quantityInput.value;
+
+			form['<portlet:namespace />mvccVersion'].value = mvccVersion;
 
 			submitForm(form);
 		}
