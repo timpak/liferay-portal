@@ -68,13 +68,13 @@ if (Validator.isNotNull(backURL)) {
 							CommerceInventoryWarehouseItem commerceInventoryWarehouseItem = commerceInventoryWarehouseItemsDisplayContext.getCommerceInventoryWarehouseItem(commerceInventoryWarehouse);
 
 							long commerceInventoryWarehouseItemId = 0;
-							long mvccVersion = 0;
 							int quantity = 0;
+							long mvccVersion = 0;
 
 							if (commerceInventoryWarehouseItem != null) {
 								commerceInventoryWarehouseItemId = commerceInventoryWarehouseItem.getCommerceInventoryWarehouseItemId();
-								mvccVersion = commerceInventoryWarehouseItem.getMvccVersion();
 								quantity = commerceInventoryWarehouseItem.getQuantity();
+								mvccVersion = commerceInventoryWarehouseItem.getMvccVersion();
 							}
 
 							int curIndex = commerceInventoryWarehouses.indexOf(commerceInventoryWarehouse);
