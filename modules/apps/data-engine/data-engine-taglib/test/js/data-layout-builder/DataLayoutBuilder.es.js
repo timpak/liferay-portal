@@ -62,20 +62,24 @@ describe('DataLayoutBuilder', () => {
 		}
 	});
 
+	it('is component custom property', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+
+		expect(component._isCustomProperty('defaultValue')).toBe(false);
+		expect(component._isCustomProperty('otherProperty')).toBe(true);
+	});
+
 	it('is rendering', () => {
 		component = new DataLayoutBuilder(props);
 
 		expect(component).toMatchSnapshot();
 	});
 
-	it('is emetting message', () => {
-		component = new DataLayoutBuilder(props);
-		const event = 'event:test';
-		const payload = {test: 'emeting'};
+	it('is rendering with localizable false', () => {
+		component = new DataLayoutBuilder({...props, localizable: false});
 
-		component.eventEmitter.once(event, expect(payload).toBe);
-
-		component.emit(event, payload);
+		expect(component).toMatchSnapshot();
 	});
 
 	it('is dispatching message', () => {
@@ -89,17 +93,14 @@ describe('DataLayoutBuilder', () => {
 		component.dispatch(event, payload);
 	});
 
-	it('is removing listener after dispatching event', () => {
+	it('is emetting message', () => {
 		component = new DataLayoutBuilder(props);
-		component.componentDidMount();
 		const event = 'event:test';
-		const payload = {test: 'dispatching'};
-		component.on(event, (eventPayload) => {
-			component.removeEventListener(event);
+		const payload = {test: 'emeting'};
 
-			expect(payload).toBe(eventPayload);
-		});
-		component.dispatch(event, payload);
+		component.eventEmitter.once(event, expect(payload).toBe);
+
+		component.emit(event, payload);
 	});
 
 	it('is dispatching action', () => {
@@ -110,16 +111,40 @@ describe('DataLayoutBuilder', () => {
 		expect(props.appContext[0].action).toBe(action);
 	});
 
-	it('is serializing pages', () => {
+	it('is getting data definition field', () => {
 		component = new DataLayoutBuilder(props);
 		component.componentDidMount();
 
-		expect(component.serialize([], [])).toMatchObject({
-			definition:
-				'{"availableLanguageIds":["en_US"],"dataDefinitionFields":[],"defaultLanguageId":"en_US"}',
-			layout:
-				'{"dataLayoutPages":[],"dataRules":[],"paginationMode":"wizard"}',
+		expect(
+			component.getDataDefinitionField(
+				{
+					nestedFields: [],
+					settingsContext: {
+						pages: [],
+					},
+				},
+				[],
+				'en_US'
+			)
+		).toMatchObject({
+			customProperties: {},
+			nestedDataDefinitionFields: [],
 		});
+	});
+
+	it('is getting data definition field formatted value', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+
+		expect(
+			component.getDataDefinitionFieldFormattedValue('json', {
+				test: 'test',
+			})
+		).toBe('{"test":"test"}');
+
+		expect(component.getDataDefinitionFieldFormattedValue('', 'test')).toBe(
+			'test'
+		);
 	});
 
 	it('is getting fieldTypes', () => {
@@ -149,5 +174,61 @@ describe('DataLayoutBuilder', () => {
 		component.componentDidMount();
 
 		expect(component.getStore()).toMatchObject({});
+	});
+
+	it('is getting component form data property', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+
+		expect(component._fromDataDefinitionToDDMFormPropertyName('name')).toBe(
+			'fieldName'
+		);
+		expect(
+			component._fromDataDefinitionToDDMFormPropertyName('otherProperty')
+		).toBe('otherProperty');
+		expect(
+			component._fromDDMFormToDataDefinitionPropertyName('fieldName')
+		).toBe('name');
+		expect(
+			component._fromDDMFormToDataDefinitionPropertyName('otherProperty')
+		).toBe('otherProperty');
+	});
+
+	it('is removing listener after dispatching event', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+		const event = 'event:test';
+		const payload = {test: 'dispatching'};
+		component.on(event, (eventPayload) => {
+			component.removeEventListener(event);
+
+			expect(payload).toBe(eventPayload);
+		});
+		component.dispatch(event, payload);
+	});
+
+	it('is removing listener after dispatching event with function', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+		const event = 'event:test';
+		const payload = {test: 'dispatching'};
+		const listener = function (eventPayload) {
+			component.removeEventListener(event, listener);
+			expect(payload).toBe(eventPayload);
+		};
+		component.on(event, listener);
+		component.dispatch(event, payload);
+	});
+
+	it('is serializing pages', () => {
+		component = new DataLayoutBuilder(props);
+		component.componentDidMount();
+
+		expect(component.serialize([], [])).toMatchObject({
+			definition:
+				'{"availableLanguageIds":["en_US"],"dataDefinitionFields":[],"defaultLanguageId":"en_US"}',
+			layout:
+				'{"dataLayoutPages":[],"dataRules":[],"paginationMode":"wizard"}',
+		});
 	});
 });
