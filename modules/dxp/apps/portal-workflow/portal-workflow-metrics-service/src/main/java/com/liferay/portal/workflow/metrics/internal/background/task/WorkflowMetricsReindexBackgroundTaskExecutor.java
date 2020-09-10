@@ -85,6 +85,7 @@ public class WorkflowMetricsReindexBackgroundTaskExecutor
 				_workflowMetricsIndexes.getService(indexEntityName);
 
 			workflowMetricsIndex.removeIndex(backgroundTask.getCompanyId());
+
 			workflowMetricsIndex.createIndex(backgroundTask.getCompanyId());
 		}
 
