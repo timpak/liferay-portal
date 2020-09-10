@@ -45,7 +45,7 @@ public class LayoutOSGiCommands {
 		Layout layout = _layoutLocalService.fetchLayout(plid);
 
 		if (layout == null) {
-			return "Layout with plid " + plid + " cannot be found";
+			return "Layout with PLID " + plid + " does not exist";
 		}
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
@@ -53,7 +53,8 @@ public class LayoutOSGiCommands {
 				fetchLayoutPageTemplateStructure(layout.getGroupId(), plid);
 
 		if (layoutPageTemplateStructure == null) {
-			return "Layout with plid " + plid + " does not have a structure";
+			return "Layout with PLID " + plid +
+				" does not have a layout page template structure";
 		}
 
 		long segmentsExperienceId = SegmentsExperienceConstants.ID_DEFAULT;
