@@ -30,10 +30,10 @@ import org.json.JSONObject;
  */
 public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 
-	public static final String PROPERTY_SLAVE_RAM_MINIMUM_DEFAULT =
+	public static final String PROPERTY_KEY_SLAVE_RAM_MINIMUM_DEFAULT =
 		"slave.ram.minimum.default";
 
-	public static final String PROPERTY_SLAVES_PER_HOST_DEFAULT =
+	public static final String PROPERTY_KEY_SLAVES_PER_HOST_DEFAULT =
 		"slaves.per.host.default";
 
 	public static final Integer SLAVE_RAM_DEFAULT = 16;
@@ -43,7 +43,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 	public static Integer getSlaveRAMMinimumDefault() {
 		try {
 			String propertyValue = JenkinsResultsParserUtil.getBuildProperty(
-				PROPERTY_SLAVE_RAM_MINIMUM_DEFAULT);
+				PROPERTY_KEY_SLAVE_RAM_MINIMUM_DEFAULT);
 
 			return Integer.valueOf(propertyValue);
 		}
@@ -51,7 +51,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("Unable to get property '");
-			sb.append(PROPERTY_SLAVE_RAM_MINIMUM_DEFAULT);
+			sb.append(PROPERTY_KEY_SLAVE_RAM_MINIMUM_DEFAULT);
 			sb.append("', defaulting to '");
 			sb.append(SLAVE_RAM_DEFAULT);
 			sb.append("'");
@@ -67,7 +67,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 	public static Integer getSlavesPerHostDefault() {
 		try {
 			String propertyValue = JenkinsResultsParserUtil.getBuildProperty(
-				PROPERTY_SLAVES_PER_HOST_DEFAULT);
+				PROPERTY_KEY_SLAVES_PER_HOST_DEFAULT);
 
 			return Integer.valueOf(propertyValue);
 		}
@@ -75,7 +75,7 @@ public class JenkinsMaster implements JenkinsNode<JenkinsMaster> {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("Unable to get property '");
-			sb.append(PROPERTY_SLAVES_PER_HOST_DEFAULT);
+			sb.append(PROPERTY_KEY_SLAVES_PER_HOST_DEFAULT);
 			sb.append("', defaulting to '");
 			sb.append(SLAVES_PER_HOST_DEFAULT);
 			sb.append("'");
