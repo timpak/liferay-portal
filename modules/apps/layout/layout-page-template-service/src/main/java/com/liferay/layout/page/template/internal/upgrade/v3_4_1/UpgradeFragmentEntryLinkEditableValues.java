@@ -59,8 +59,8 @@ public class UpgradeFragmentEntryLinkEditableValues extends UpgradeProcess {
 				}
 
 				_replaceAlign(configurationJSONObject);
-				_replaceBottomSpacing(configurationJSONObject);
 				_replaceBorderRadius(configurationJSONObject);
+				_replaceBottomSpacing(configurationJSONObject);
 				_replaceShadow(configurationJSONObject);
 				_replaceTextColor(configurationJSONObject);
 
