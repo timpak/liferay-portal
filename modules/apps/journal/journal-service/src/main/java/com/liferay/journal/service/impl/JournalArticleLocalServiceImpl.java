@@ -8903,11 +8903,14 @@ public class JournalArticleLocalServiceImpl
 
 		sb.append(layoutDisplayPageProvider.getURLSeparator());
 
-		for (String availableLanguageId : article.getAvailableLanguageIds()) {
-			String urlTitle = layoutDisplayPageObjectProvider.getURLTitle(
-				LocaleUtil.fromLanguageId(availableLanguageId));
+		Map<Locale, String> friendlyURLs = article.getFriendlyURLMap();
 
-			friendlyURLMap.put(availableLanguageId, sb.toString() + urlTitle);
+		for (Locale locale : friendlyURLs.keySet()) {
+			String urlTitle = layoutDisplayPageObjectProvider.getURLTitle(
+				locale);
+
+			friendlyURLMap.put(
+				LocaleUtil.toLanguageId(locale), sb.toString() + urlTitle);
 		}
 
 		return friendlyURLMap;
