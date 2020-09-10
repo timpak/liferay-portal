@@ -295,7 +295,7 @@ public class StructuredContentResourceTest
 
 		Assert.assertEquals(title, structuredContent.getTitle());
 
-		// Add properties
+		// Extension
 
 		Bundle bundle = FrameworkUtil.getBundle(
 			StructuredContentResourceTest.class);
