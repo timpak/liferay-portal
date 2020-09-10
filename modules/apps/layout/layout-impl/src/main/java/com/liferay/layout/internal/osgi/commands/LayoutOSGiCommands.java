@@ -40,7 +40,7 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class LayoutOSGiCommands {
 
-	@Descriptor("Get Page Definition JSON for a given layout by its plid")
+	@Descriptor("Get page definition JSON for a given layout by its PLID")
 	public String exportAsJSON(long plid) throws PortalException {
 		Layout layout = _layoutLocalService.fetchLayout(plid);
 
