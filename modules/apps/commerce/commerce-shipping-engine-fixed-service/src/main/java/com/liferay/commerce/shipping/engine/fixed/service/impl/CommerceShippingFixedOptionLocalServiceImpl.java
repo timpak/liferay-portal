@@ -215,20 +215,20 @@ public class CommerceShippingFixedOptionLocalServiceImpl
 
 		SearchContext searchContext = new SearchContext();
 
+		searchContext.setAttribute(
+			"commerceShippingMethodId", commerceShippingMethodId);
 		searchContext.setCompanyId(companyId);
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(new long[] {groupId});
 		searchContext.setKeywords(keywords);
-		searchContext.setStart(start);
-
-		searchContext.setAttribute(
-			"commerceShippingMethodId", commerceShippingMethodId);
 
 		Sort sort = SortFactoryUtil.getSort(
 			CommerceShippingFixedOption.class, Sort.LONG_TYPE,
 			Field.CREATE_DATE, "DESC");
 
 		searchContext.setSorts(sort);
+
+		searchContext.setStart(start);
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
