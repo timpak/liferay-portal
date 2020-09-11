@@ -35,12 +35,12 @@ public class DDMFormFactoryHelperTest {
 		_ddmFormFactoryHelper = new DDMFormFactoryHelper(
 			DDMDataProviderInputParametersSettings.class);
 
-		String[] expectedNames = {
-			"inputParameterLabel", "inputParameterName", "inputParameterType",
-			"inputParameterRequired"
-		};
-
-		Assert.assertArrayEquals(expectedNames, getNames());
+		Assert.assertArrayEquals(
+			new String[] {
+				"inputParameterLabel", "inputParameterName",
+				"inputParameterType", "inputParameterRequired"
+			},
+			getNames());
 	}
 
 	@Test
@@ -48,12 +48,12 @@ public class DDMFormFactoryHelperTest {
 		_ddmFormFactoryHelper = new DDMFormFactoryHelper(
 			DDMDataProviderOutputParametersSettings.class);
 
-		String[] expectedNames = {
-			"outputParameterId", "outputParameterName", "outputParameterPath",
-			"outputParameterType"
-		};
-
-		Assert.assertArrayEquals(expectedNames, getNames());
+		Assert.assertArrayEquals(
+			new String[] {
+				"outputParameterId", "outputParameterName",
+				"outputParameterPath", "outputParameterType"
+			},
+			getNames());
 	}
 
 	protected String[] getNames() {
