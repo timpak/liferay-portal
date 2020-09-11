@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String cmd = ParamUtil.getString(request, Constants.CMD);
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", "/view_configuration_screen");
@@ -24,7 +26,6 @@ portletURL.setParameter("configurationScreenKey", "synced-contact-data");
 
 String redirect = ParamUtil.getString(request, "redirect", portletURL.toString());
 
-String cmd = ParamUtil.getString(request, Constants.CMD);
 boolean syncAllContacts = ParamUtil.getBoolean(request, "syncAllContacts");
 String[] syncedOrganizationIds = ParamUtil.getStringValues(request, "syncedOrganizationIds");
 String[] syncedUserGroupIds = ParamUtil.getStringValues(request, "syncedUserGroupIds");

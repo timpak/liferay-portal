@@ -60,6 +60,7 @@ public class EditSyncedContactsMVCActionCommand
 		throws Exception {
 
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
 		boolean syncAllContacts = ParamUtil.getBoolean(
 			actionRequest, "syncAllContacts");
 		String[] syncedOrganizationIds = ParamUtil.getStringValues(
@@ -71,9 +72,10 @@ public class EditSyncedContactsMVCActionCommand
 			"syncAllContacts", String.valueOf(syncAllContacts));
 
 		if (!syncAllContacts) {
+			String referrer = ParamUtil.getString(actionRequest, "referrer");
+
 			boolean includeSyncContactsFields = ParamUtil.getBoolean(
 				actionRequest, "includeSyncContactsFields");
-			String referrer = ParamUtil.getString(actionRequest, "referrer");
 
 			if (!includeSyncContactsFields) {
 				referrer = cmd;
