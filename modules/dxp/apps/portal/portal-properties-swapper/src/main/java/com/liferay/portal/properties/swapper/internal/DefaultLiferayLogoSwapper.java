@@ -62,7 +62,7 @@ public class DefaultLiferayLogoSwapper {
 		catch (ReflectiveOperationException reflectiveOperationException) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Unable to swap default liferay logo",
+					"Unable to swap default Liferay logo",
 					reflectiveOperationException);
 			}
 		}

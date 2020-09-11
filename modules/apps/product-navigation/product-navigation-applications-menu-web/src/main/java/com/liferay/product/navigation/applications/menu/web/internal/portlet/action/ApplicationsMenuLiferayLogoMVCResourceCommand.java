@@ -66,10 +66,10 @@ public class ApplicationsMenuLiferayLogoMVCResourceCommand
 		try {
 			InputStream inputStream = null;
 
-			String imageDefaultCompanyLogo = PropsUtil.get(
+			String imageDefaultLiferayLogo = PropsUtil.get(
 				PropsKeys.APPLICATIONS_MENU_DEFAULT_LIFERAY_LOGO);
 
-			int index = imageDefaultCompanyLogo.indexOf(CharPool.SEMICOLON);
+			int index = imageDefaultLiferayLogo.indexOf(CharPool.SEMICOLON);
 
 			if (index == -1) {
 				inputStream = classLoader.getResourceAsStream(
@@ -77,12 +77,12 @@ public class ApplicationsMenuLiferayLogoMVCResourceCommand
 						PropsKeys.APPLICATIONS_MENU_DEFAULT_LIFERAY_LOGO));
 			}
 			else {
-				String bundleIdString = imageDefaultCompanyLogo.substring(
+				String bundleIdString = imageDefaultLiferayLogo.substring(
 					0, index);
 
 				int bundleId = GetterUtil.getInteger(bundleIdString, -1);
 
-				String name = imageDefaultCompanyLogo.substring(index + 1);
+				String name = imageDefaultLiferayLogo.substring(index + 1);
 
 				if (bundleId < 0) {
 					if (_log.isWarnEnabled()) {
@@ -102,14 +102,14 @@ public class ApplicationsMenuLiferayLogoMVCResourceCommand
 			}
 
 			if (inputStream == null) {
-				_log.error("Default liferay logo is not available");
+				_log.error("Default Liferay logo is not available");
 			}
 
 			return inputStream;
 		}
 		catch (Exception exception) {
 			_log.error(
-				"Unable to configure the default liferay logo: " +
+				"Unable to configure the default Liferay logo: " +
 					exception.getMessage());
 		}
 
