@@ -142,7 +142,8 @@ public class SamlAdminRenderFilter implements RenderFilter {
 
 		if (Objects.equals(
 				_keyStoreManagerServiceReference.getProperty("component.name"),
-				_DL_KEYSTORE_MANAGER_CLASS_NAME)) {
+				"com.liferay.saml.opensaml.integration.internal.credential." +
+					"DLKeyStoreManagerImpl")) {
 
 			_serviceRegistration = bundleContext.registerService(
 				PortletFilter.class, this, new HashMapDictionary<>(properties));
@@ -155,10 +156,6 @@ public class SamlAdminRenderFilter implements RenderFilter {
 			_serviceRegistration.unregister();
 		}
 	}
-
-	private static final String _DL_KEYSTORE_MANAGER_CLASS_NAME =
-		"com.liferay.saml.opensaml.integration.internal.credential." +
-			"DLKeyStoreManagerImpl";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SamlAdminRenderFilter.class);
