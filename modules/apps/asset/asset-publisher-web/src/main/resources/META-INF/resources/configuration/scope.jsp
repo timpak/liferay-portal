@@ -127,11 +127,11 @@ GroupItemSelectorCriterion groupItemSelectorCriterion = new GroupItemSelectorCri
 
 groupItemSelectorCriterion.setDesiredItemSelectorReturnTypes(new GroupItemSelectorReturnType());
 groupItemSelectorCriterion.setIncludeChildSites(true);
-groupItemSelectorCriterion.setIncludeSitesThatIAdminister(true);
 groupItemSelectorCriterion.setIncludeLayoutScopes(true);
 groupItemSelectorCriterion.setIncludeMySites(false);
 groupItemSelectorCriterion.setIncludeParentSites(true);
 groupItemSelectorCriterion.setIncludeRecentSites(false);
+groupItemSelectorCriterion.setIncludeSitesThatIAdminister(true);
 
 PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(renderRequest), eventName, groupItemSelectorCriterion);
 
