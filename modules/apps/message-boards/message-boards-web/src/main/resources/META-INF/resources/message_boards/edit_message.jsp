@@ -130,11 +130,11 @@ if (portletTitleBasedNavigation) {
 	<aui:form action="<%= editMessageURL %>" enctype="multipart/form-data" method="post" name="fm" onSubmit="event.preventDefault();">
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+		<aui:input name="portletResource" type="hidden" value="<%= portletDisplay.getPortletResource() %>" />
 		<aui:input name="messageId" type="hidden" value="<%= messageId %>" />
 		<aui:input name="mbCategoryId" type="hidden" value="<%= categoryId %>" />
 		<aui:input name="threadId" type="hidden" value="<%= threadId %>" />
 		<aui:input name="parentMessageId" type="hidden" value="<%= parentMessageId %>" />
-		<aui:input name="portletResource" type="hidden" value="<%= portletDisplay.getPortletResource() %>" />
 		<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
 
 		<liferay-ui:error exception="<%= AntivirusScannerException.class %>">
