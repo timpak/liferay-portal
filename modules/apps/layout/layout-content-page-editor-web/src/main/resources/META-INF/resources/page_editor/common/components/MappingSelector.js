@@ -290,6 +290,7 @@ function MappingSelector({fieldType, mappedItem, onMappingSelect}) {
 
 					<ClaySelectWithOption
 						aria-label={Liferay.Language.get('source')}
+						className="pr-4 text-truncate"
 						id={mappingSelectorSourceSelectId}
 						onChange={(event) => {
 							setSelectedSourceTypeId(event.target.value);
