@@ -100,20 +100,20 @@ public class ConditionExpressionVisitor extends ExpressionVisitor<Object> {
 		List<Expression> parameterExpressions =
 			functionCallExpression.getParameterExpressions();
 
-		if (Objects.equals(functionName, "getValue")) {
-			SPIDDMFormRuleCondition.Operand operand = doVisit(
-				parameterExpressions.get(0));
-
-			return new SPIDDMFormRuleCondition.Operand(
-				"field", operand.getValue());
-		}
-
 		if (Objects.equals(functionName, "getOptionLabel")) {
 			SPIDDMFormRuleCondition.Operand operand = doVisit(
 				parameterExpressions.get(1));
 
 			return new SPIDDMFormRuleCondition.Operand(
 				"option", operand.getValue());
+		}
+
+		if (Objects.equals(functionName, "getValue")) {
+			SPIDDMFormRuleCondition.Operand operand = doVisit(
+				parameterExpressions.get(0));
+
+			return new SPIDDMFormRuleCondition.Operand(
+				"field", operand.getValue());
 		}
 
 		List<SPIDDMFormRuleCondition.Operand> operands = new ArrayList<>();
