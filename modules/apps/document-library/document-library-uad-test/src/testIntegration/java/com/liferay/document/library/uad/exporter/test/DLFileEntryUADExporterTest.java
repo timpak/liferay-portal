@@ -91,7 +91,7 @@ public class DLFileEntryUADExporterTest
 		level = "ERROR", loggerClass = DynamicQueryUADExporter.class
 	)
 	@Test
-	public void testExportWithMissingBinary() throws Exception {
+	public void testExportAllWithMissingBinary() throws Exception {
 		DLFileEntry dlFileEntry = addBaseModel(user.getUserId());
 
 		DLStoreUtil.deleteFile(
