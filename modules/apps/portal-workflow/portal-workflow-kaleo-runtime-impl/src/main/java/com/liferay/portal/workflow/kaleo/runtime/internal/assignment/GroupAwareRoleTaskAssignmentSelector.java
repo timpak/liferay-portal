@@ -28,6 +28,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
+import com.liferay.portal.workflow.kaleo.runtime.util.validator.GroupAwareRoleValidator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,9 @@ import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -60,6 +64,17 @@ public class GroupAwareRoleTaskAssignmentSelector
 			kaleoTaskAssignment.getAssigneeClassPK());
 
 		return createKaleoTaskAssigments(kaleoInstanceToken.getGroupId(), role);
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void addGroupAwareRoleValidator(
+		GroupAwareRoleValidator groupAwareRoleValidator) {
+
+		_groupAwareRoleValidators.add(groupAwareRoleValidator);
 	}
 
 	protected List<KaleoTaskAssignment> createKaleoTaskAssigments(
@@ -172,8 +187,25 @@ public class GroupAwareRoleTaskAssignmentSelector
 			return true;
 		}
 
+		for (GroupAwareRoleValidator groupAwareRoleValidator :
+				_groupAwareRoleValidators) {
+
+			if (groupAwareRoleValidator.isValidGroup(group, role)) {
+				return true;
+			}
+		}
+
 		return false;
 	}
+
+	protected void removeGroupAwareRoleValidator(
+		GroupAwareRoleValidator groupAwareRoleValidator) {
+
+		_groupAwareRoleValidators.remove(groupAwareRoleValidator);
+	}
+
+	private final List<GroupAwareRoleValidator> _groupAwareRoleValidators =
+		new ArrayList<>();
 
 	@Reference
 	private GroupLocalService _groupLocalService;
