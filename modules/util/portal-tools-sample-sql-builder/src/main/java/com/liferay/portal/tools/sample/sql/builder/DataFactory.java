@@ -4913,11 +4913,11 @@ public class DataFactory {
 				if (name.endsWith(StringPool.UNDERLINE)) {
 					name = name.substring(0, name.length() - 1);
 				}
-				else if (name.equals("LPageTemplateStructureRelId")) {
-					name = "LayoutPageTemplateStructureRelId";
-				}
 				else if (name.equals("DeliverySubTypeSettings")) {
 					name = "DeliverySubscriptionTypeSettings";
+				}
+				else if (name.equals("LPageTemplateStructureRelId")) {
+					name = "LayoutPageTemplateStructureRelId";
 				}
 
 				int type = (int)tableColumn[1];
