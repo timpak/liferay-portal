@@ -37,7 +37,6 @@ import com.liferay.saml.runtime.configuration.SamlProviderConfiguration;
 import com.liferay.saml.runtime.configuration.SamlProviderConfigurationHelper;
 import com.liferay.saml.runtime.credential.KeyStoreManager;
 import com.liferay.saml.saas.internal.configuration.SamlSaasConfiguration;
-import com.liferay.saml.saas.internal.constants.SamlSaasJSONKeys;
 import com.liferay.saml.saas.internal.util.SymmetricEncryptor;
 
 import java.io.ByteArrayOutputStream;
@@ -51,6 +50,7 @@ import java.security.cert.CertificateException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -126,9 +126,7 @@ public class ExportSamlSaasMVCActionCommand extends BaseMVCActionCommand {
 			if (json != null) {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(json);
 
-				if (SamlSaasJSONKeys.RESULT_ERROR.equals(
-						jsonObject.get(SamlSaasJSONKeys.RESULT))) {
-
+				if (Objects.equals("resultError", jsonObject.get("result"))) {
 					SessionErrors.add(actionRequest, "exportError");
 				}
 			}
@@ -146,8 +144,7 @@ public class ExportSamlSaasMVCActionCommand extends BaseMVCActionCommand {
 		JSONObject jsonObject;
 
 		try {
-			jsonObject = JSONUtil.put(
-				SamlSaasJSONKeys.SAML_KEYSTORE, _getKeyStore());
+			jsonObject = JSONUtil.put("samlKeystore", _getKeyStore());
 		}
 		catch (Exception exception) {
 			_log.error(
@@ -158,11 +155,9 @@ public class ExportSamlSaasMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		jsonObject.put(
-			SamlSaasJSONKeys.SAML_PROVIDER_CONFIGURATION,
-			_getSamlProviderConfiguration()
+			"samlProviderConfiguration", _getSamlProviderConfiguration()
 		).put(
-			SamlSaasJSONKeys.SAML_SP_IDP_CONNECTIONS,
-			_getSpIdpConnections(companyId)
+			"samlSpIdpConnections", _getSpIdpConnections(companyId)
 		);
 
 		try {
@@ -267,15 +262,15 @@ public class ExportSamlSaasMVCActionCommand extends BaseMVCActionCommand {
 
 			samlSpIdpConnectionsJsonArray.put(
 				JSONUtil.put(
-					SamlSaasJSONKeys.EXPANDO_VALUES,
-					_getSpIdpConnectionExpandoValues(samlSpIdpConnection)
-				).put(
 					"assertionSignatureRequired",
 					samlSpIdpConnection.isAssertionSignatureRequired()
 				).put(
 					"clockSkew", samlSpIdpConnection.getClockSkew()
 				).put(
 					"enabled", samlSpIdpConnection.isEnabled()
+				).put(
+					"expandoValues",
+					_getSpIdpConnectionExpandoValues(samlSpIdpConnection)
 				).put(
 					"forceAuthn", samlSpIdpConnection.isForceAuthn()
 				).put(
