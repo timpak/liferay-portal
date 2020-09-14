@@ -621,6 +621,7 @@ public class LayoutSetBranchLocalServiceImpl
 
 		for (long plid : relatedPlids) {
 			boolean deletableLayout = true;
+
 			List<LayoutRevision> layoutRevisions =
 				layoutRevisionLocalService.getLayoutRevisions(plid);
 
