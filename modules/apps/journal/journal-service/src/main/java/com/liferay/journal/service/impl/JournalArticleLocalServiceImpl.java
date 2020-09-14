@@ -4198,7 +4198,7 @@ public class JournalArticleLocalServiceImpl
 			article.setContent(content);
 		}
 
-		// Friendly URL
+		article = journalArticlePersistence.update(article);
 
 		FriendlyURLEntry friendlyURLEntry =
 			friendlyURLEntryLocalService.fetchFriendlyURLEntry(
@@ -4208,7 +4208,7 @@ public class JournalArticleLocalServiceImpl
 		friendlyURLEntryLocalService.deleteFriendlyURLLocalizationEntry(
 			friendlyURLEntry.getFriendlyURLEntryId(), languageId);
 
-		return journalArticlePersistence.update(article);
+		return article;
 	}
 
 	/**
