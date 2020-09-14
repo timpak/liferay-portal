@@ -403,7 +403,7 @@ public interface PropsKeys {
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #VIEW_COUNTS_ENABLED}
+	 *             #VIEW_COUNT_ENABLED}
 	 */
 	@Deprecated
 	public static final String BUFFERED_INCREMENT_ENABLED =
@@ -3400,7 +3400,7 @@ public interface PropsKeys {
 	@Deprecated
 	public static final String VERIFY_PROCESSES = "verify.processes";
 
-	public static final String VIEW_COUNTS_ENABLED = "view.counts.enabled";
+	public static final String VIEW_COUNT_ENABLED = "view.count.enabled";
 
 	public static final String VIRTUAL_HOSTS_DEFAULT_SITE_NAME =
 		"virtual.hosts.default.site.name";

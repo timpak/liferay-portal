@@ -170,7 +170,7 @@ public class PropsValues {
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #VIEW_COUNTS_ENABLED}
+	 *             #VIEW_COUNT_ENABLED}
 	 */
 	@Deprecated
 	public static final boolean ASSET_ENTRY_BUFFERED_INCREMENT_ENABLED =
@@ -396,7 +396,7 @@ public class PropsValues {
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #VIEW_COUNTS_ENABLED}
+	 *             #VIEW_COUNT_ENABLED}
 	 */
 	@Deprecated
 	public static final boolean BUFFERED_INCREMENT_ENABLED =
@@ -767,7 +767,7 @@ public class PropsValues {
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #VIEW_COUNTS_ENABLED}
+	 *             #VIEW_COUNT_ENABLED}
 	 */
 	@Deprecated
 	public static final boolean DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED =
@@ -3018,8 +3018,8 @@ public class PropsValues {
 		GetterUtil.getInteger(
 			PropsUtil.get(PropsKeys.VERIFY_PROCESS_CONCURRENCY_THRESHOLD));
 
-	public static final boolean VIEW_COUNTS_ENABLED = GetterUtil.getBoolean(
-		PropsUtil.get(PropsKeys.VIEW_COUNTS_ENABLED));
+	public static final boolean VIEW_COUNT_ENABLED = GetterUtil.getBoolean(
+		PropsUtil.get(PropsKeys.VIEW_COUNT_ENABLED));
 
 	public static final String VIRTUAL_HOSTS_DEFAULT_SITE_NAME = PropsUtil.get(
 		PropsKeys.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);

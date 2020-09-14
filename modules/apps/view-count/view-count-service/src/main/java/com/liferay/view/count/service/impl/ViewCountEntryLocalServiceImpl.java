@@ -72,7 +72,7 @@ public class ViewCountEntryLocalServiceImpl
 	public long getViewCount(long companyId, long classNameId, long classPK) {
 		ViewCountEntry viewCountEntry = null;
 
-		if (PropsValues.VIEW_COUNTS_ENABLED) {
+		if (PropsValues.VIEW_COUNT_ENABLED) {
 			viewCountEntry = viewCountEntryPersistence.fetchByPrimaryKey(
 				new ViewCountEntryPK(companyId, classNameId, classPK));
 		}
@@ -99,7 +99,7 @@ public class ViewCountEntryLocalServiceImpl
 	public void incrementViewCount(
 		long companyId, long classNameId, long classPK, int increment) {
 
-		if (PropsValues.VIEW_COUNTS_ENABLED) {
+		if (PropsValues.VIEW_COUNT_ENABLED) {
 			viewCountEntryFinder.incrementViewCount(
 				companyId, classNameId, classPK, increment);
 		}
