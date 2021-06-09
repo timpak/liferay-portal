@@ -1,10 +1,7 @@
 definition {
 
 	macro addBlueprint {
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
+		Navigator.gotoNavItem(navItem = "Blueprints");
 
 		Click(locator1 = "Button#PLUS");
 
@@ -29,11 +26,6 @@ definition {
 	}
 
 	macro addElements {
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
-
 		Navigator.gotoNavItem(navItem = "Elements");
 
 		Click(locator1 = "Button#PLUS");
@@ -46,14 +38,14 @@ definition {
 
 		Refresh();
 
-		SearchBlueprints.editElement(name = "${name}");
+		SearchExperiences.editElement(name = "${name}");
 
-		Type.typeCodeMirrorEditorNoError(
-			locator1 = "SearchTuning#BLUEPRINTS_ELEMENT_TEMPLATE_JSON",
+		Type.typeCodeMirrorEditor(
+			locator1 = "SearchExperiences#BLUEPRINTS_ELEMENT_TEMPLATE_JSON",
 			value1 = "${elementTemplateJSON}");
 
-		Type.typeCodeMirrorEditorNoError(
-			locator1 = "SearchTuning#BLUEPRINTS_ELEMENT_UI_CONFIGURATION_JSON",
+		Type.typeCodeMirrorEditor(
+			locator1 = "SearchExperiences#BLUEPRINTS_ELEMENT_UI_CONFIGURATION_JSON",
 			value1 = "${uiConfigurationJSON}");
 
 		PortletEntry.save();
@@ -63,49 +55,49 @@ definition {
 		AssertElementPresent(locator1 = "//div[contains(@class,'sidebar-header')]//span[contains(.,'Add Query Elements')]");
 
 		Type.sendKeysApplicationSearch(
-			locator1 = "SearchTuning#BLUEPRINTS_FRAGMENT_QUERY_SEARCH_BAR",
+			locator1 = "SearchExperiences#BLUEPRINTS_FRAGMENT_QUERY_SEARCH_BAR",
 			value1 = "${fragment}");
 
 		MouseOver(
 			key_fragmentName = "${fragment}",
-			locator1 = "SearchTuning#BLUEPRINTS_QUERY_FRAGMENT_NAME");
+			locator1 = "SearchExperiences#BLUEPRINTS_QUERY_FRAGMENT_NAME");
 
 		Click.clickNoMouseOverNoWaitForVisible(
 			key_fragmentName = "${fragment}",
-			locator1 = "SearchTuning#BLUEPRINTS_ADD_QUERY_FRAGMENT");
+			locator1 = "SearchExperiences#BLUEPRINTS_ADD_QUERY_FRAGMENT");
 
 		if (isSet(assetType)) {
-			Click(locator1 = "SearchTuning#BLUEPRINTS_QUERY_BUILDER_ASSET_TYPE_DROPDOWN");
+			Click(locator1 = "SearchExperiences#BLUEPRINTS_QUERY_BUILDER_ASSET_TYPE_DROPDOWN");
 
 			Click(
-				locator1 = "SearchTuning#BLUEPRINTS_QUERY_BUILDER_ASSET_TYPE_OPTION",
+				locator1 = "SearchExperiences#BLUEPRINTS_QUERY_BUILDER_ASSET_TYPE_OPTION",
 				sortOption = "${assetType}");
 		}
 
 		if (isSet(elasticsearchQuery)) {
-			Type.typeCodeMirrorEditorNoError(
-				locator1 = "SearchTuning#BLUEPRINTS_ELASTICSEACH_QUERY_JSON",
+			Type.typeCodeMirrorEditor(
+				locator1 = "SearchExperiences#BLUEPRINTS_ELASTICSEARCH_QUERY_JSON",
 				value1 = "${elasticsearchQuery}");
 		}
 
 		if (isSet(numberBoost)) {
 			Type(
 				key_fieldLabel = "Boost",
-				locator1 = "SearchTuning#BLUEPRINTS_QUERY_BUILDER_NUMBER_FIELD",
+				locator1 = "SearchExperiences#BLUEPRINTS_QUERY_BUILDER_NUMBER_FIELD",
 				value1 = "${numberBoost}");
 		}
 
 		if (isSet(tag1)) {
 			Type(
 				key_fieldLabel = "Tag 1",
-				locator1 = "SearchTuning#BLUEPRINTS_QUERY_TEXT_FIELD",
+				locator1 = "SearchExperiences#BLUEPRINTS_QUERY_TEXT_FIELD",
 				value1 = "${tag1}");
 		}
 
 		if (isSet(tag2)) {
 			Type(
 				key_fieldLabel = "Tag 2",
-				locator1 = "SearchTuning#BLUEPRINTS_QUERY_TEXT_FIELD",
+				locator1 = "SearchExperiences#BLUEPRINTS_QUERY_TEXT_FIELD",
 				value1 = "${tag2}");
 		}
 
@@ -113,19 +105,13 @@ definition {
 	}
 
 	macro deleteBlueprint {
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
+		Navigator.gotoNavItem(navItem = "Blueprints");
 
 		LexiconEntry.delete(rowEntry = "${name}");
 	}
 
 	macro editBlueprint {
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
+		Navigator.gotoNavItem(navItem = "Blueprints");
 
 		LexiconEntry.gotoEntryMenuItem(
 			menuItem = "Edit",
@@ -133,10 +119,7 @@ definition {
 	}
 
 	macro editElement {
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
 		Navigator.gotoNavItem(navItem = "Elements");
 
@@ -145,17 +128,13 @@ definition {
 			rowEntry = "${name}");
 	}
 
-	macro findBlueprintID {
-		var blueprintsID = selenium.getAttribute("//h4[contains(.,'${name}')]/following-sibling::h5[2]/span[contains(@class,'id-text')]@textContent");
-
-		var blueprintsID = StringUtil.extractDigits("${blueprintsID}");
-
-		return "${blueprintsID}";
+	macro openSearchExperiences {
+		Navigator.openWithAppendToBaseURL(urlAppend = "group/${siteURLKey}/~/control_panel/manage?p_p_id=com_liferay_portal_search_tuning_blueprints_web_internal_portlet_BlueprintsAdminPortlet");
 	}
 
 	macro searchBlueprintsPreview {
 		Type(
-			locator1 = "SearchTuning#BLUEPRINTS_PREVIEW_SEARCH_BAR",
+			locator1 = "SearchExperiences#BLUEPRINTS_PREVIEW_SEARCH_BAR",
 			value1 = "${searchTerm}");
 
 		var browserType = PropsUtil.get("browser.type");
@@ -165,7 +144,7 @@ definition {
 		}
 		else {
 			KeyPress(
-				locator1 = "SearchTuning#BLUEPRINTS_PREVIEW_SEARCH_BAR",
+				locator1 = "SearchExperiences#BLUEPRINTS_PREVIEW_SEARCH_BAR",
 				value1 = "\RETURN");
 		}
 
@@ -173,10 +152,10 @@ definition {
 	}
 
 	macro searchReactiveSearchWidget {
-		AssertElementPresent(locator1 = "SearchTuning#BLUEPRINTS_SEARCH_BAR");
+		AssertElementPresent(locator1 = "SearchExperiences#BLUEPRINTS_SEARCH_BAR");
 
 		Type(
-			locator1 = "SearchTuning#BLUEPRINTS_SEARCH_BAR",
+			locator1 = "SearchExperiences#BLUEPRINTS_SEARCH_BAR",
 			value1 = "${searchTerm}");
 
 		var browserType = PropsUtil.get("browser.type");
@@ -186,7 +165,7 @@ definition {
 		}
 		else {
 			KeyPress(
-				locator1 = "SearchTuning#BLUEPRINTS_SEARCH_BAR",
+				locator1 = "SearchExperiences#BLUEPRINTS_SEARCH_BAR",
 				value1 = "\RETURN");
 		}
 
@@ -211,7 +190,7 @@ definition {
 		var key_blueprintName = "${name}";
 
 		AssertClick(
-			locator1 = "SearchTuning#BLUEPRINTS_TABLE_CHOOSE",
+			locator1 = "SearchExperiences#BLUEPRINTS_TABLE_CHOOSE",
 			value1 = "Choose");
 
 		SelectFrameTop();
@@ -226,12 +205,7 @@ definition {
 	}
 
 	macro tearDownCP {
-		Navigator.openURL();
-
-		ApplicationsMenu.gotoPortlet(
-			category = "Search Tuning",
-			panel = "Applications",
-			portlet = "Search Experiences");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
@@ -255,7 +229,7 @@ definition {
 			var resultOrder = ${resultOrder} + 1;
 
 			AssertTextEquals.assertPartialText(
-				locator1 = "SearchTuning#BLUEPRINTS_ASSET_ENTRY_LIST_TITLE_SPECIFIC_ORDER",
+				locator1 = "SearchExperiences#BLUEPRINTS_ASSET_ENTRY_LIST_TITLE_SPECIFIC_ORDER",
 				resultOrder = "${resultOrder}",
 				value1 = "${blueprintsTitle}");
 		}

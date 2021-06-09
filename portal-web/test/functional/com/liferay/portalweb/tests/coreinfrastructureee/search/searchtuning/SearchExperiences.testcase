@@ -4,7 +4,7 @@ definition {
 	property portal.release = "true";
 	property portal.suite.search.engine = "elasticsearch7";
 	property portal.upstream = "true";
-	property testray.main.component.name = "Search Blueprints";
+	property testray.main.component.name = "Search Experiences";
 
 	setUp {
 		TestCase.setUpPortalInstance();
@@ -25,17 +25,19 @@ definition {
 
 			WebContent.tearDownCP();
 
-			SearchBlueprints.tearDownCP();
+			SearchExperiences.tearDownCP();
 
 			Page.tearDownCP();
 		}
 	}
 
 	test AssertAddCopyAndDeleteSearchBlueprint {
-		property test.name.skip.portal.instance = "SearchBlueprints#AssertAddCopyAndDeleteSearchBlueprint";
+		property test.name.skip.portal.instance = "SearchExperiences#AssertAddCopyAndDeleteSearchBlueprint";
+
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
 		for (var title : list "Blueprint 1,Blueprint 2") {
-			SearchBlueprints.addBlueprint(name = "${title}");
+			SearchExperiences.addBlueprint(name = "${title}");
 		}
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -44,18 +46,18 @@ definition {
 
 		AssertElementPresent(
 			key_searchAssetTitle = "Blueprint 2 (Copy)",
-			locator1 = "SearchTuning#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
+			locator1 = "SearchExperiences#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
 
-		SearchBlueprints.deleteBlueprint(name = "Blueprint 1");
+		SearchExperiences.deleteBlueprint(name = "Blueprint 1");
 
 		AssertElementNotPresent(
 			key_searchAssetTitle = "Blueprint 1",
-			locator1 = "SearchTuning#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
+			locator1 = "SearchExperiences#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
 	}
 
 	test AssertNonAdminsCannotSeeSearchExperience {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
-		property test.name.skip.portal.instance = "SearchBlueprints#AssertNonAdminsCannotSeeSearchExperience";
+		property test.name.skip.portal.instance = "SearchExperiences#AssertNonAdminsCannotSeeSearchExperience";
 
 		JSONWebcontent.addWebContent(
 			content = "Los Angeles",
@@ -89,7 +91,9 @@ definition {
 			password = "test",
 			userEmailAddress = "userea1@liferay.com");
 
-		SearchBlueprints.addBlueprint(name = "Los Angeles Boost");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(name = "Los Angeles Boost");
 
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -97,7 +101,7 @@ definition {
 
 		SearchPortlets.addWidgets(searchPortletList = "Blueprints Options");
 
-		SearchBlueprints.selectBlueprintFromOptionsWidget(name = "Los Angeles Boost");
+		SearchExperiences.selectBlueprintFromOptionsWidget(name = "Los Angeles Boost");
 
 		SearchPortlets.searchEmbedded(searchTerm = "cafe");
 
@@ -113,7 +117,7 @@ definition {
 
 		AssertElementNotPresent(locator1 = "ControlMenu#APPLICATIONS_MENU_ICON");
 
-		Navigator.openWithAppendToBaseURL(urlAppend = "group/guest/~/control_panel/manage?p_p_id=com_liferay_portal_search_tuning_blueprints_web_internal_portlet_BlueprintsAdminPortlet");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
 		Portlet.viewNoPermissionPG();
 
@@ -127,14 +131,16 @@ definition {
 	}
 
 	test AssertSearchResultsScore {
-		property test.name.skip.portal.instance = "SearchBlueprints#AssertSearchResultsScore";
+		property test.name.skip.portal.instance = "SearchExperiences#AssertSearchResultsScore";
 
 		JSONWebcontent.addWebContent(
 			content = "WC Content",
 			groupName = "Guest",
 			title = "Apple");
 
-		SearchBlueprints.addBlueprint(name = "Score Explanation Blueprint");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(name = "Score Explanation Blueprint");
 
 		LexiconEntry.gotoEntryMenuItem(
 			menuItem = "Edit",
@@ -142,9 +148,11 @@ definition {
 
 		Click(locator1 = "Button#PREVIEW");
 
-		SearchBlueprints.searchBlueprintsPreview(searchTerm = "Apple");
+		SearchExperiences.searchBlueprintsPreview(searchTerm = "Apple");
 
-		Click(locator1 = "//button[contains(@class,'score')]");
+		Click(
+			key_searchAssetTitle = "Apple",
+			locator1 = "SearchExperiences#BLUEPRINTS_PREVIEW_SCORE");
 
 		AssertTextEquals(
 			locator1 = "Modal#HEADER",
@@ -152,10 +160,42 @@ definition {
 
 		AssertVisible(
 			key_searchExplanation = "PerFieldSimilarity",
-			locator1 = "SearchTuning#BLUEPRINTS_PREVIEW_SCORE_EXPLANATION");
+			locator1 = "SearchExperiences#BLUEPRINTS_PREVIEW_SCORE_EXPLANATION");
 	}
 
 	test BoostWithElasticsearchQuery {
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(
+			clauseOption = "Custom Clauses",
+			name = "The Closer to Liferay, the Better");
+
+		SearchExperiences.editBlueprint(name = "The Closer to Liferay, the Better");
+
+		Type.sendKeysApplicationSearch(
+			locator1 = "SearchExperiences#BLUEPRINTS_FRAGMENT_QUERY_SEARCH_BAR",
+			value1 = "Filter by Exact Terms Match");
+
+		MouseOver(
+			key_fragmentName = "Filter by Exact Terms Match",
+			locator1 = "SearchExperiences#BLUEPRINTS_QUERY_FRAGMENT_NAME");
+
+		Click.clickNoMouseOverNoWaitForVisible(
+			key_fragmentName = "Filter by Exact Terms Match",
+			locator1 = "SearchExperiences#BLUEPRINTS_ADD_QUERY_FRAGMENT");
+
+		Type(
+			key_fieldLabel = "Field",
+			locator1 = "SearchExperiences#BLUEPRINTS_QUERY_TEXT_FIELD",
+			value1 = "ddmStructureKey");
+
+		Type(
+			key_fieldLabel = "Values",
+			locator1 = "SearchExperiences#BLUEPRINTS_QUERY_TEXT_FIELD",
+			value1 = "BASIC-WEB-CONTENT");
+
+		Click(locator1 = "SearchExperiences#BLUEPRINTS_CLEAR_BUTTON");
+
 		var elasticsearchQueryJSON = '''
 {
 	"function_score": {
@@ -174,37 +214,7 @@ definition {
 }
 			''';
 
-		SearchBlueprints.addBlueprint(
-			clauseOption = "Custom Clauses",
-			name = "The Closer to Liferay, the Better");
-
-		SearchBlueprints.editBlueprint(name = "The Closer to Liferay, the Better");
-
-		Type.sendKeysApplicationSearch(
-			locator1 = "SearchTuning#BLUEPRINTS_FRAGMENT_QUERY_SEARCH_BAR",
-			value1 = "Filter by Exact Terms Match");
-
-		MouseOver(
-			key_fragmentName = "Filter by Exact Terms Match",
-			locator1 = "SearchTuning#BLUEPRINTS_QUERY_FRAGMENT_NAME");
-
-		Click.clickNoMouseOverNoWaitForVisible(
-			key_fragmentName = "Filter by Exact Terms Match",
-			locator1 = "SearchTuning#BLUEPRINTS_ADD_QUERY_FRAGMENT");
-
-		Type(
-			key_fieldLabel = "Field",
-			locator1 = "SearchTuning#BLUEPRINTS_QUERY_TEXT_FIELD",
-			value1 = "ddmStructureKey");
-
-		Type(
-			key_fieldLabel = "Values",
-			locator1 = "SearchTuning#BLUEPRINTS_QUERY_TEXT_FIELD",
-			value1 = "BASIC-WEB-CONTENT");
-
-		Click(locator1 = "SearchTuning#BLUEPRINTS_CLEAR_BUTTON");
-
-		SearchBlueprints.addQueryElements(
+		SearchExperiences.addQueryElements(
 			elasticsearchQuery = "${elasticsearchQueryJSON}",
 			fragment = "Paste any Elasticsearch query");
 
@@ -214,7 +224,7 @@ definition {
 
 		SearchPortlets.addWidgets(searchPortletList = "Blueprints Options");
 
-		SearchBlueprints.selectBlueprintFromOptionsWidget(name = "The Closer to Liferay, the Better");
+		SearchExperiences.selectBlueprintFromOptionsWidget(name = "The Closer to Liferay, the Better");
 
 		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
@@ -278,9 +288,11 @@ definition {
 	}
 
 	test CreateBoostAssetType {
-		property test.name.skip.portal.instance = "SearchBlueprints#CreateBoostAssetType";
+		property test.name.skip.portal.instance = "SearchExperiences#CreateBoostAssetType";
 
-		SearchBlueprints.addBlueprint(name = "My Blueprint");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(name = "My Blueprint");
 
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -288,7 +300,7 @@ definition {
 
 		SearchPortlets.addWidgets(searchPortletList = "Blueprints Options");
 
-		SearchBlueprints.selectBlueprintFromOptionsWidget(name = "My Blueprint");
+		SearchExperiences.selectBlueprintFromOptionsWidget(name = "My Blueprint");
 
 		JSONWebcontent.addWebContent(
 			content = "Liferay",
@@ -305,9 +317,11 @@ definition {
 
 		SearchResultPortlet.viewSearchResultsSpecificOrder(resultsList = "Liferay Blogs Entry,Liferay Web Content");
 
-		SearchBlueprints.editBlueprint(name = "My Blueprint");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
-		SearchBlueprints.addQueryElements(
+		SearchExperiences.editBlueprint(name = "My Blueprint");
+
+		SearchExperiences.addQueryElements(
 			assetType = "Web Content Article",
 			fragment = "Boost Asset Type",
 			numberBoost = "1000");
@@ -321,9 +335,11 @@ definition {
 
 	@priority = "4"
 	test HideWebContentWithCustomElement {
-		property test.name.skip.portal.instance = "SearchBlueprints#HideWebContentWithCustomElement";
+		property test.name.skip.portal.instance = "SearchExperiences#HideWebContentWithCustomElement";
 
-		SearchBlueprints.addBlueprint(name = "Hide Test and Experimental Content");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(name = "Hide Test and Experimental Content");
 
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -331,7 +347,7 @@ definition {
 
 		SearchPortlets.addWidgets(searchPortletList = "Blueprints Options");
 
-		SearchBlueprints.selectBlueprintFromOptionsWidget(name = "Hide Test and Experimental Content");
+		SearchExperiences.selectBlueprintFromOptionsWidget(name = "Hide Test and Experimental Content");
 
 		JSONWebcontent.addWebContent(
 			content = "",
@@ -432,14 +448,16 @@ definition {
 }
 			''';
 
-		SearchBlueprints.addElements(
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addElements(
 			elementTemplateJSON = "${elementTemplateJSON}",
 			name = "Hide Multiple Tagged Contents",
 			uiConfigurationJSON = "${uiConfigurationJSON}");
 
-		SearchBlueprints.editBlueprint(name = "Hide Test and Experimental Content");
+		SearchExperiences.editBlueprint(name = "Hide Test and Experimental Content");
 
-		SearchBlueprints.addQueryElements(
+		SearchExperiences.addQueryElements(
 			fragment = "Hide Multiple Tagged Contents",
 			tag1 = "test",
 			tag2 = "experimental");
@@ -461,66 +479,70 @@ definition {
 			searchAssetType = "Web Content Article");
 	}
 
-	test SearchBlueprintsByTitleOrDescription {
-		property test.name.skip.portal.instance = "SearchBlueprints#SearchBlueprintsByTitleOrDescription";
+	test SearchBlueprintsByTitleAndDescription {
+		property test.name.skip.portal.instance = "SearchExperiences#SearchBlueprintsByTitleAndDescription";
 
-		SearchBlueprints.addBlueprint(
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(
 			description = "Blueprint Test Description",
 			name = "Test Blueprint - Adminicle");
 
-		SearchBlueprints.addBlueprint(
+		SearchExperiences.addBlueprint(
 			description = "Serendipitous Blueprint Test Description",
 			name = "Test Blueprint - Aid");
 
-		SearchBlueprints.searchReactiveSearchWidget(searchTerm = "Adminicle");
+		SearchExperiences.searchReactiveSearchWidget(searchTerm = "Adminicle");
 
 		AssertElementPresent(
 			key_searchAssetTitle = "Test Blueprint - Adminicle",
-			locator1 = "SearchTuning#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
+			locator1 = "SearchExperiences#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
 
-		SearchBlueprints.searchReactiveSearchWidget(searchTerm = "Serendipitous");
+		SearchExperiences.searchReactiveSearchWidget(searchTerm = "Serendipitous");
 
 		AssertElementPresent(
 			key_searchAssetTitle = "Test Blueprint - Aid",
-			locator1 = "SearchTuning#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
+			locator1 = "SearchExperiences#BLUEPRINTS_ASSET_ENTRY_TABLE_TITLE");
 	}
 
 	test SortAndViewSearchBlueprints {
-		property test.name.skip.portal.instance = "SearchBlueprints#SortAndViewSearchBlueprints";
+		property test.name.skip.portal.instance = "SearchExperiences#SortAndViewSearchBlueprints";
 
-		SearchBlueprints.tearDownCP();
+		SearchExperiences.tearDownCP();
+
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
 
 		for (var blueprintNumber : list "1,3,2") {
-			SearchBlueprints.addBlueprint(name = "Blueprint ${blueprintNumber}");
+			SearchExperiences.addBlueprint(name = "Blueprint ${blueprintNumber}");
 		}
 
 		Click(locator1 = "Dropdown#FILTER_AND_ORDER");
 
 		MenuItem.click(menuItem = "Title");
 
-		SearchBlueprints.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 1,Blueprint 2,Blueprint 3");
+		SearchExperiences.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 1,Blueprint 2,Blueprint 3");
 
 		Click(locator1 = "Dropdown#FILTER_AND_ORDER");
 
 		MenuItem.click(menuItem = "Created");
 
-		SearchBlueprints.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 1,Blueprint 3,Blueprint 2");
+		SearchExperiences.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 1,Blueprint 3,Blueprint 2");
 
 		LexiconEntry.gotoEntryMenuItem(
 			menuItem = "Edit",
 			rowEntry = "Blueprint 1");
 
-		SearchBlueprints.addQueryElements(fragment = "Boost Asset Type");
+		SearchExperiences.addQueryElements(fragment = "Boost Asset Type");
 
 		Click(locator1 = "Dropdown#FILTER_AND_ORDER");
 
 		MenuItem.click(menuItem = "Modified");
 
-		SearchBlueprints.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 3,Blueprint 2,Blueprint 1");
+		SearchExperiences.viewBlueprintsSpecificOrder(blueprintsList = "Blueprint 3,Blueprint 2,Blueprint 1");
 	}
 
 	test ViewBlueprintsAssetDetails {
-		property test.name.skip.portal.instance = "SearchBlueprints#ViewBlueprintsAssetDetails";
+		property test.name.skip.portal.instance = "SearchExperiences#ViewBlueprintsAssetDetails";
 
 		JSONBlog.addEntry(
 			entryContent = "banana, red apple, blueberry!",
@@ -531,7 +553,9 @@ definition {
 			groupName = "Guest",
 			title = "Web Content Article Apple");
 
-		SearchBlueprints.addBlueprint(name = "My Blueprint");
+		SearchExperiences.openSearchExperiences(siteURLKey = "guest");
+
+		SearchExperiences.addBlueprint(name = "My Blueprint");
 
 		LexiconEntry.gotoEntryMenuItem(
 			menuItem = "Edit",
@@ -539,7 +563,7 @@ definition {
 
 		Click(locator1 = "Button#PREVIEW");
 
-		SearchBlueprints.searchBlueprintsPreview(searchTerm = "Apple");
+		SearchExperiences.searchBlueprintsPreview(searchTerm = "Apple");
 
 		Click(
 			key_searchAssetTitle = "Liferay Blogs Entry Apple",
