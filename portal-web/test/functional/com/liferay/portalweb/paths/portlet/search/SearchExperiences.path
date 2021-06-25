@@ -30,6 +30,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>BLUEPRINTS_PREVIEW_ENTRY_FIELD_VALUE</td>
+	<td>//div[contains(@class,'row')]/div[contains(.,'${key_fieldValue}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>BLUEPRINTS_PREVIEW_SCORE_EXPLANATION</td>
 	<td>xpath=(//span[contains(@class,'cm-variable') and text()='${key_searchExplanation}'])[1]</td>
 	<td></td>
