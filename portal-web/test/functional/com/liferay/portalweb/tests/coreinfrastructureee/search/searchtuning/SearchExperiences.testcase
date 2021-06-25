@@ -438,7 +438,6 @@ definition {
 
 		ManagementBar.setFilterAndOrder(orderBy = "Created");
 
-
 		LexiconEntry.viewEntriesSpecificOrder(entryList = "Blueprint 2,Blueprint 3,Blueprint 1");
 
 		SearchExperiences.editBlueprint(name = "Blueprint 1");
