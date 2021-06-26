@@ -35,6 +35,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>BLUEPRINTS_PREVIEW_EXPAND_ENTRY_BUTTON</td>
+	<td>//button[contains(@aria-label,'Expand')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>BLUEPRINTS_PREVIEW_SCORE_EXPLANATION</td>
 	<td>xpath=(//span[contains(@class,'cm-variable') and text()='${key_searchExplanation}'])[1]</td>
 	<td></td>
