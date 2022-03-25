@@ -10,6 +10,21 @@ definition {
 		return "${clientVersion}";
 	}
 
+	macro getElasticsearchLogEntry {
+		var liferayHome = PropsUtil.get("liferay.home.dir.name");
+
+		var serverVersion = Elasticsearch.getServerVersion();
+
+		var fileContent = FileUtil.read("${liferayHome}/elasticsearch-${serverVersion}/logs/LiferayElasticsearchCluster.log");
+		var logEntry = StringUtil.extractLast("${fileContent}", "MetadataMappingService] ");
+		var logEntry = StringUtil.extractLast("${logEntry}", "] [");
+		var logEntry = StringUtil.stripBetween("${logEntry}", "/", "]");
+
+		echo("The log snippet is: ${logEntry}");
+
+		return "${logEntry}";
+	}
+
 	macro getServerPort {
 		var remoteEnabled = Elasticsearch.isRemoteMode();
 
