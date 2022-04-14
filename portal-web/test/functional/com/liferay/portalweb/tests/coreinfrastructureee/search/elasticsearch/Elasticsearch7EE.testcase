@@ -32,6 +32,7 @@ definition {
 	test LearningToRankSmoke {
 		property elasticsearch.ltr.enabled = "true";
 		property environment.acceptance = "false";
+		property portal.acceptance = "timpak";
 		property remote.elasticsearch.enabled = "true";
 		property test.name.skip.portal.instance = "Elasticsearch7EE#LearningToRankSmoke";
 
