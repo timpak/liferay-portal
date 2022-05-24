@@ -1065,11 +1065,11 @@ definition {
 
 		JSONGroup.addGroup(
 			groupName = "Remote Site",
-			portalURL = "http://localhost:${remotePort}");
+			portalURL = "http://localhost:${remotePort}/liferay");
 
 		var remoteGroupId = JSONGroupSetter.setGroupId(
 			groupName = "Remote Site",
-			portalURL = "http://localhost:${remotePort}");
+			portalURL = "http://localhost:${remotePort}/liferay");
 
 		JSONStaging.enableRemoteStaging(
 			branchingPrivate = "${branchingPrivate}",
