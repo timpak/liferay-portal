@@ -1960,7 +1960,7 @@ definition {
 		if (isSet(virtualHostsURL)) {
 			Navigator.openSpecificURL(
 				domain = "${domain}",
-				url = "${virtualHostsURL}");
+				url = "${virtualHostsURL}/liferay");
 		}
 		else {
 			Navigator.openURL();
@@ -1973,7 +1973,7 @@ definition {
 			userEmailAddress = "${userEmailAddress}");
 
 		if (isSet(virtualHostsURL)) {
-			Navigator.openSpecificURL(url = "${virtualHostsURL}/web/guest?SM_USER=${userEmailAddress}");
+			Navigator.openSpecificURL(url = "${virtualHostsURL}/liferay/web/guest?SM_USER=${userEmailAddress}");
 		}
 		else {
 			var baseURL = PropsUtil.get("portal.url");
@@ -2010,7 +2010,10 @@ definition {
 		if (isSet(specificURL)) {
 			Navigator.openSpecificURL(
 				domain = "${domain}",
-				url = "${specificURL}");
+				url = "${specificURL}/liferay");
+		}
+		else if (isSet(customURL)) {
+			Navigator.openSpecificURL(url = "${customURL}");
 		}
 		else {
 			Navigator.openURL();
