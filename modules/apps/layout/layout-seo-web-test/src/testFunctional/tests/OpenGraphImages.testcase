@@ -273,7 +273,7 @@ definition {
 	test CanDisableAfterAddingImage {
 		property test.name.skip.portal.instance = "OpenGraphImages#CanDisableAfterAddingImage";
 
-		Navigator.openSpecificURL(url = "https://localhost:8443/web/test-site-name/test-page-name");
+		Navigator.openSpecificURL(url = "https://localhost:8443/liferay/web/test-site-name/test-page-name");
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name");
 
@@ -292,7 +292,7 @@ definition {
 
 		User.logoutPG();
 
-		Navigator.openSpecificURL(url = "https://localhost:8443/web/test-site-name/test-page-name");
+		Navigator.openSpecificURL(url = "https://localhost:8443/liferay/web/test-site-name/test-page-name");
 
 		OpenGraph.viewNoOpenGraphProperties(ogPropertyList = '''og:image:url,og:image:secure_url,og:image:type,og:image:width,og:image:height''');
 	}
@@ -338,7 +338,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "OpenGraphImages#CanViewImageWithMetaTags";
 
-		Navigator.openSpecificURL(url = "https://localhost:8443/web/test-site-name/test-page-name");
+		Navigator.openSpecificURL(url = "https://localhost:8443/liferay/web/test-site-name/test-page-name");
 
 		Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name");
 
@@ -351,7 +351,7 @@ definition {
 
 		User.logoutPG();
 
-		Navigator.openSpecificURL(url = "https://localhost:8443/web/test-site-name/test-page-name");
+		Navigator.openSpecificURL(url = "https://localhost:8443/liferay/web/test-site-name/test-page-name");
 
 		OpenGraph.viewOpenGraphProperties(ogPropertyList = '''og:image:url,og:image:secure_url,og:image:type,og:image:width,og:image:height''');
 	}

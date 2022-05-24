@@ -109,7 +109,7 @@ definition {
 				userEmailAddress = "test@www.able.com",
 				virtualHostsURL = "http://www.able.com:8080");
 
-			PortalSettings.openInstanceSettingsAdmin(baseURL = "http://www.able.com:8080");
+			PortalSettings.openInstanceSettingsAdmin(baseURL = "http://www.able.com:8080/liferay");
 
 			SystemSettings.gotoConfiguration(
 				configurationCategory = "SSO",
@@ -125,7 +125,7 @@ definition {
 		task ("Sign out and go to able.com") {
 			UserBar.signOut();
 
-			Navigator.openSpecificURL(url = "http://www.able.com:8080/");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 		}
 
 		task ("View provider and assert OpenID Connect login option") {
@@ -146,7 +146,7 @@ definition {
 
 			Navigator.openSpecificURL(
 				domain = "www.baker.com",
-				url = "http://www.baker.com:8080/");
+				url = "http://www.baker.com:8080/liferay");
 
 			OpenIDConnect.viewProvider();
 		}
@@ -174,13 +174,13 @@ definition {
 		task ("Goto new CP url and sign in") {
 			Navigator.openSpecificURL(
 				domain = "www.able.com",
-				url = "https://www.able.com:8443/");
+				url = "https://www.able.com:8443/liferay");
 
 			OpenIDConnect.viewNoProvider();
 		}
 
 		task ("Enable openID connect CP") {
-			Navigator.openURL(baseURL = "https://localhost:8443");
+			Navigator.openURL(baseURL = "https://localhost:8443/liferay");
 
 			SystemSettings.openSystemSettingsAdmin();
 
@@ -209,7 +209,7 @@ definition {
 		task ("Go to able.com and assert openId connect") {
 			Navigator.openSpecificURL(
 				domain = "www.able.com",
-				url = "https://www.able.com:8443/");
+				url = "https://www.able.com:8443/liferay");
 
 			OpenIDConnect.viewProvider();
 		}
@@ -242,7 +242,7 @@ definition {
 				userEmailAddress = "test@www.able.com");
 
 			PortalSettings.gotoConfiguration(
-				baseURL = "https://www.able.com:8443",
+				baseURL = "https://www.able.com:8443/liferay",
 				configurationCategory = "SSO",
 				configurationName = "OpenID Connect",
 				configurationScope = "Virtual Instance Scope");
@@ -251,7 +251,7 @@ definition {
 		}
 
 		task ("Add SSO openID connect provider") {
-			PortalSettings.openInstanceSettingsAdmin(baseURL = "https://www.able.com:8443");
+			PortalSettings.openInstanceSettingsAdmin(baseURL = "https://www.able.com:8443/liferay");
 
 			SystemSettings.gotoConfiguration(
 				configurationCategory = "SSO",
@@ -268,7 +268,7 @@ definition {
 			UserBar.signOut();
 
 			User.loginUserWithOpenIDConnectEnabledPG(
-				specificURL = "https://www.able.com:8443",
+				specificURL = "https://www.able.com:8443/liferay",
 				userEmailAddress = "${userEmailAddress}",
 				userPassword = "${userPassword}");
 		}
@@ -296,7 +296,7 @@ definition {
 
 		task ("Add SSO OpenID Connect provider") {
 			PortalSettings.gotoConfiguration(
-				baseURL = "http://localhost:8080",
+				baseURL = "http://localhost:8080/liferay",
 				configurationCategory = "SSO",
 				configurationName = "OpenID Connect",
 				configurationScope = "Virtual Instance Scope");

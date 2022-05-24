@@ -676,7 +676,7 @@ definition {
 		task ("Sign In the New Account and Assert the User Name") {
 			User.firstLoginUI(
 				password = "user",
-				specificURL = "http://localhost:8080/web/${testSiteURL}/sign-in",
+				customURL = "http://localhost:8080/liferay/web/${testSiteURL}/sign-in",
 				userEmailAddress = "usera@liferay.com");
 
 			User.resetPassword();

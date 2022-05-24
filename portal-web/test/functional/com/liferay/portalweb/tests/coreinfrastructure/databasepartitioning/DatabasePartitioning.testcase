@@ -43,7 +43,7 @@ definition {
 			specificURL = "http://www.able.com:8080",
 			userEmailAddress = "test@www.able.com");
 
-		Navigator.openSpecificURL(url = "http://www.able.com:8080");
+		Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 		ProductMenu.gotoPortlet(
 			category = "Content & Data",
@@ -64,7 +64,7 @@ definition {
 			specificURL = "http://www.baker.com:8080",
 			userEmailAddress = "test@www.baker.com");
 
-		Navigator.openSpecificURL(url = "http://www.baker.com:8080");
+		Navigator.openSpecificURL(url = "http://www.baker.com:8080/liferay");
 
 		ProductMenu.gotoPortlet(
 			category = "Content & Data",
@@ -174,7 +174,7 @@ definition {
 			specificURL = "http://www.able.com:8080",
 			userEmailAddress = "test@www.able.com");
 
-		Navigator.openSpecificURL(url = "http://www.able.com:8080");
+		Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 		ProductMenu.gotoPortlet(
 			category = "Content & Data",
@@ -244,10 +244,10 @@ definition {
 			pageVirtualHostURL = "www.baker.com");
 
 		Navigator.gotoPage(
-			baseURL = "www.baker.com:8080",
+			baseURL = "www.baker.com:8080/liferay",
 			pageName = "Home");
 
-		AssertLocation(value1 = "http://www.baker.com:8080/web/guest/home");
+		AssertLocation(value1 = "http://www.baker.com:8080/liferay/web/guest/home");
 
 		SignOut.signOut();
 
@@ -261,10 +261,10 @@ definition {
 		ServerAdministration.executeServerResourcesActions(actionsDescription = "Clear the database cache.");
 
 		Navigator.gotoPage(
-			baseURL = "www.baker.com:8080",
+			baseURL = "www.baker.com:8080/liferay",
 			pageName = "Home");
 
-		AssertLocation(value1 = "http://www.baker.com:8080/web/guest/home");
+		AssertLocation(value1 = "http://www.baker.com:8080/liferay/web/guest/home");
 	}
 
 	@priority = "5"
@@ -347,7 +347,7 @@ definition {
 
 		Portlet.startServer(keepOsGiState = "true");
 
-		Navigator.openSpecificURL(url = "http://www.able.com:8080");
+		Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 		ProductMenu.gotoPortlet(
 			category = "Content & Data",
@@ -435,7 +435,7 @@ definition {
 		}
 
 		task ("New Company publish it's WebContent Article") {
-			Navigator.openSpecificURL(url = "http://www.able.com:8080");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 			Pause(locator1 = "230000");
 

@@ -100,7 +100,7 @@ definition {
 		}
 
 		task ("Go to the new Virtual Instance") {
-			Navigator.openSpecificURL(url = "http://www.baker.com:8080");
+			Navigator.openSpecificURL(url = "http://www.baker.com:8080/liferay");
 		}
 
 		task ("Assert the default Welcome Page is present") {
@@ -127,7 +127,7 @@ definition {
 		}
 
 		task ("Go to the new Virtual Instance") {
-			Navigator.openSpecificURL(url = "http://www.able.com:8080");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 		}
 
 		task ("Assert the Masterclass Welcome Page") {
@@ -242,7 +242,7 @@ definition {
 		}
 
 		task ("Go to the Virtual Instance Created and Assert the Team Extranet Logo") {
-			Navigator.openSpecificURL(url = "http://www.able.com:8080");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 			AssertElementPresent(
 				key_title = "Welcome to the team!",
@@ -350,7 +350,7 @@ definition {
 		}
 
 		task ("Go to the Virtual Instance Created and Assert the Team Extranet Logo") {
-			Navigator.openSpecificURL(url = "http://www.able.com:8080");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 			AssertElementPresent(
 				key_title = "Welcome to the team!",
@@ -414,7 +414,7 @@ definition {
 		task ("Add a '${portletName}' portlet to the page named '${pageName}'") {
 			Navigator.gotoSpecificURLPage(
 				pageName = "${pageName}",
-				url = "http://www.able.com:8080");
+				url = "http://www.able.com:8080/liferay");
 
 			Portlet.addPG(
 				i = "${i}",
@@ -428,7 +428,7 @@ definition {
 
 			Navigator.gotoSpecificURLPage(
 				pageName = "${pageName}",
-				url = "http://www.able.com:8080");
+				url = "http://www.able.com:8080/liferay");
 
 			Portlet.viewTitle(portletName = "${portletName}");
 
@@ -444,7 +444,7 @@ definition {
 
 		task ("Add a '${fragmentName}' fragment to the content page named '${contentPageName}'") {
 			task ("Create a Content Page") {
-				Navigator.openSpecificURL(url = "http://www.able.com:8080");
+				Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 				ProductMenu.gotoPortlet(
 					category = "Site Builder",
@@ -466,7 +466,7 @@ definition {
 			task ("Navigate to the content page") {
 				Navigator.gotoSpecificURLPage(
 					pageName = "${contentPageName}",
-					url = "http://www.able.com:8080");
+					url = "http://www.able.com:8080/liferay");
 			}
 
 			task ("Assert the '${fragmentName}' fragment is present") {
@@ -477,7 +477,7 @@ definition {
 		var portlet = "Web Content";
 
 		task ("Navigate to Product Menu > Sites > Content > ${portlet}") {
-			Navigator.openSpecificURL(url = "http://www.able.com:8080");
+			Navigator.openSpecificURL(url = "http://www.able.com:8080/liferay");
 
 			ProductMenu.gotoPortlet(
 				category = "Content & Data",
