@@ -664,22 +664,22 @@ definition {
 			JSONDepot.addDepot(
 				depotDescription = "This is the description of a remote depot",
 				depotName = "${remoteDepotName}",
-				portalURL = "http://localhost:${remotePort}");
+				portalURL = "http://localhost:${remotePort}/liferay");
 
 			var remoteGroupId = JSONGroupSetter.setGroupId(
 				groupName = "${remoteDepotName}",
-				portalURL = "http://localhost:${remotePort}",
+				portalURL = "http://localhost:${remotePort}/liferay",
 				site = "${site}");
 		}
 		else {
 			JSONDepot.addDepot(
 				depotDescription = "This is the description of a remote depot",
 				depotName = "Remote Depot",
-				portalURL = "http://localhost:${remotePort}");
+				portalURL = "http://localhost:${remotePort}/liferay");
 
 			var remoteGroupId = JSONGroupSetter.setGroupId(
 				groupName = "Remote Depot",
-				portalURL = "http://localhost:${remotePort}",
+				portalURL = "http://localhost:${remotePort}/liferay",
 				site = "${site}");
 		}
 
