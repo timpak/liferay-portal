@@ -99,9 +99,9 @@ definition {
 
 	}
 
-	@description = "LPS-151765 - Verify if the relationship one to many, with prevent deletion type, not be able to delete an entry related to another one"
+	@description = "LPS-151765 - Verify it's not possible to delete an entry if the relationship is one to many with prevent deletion type"
 	@priority = "4"
-	test CannotDeleteRelationshipWhenDeletionTypeIsPrevent {
+	test CannotDeleteEntryWhenDeletionTypeIsPrevent {
 		Accounts.openAccountsAdmin();
 
 		Accounts.addBusinessAccount(
