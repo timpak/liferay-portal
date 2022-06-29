@@ -383,7 +383,7 @@ definition {
 
 		ObjectCustomViews.goToViewsBuilderTab();
 
-		ObjectCustomViews.addColumnsViaUI(columnOption = "Author");
+		ObjectCustomViews.addColumnsViaUI(addColumns = "Author");
 
 		Button.clickSave();
 
@@ -438,7 +438,7 @@ definition {
 
 		ObjectCustomViews.goToViewsBuilderTab();
 
-		ObjectCustomViews.addColumnsViaUI(columnOption = "ID");
+		ObjectCustomViews.addColumnsViaUI(addColumns = "ID");
 
 		ObjectCustomViews.goToDefaultSortTab();
 
@@ -632,7 +632,7 @@ definition {
 
 		Audit.viewAuditEntries(
 			clientIP = "127.0.0.1",
-			createDate = "Seconds Ago",
+			createDate = "Second Ago",
 			id = "",
 			position = "1",
 			resourceAction = "ADD",
@@ -1061,7 +1061,7 @@ definition {
 
 		ObjectCustomViews.goToViewsBuilderTab();
 
-		ObjectCustomViews.addColumnsViaUI(columnOption = "Author");
+		ObjectCustomViews.addColumnsViaUI(addColumns = "Author");
 
 		Button.clickSave();
 
