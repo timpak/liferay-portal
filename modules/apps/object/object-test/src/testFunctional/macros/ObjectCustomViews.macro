@@ -3,7 +3,7 @@ definition {
 	macro addColumnsViaUI {
 		LexiconEntry.gotoAdd();
 
-		SelectFrame(locator1 = "ObjectCustomViews#VIEW_MODAL_ADD_COLUMNS");
+		SelectFrame(locator1 = "ObjectCustomViews#VIEW_MODAL_CONTENT");
 
 		for (var columnsOptions : list "${addColumns}") {
 			Click.clickAtNotVisible(
@@ -27,8 +27,8 @@ definition {
 		Click(locator1 = "ObjectCustomViews#SELECT_COLUMN_ON_DEFAULT_SORT");
 
 		Click(
-			key_columnOption = "${columnOption}",
-			locator1 = "ObjectCustomViews#DEFAULT_SORT_COLUMN_OPTION");
+			key_selectOption = "${columnOption}",
+			locator1 = "ObjectCustomViews#GENERIC_OPTIONS_ON_MODAL");
 
 		Click(locator1 = "ObjectCustomViews#SELECT_SORTING_ON_DEFAULT_SORT");
 
@@ -43,6 +43,48 @@ definition {
 
 	macro addNewDefaultSort {
 		Click(locator1 = "ObjectCustomViews#ADD_NEW_DEFAULT_SORT");
+	}
+
+	macro addNewFilterViaUI {
+		ObjectCustomViews.gotoAddNewFilter();
+
+		Click(locator1 = "ObjectCustomViews#FILTER_BY_ON_NEW_FILTER");
+
+		ObjectCustomViews.assertDefaultMetadataOnFilterBy();
+
+		Click(
+			key_selectOption = "${filterBy}",
+			locator1 = "ObjectCustomViews#GENERIC_OPTIONS_ON_MODAL");
+
+		if (isSet(filterType)) {
+			Click(
+				key_filterLabel = "Filter Type",
+				locator1 = "ObjectCustomViews#SELECT_FILTER_GENERIC");
+
+			ObjectCustomViews.assertDefaultMetadataOnFilterType();
+
+			Click(
+				key_fieldType = "${filterType}",
+				locator1 = "ObjectField#TYPE_OPTION");
+		}
+
+		if (isSet(filterValue)) {
+			Click(
+				key_filterLabel = "Value",
+				locator1 = "ObjectCustomViews#SELECT_FILTER_GENERIC");
+
+			ObjectCustomViews.assertDefaultMetadataOnFilterValue();
+
+			for (var filterValueList : list "${filterValue}") {
+				Click.clickAtNotVisible(
+					key_columnOption = "${filterValueList}",
+					locator1 = "ObjectCustomViews#CHECKBOX_COLUMN_OPTION");
+			}
+		}
+
+		Click(
+			key_name = "Save",
+			locator1 = "Button#GENERAL_BUTTON_MODAL_FOOTER");
 	}
 
 	macro addObjectViewViaUI {
@@ -99,11 +141,35 @@ definition {
 	}
 
 	macro assertColumnVisibleOnAddColumnModal {
-		Click(locator1 = "ObjectCustomViews#VIEW_MODAL_ADD_COLUMNS");
+		Click(locator1 = "ObjectCustomViews#VIEW_MODAL_CONTENT");
 
 		AssertVisible(
 			key_columnName = "${columnOption}",
 			locator1 = "ObjectCustomViews#ADD_COLUMNS_COLUMN_LABEL");
+	}
+
+	macro assertDefaultMetadataOnFilterBy {
+		for (var metaDataOptions : list "Creation Date,Modified Date,Workflow Status") {
+			AssertElementPresent(
+				key_selectOption = "${metaDataOptions}",
+				locator1 = "ObjectCustomViews#GENERIC_OPTIONS_ON_MODAL");
+		}
+	}
+
+	macro assertDefaultMetadataOnFilterType {
+		for (var metaDataOptions : list "Includes,Excludes") {
+			AssertElementPresent(
+				locator1 = "ObjectCustomViews#FILTER_TYPE_ON_NEW_FILTER",
+				value1 = "${metaDataOptions}");
+		}
+	}
+
+	macro assertDefaultMetadataOnFilterValue {
+		for (var metaDataOptions : list "Approved,Denied,Draft,Expired,Inactive,Incomplete,In Recycle Bin,Pending,Scheduled") {
+			AssertElementPresent(
+				locator1 = "ObjectCustomViews#FILTER_TYPE_ON_NEW_FILTER",
+				value1 = "${metaDataOptions}");
+		}
 	}
 
 	macro assertEmptyStateTextOnViewBuilder {
@@ -136,6 +202,18 @@ definition {
 		var key_viewLabel = "${viewLabel}";
 
 		AssertElementNotPresent(locator1 = "ObjectCustomViews#OBJECT_VIEW_LABEL");
+	}
+
+	macro assertVisibleEntriesOnFilters {
+		AssertVisible(
+			key_columnName = "${filterBy}",
+			locator1 = "ObjectCustomViews#VIEW_BUILDER_SEARCH_RESULT");
+
+		for (var filterValueList : list "${filterValue}") {
+			AssertVisible(
+				key_columnLabel = "${filterValueList}",
+				locator1 = "ObjectCustomViews#BUILDER_SEARCH_RESULT_COLUMN_LABEL");
+		}
 	}
 
 	macro deleteObjectCustomViewViaUI {
@@ -194,8 +272,18 @@ definition {
 		DropdownMenuItem.click(menuItem = "Edit");
 	}
 
+	macro gotoAddNewFilter {
+		Click(locator1 = "ObjectCustomViews#ADD_BUTTON_FILTERS");
+
+		Click(locator1 = "ObjectCustomViews#VIEW_MODAL_CONTENT");
+	}
+
 	macro goToDefaultSortTab {
 		Click(locator1 = "ObjectCustomViews#DEFAULT_SORT_TAB");
+	}
+
+	macro goToFiltersTab {
+		Click(locator1 = "ObjectCustomViews#FILTERS_TAB");
 	}
 
 	macro gotoPermissions {
@@ -253,7 +341,7 @@ definition {
 	}
 
 	macro searchOnAddColumnModal {
-		SelectFrame(locator1 = "ObjectCustomViews#VIEW_MODAL_ADD_COLUMNS");
+		SelectFrame(locator1 = "ObjectCustomViews#VIEW_MODAL_CONTENT");
 
 		Click(locator1 = "ObjectCustomViews#ADD_COLUMNS_SEARCH_BAR");
 

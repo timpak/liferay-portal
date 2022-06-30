@@ -19,9 +19,11 @@ definition {
 		if ("${testPortalInstance}" == "true") {
 			PortalInstances.tearDownCP();
 		}
+
 		else {
 			ObjectAdmin.deleteAllCustomObjectsViaAPI();
 		}
+
 	}
 
 	@description = "LPS-135394 - Verify it is possible to add a column for the View"
@@ -276,6 +278,44 @@ definition {
 		ObjectCustomViews.assertColumnPresentOnDefaultSort(
 			columnName = "Author",
 			sortingLabel = "Ascending");
+	}
+
+	@description = "LPS-144957 - Verify that it's possible to create the filter"
+	@priority = "4"
+	test CanCreateFilter {
+		task ("Create Custom Object via API and go to it") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156807",
+				objectName = "CustomObject156807",
+				pluralLabelName = "Custom Objects 156807");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156807");
+		}
+
+		task ("Create Custom View and go to it") {
+			ObjectCustomViews.goToViewsTab();
+
+			ObjectCustomViews.addObjectViewViaUI(viewName = "Custom Views");
+
+			ObjectCustomViews.goToViewsDetails(label = "Custom Views");
+		}
+
+		task ("Go to Filters tab and add new Filter") {
+			ObjectCustomViews.goToFiltersTab();
+
+			ObjectCustomViews.addNewFilterViaUI(
+				filterBy = "Workflow Status",
+				filterType = "Includes",
+				filterValue = "Approved,Denied,Draft,Expired,Inactive,Incomplete,In Recycle Bin,Pending,Scheduled");
+		}
+
+		task ("Assert Filter created") {
+			ObjectCustomViews.assertVisibleEntriesOnFilters(
+				filterBy = "Workflow Status",
+				filterValue = "Approved,Denied,Draft,Expired,Inactive,Incomplete,In Recycle Bin,Pending,Scheduled");
+		}
 	}
 
 	@description = "LPS-135394 - Verify it is possible to create a View"
