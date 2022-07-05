@@ -176,8 +176,8 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td>EDIT_COLUMNS_ON_DEFAULT_SORT</td>
-		<td>//h3[(@class='lfr-objects__card-title') and text()='Default Sort']//../..//div[contains(@class,'dropdown')]</td>
+		<td>SELECT_DROPDOWN_ON_LABEL</td>
+		<td>//h3[(@class='lfr-objects__card-title') and text()='${key_cardName}']//../..//div[contains(@class,'dropdown')]</td>
 		<td></td>
 	</tr>
 	<tr>
