@@ -186,6 +186,12 @@ definition {
 		AssertElementPresent(locator1 = "ObjectCustomViews#DEFAULT_SORT_NO_COLUMN_OPTION");
 	}
 
+	macro assertNotPresentEntryOnFilters {
+		AssertElementNotPresent(
+			key_columnName = "${filterBy}",
+			locator1 = "ObjectCustomViews#VIEW_BUILDER_SEARCH_RESULT");
+	}
+
 	macro assertObjectView {
 		var key_viewLabel = "${viewLabel}";
 
@@ -209,11 +215,23 @@ definition {
 			key_columnName = "${filterBy}",
 			locator1 = "ObjectCustomViews#VIEW_BUILDER_SEARCH_RESULT");
 
-		for (var filterValueList : list "${filterValue}") {
-			AssertVisible(
-				key_columnLabel = "${filterValueList}",
-				locator1 = "ObjectCustomViews#BUILDER_SEARCH_RESULT_COLUMN_LABEL");
+		if (isSet(filterValue)) {
+			for (var filterValueList : list "${filterValue}") {
+				AssertVisible(
+					key_columnLabel = "${filterValueList}",
+					locator1 = "ObjectCustomViews#BUILDER_SEARCH_RESULT_COLUMN_LABEL");
+			}
 		}
+	}
+
+	macro deleteFilterViaUI {
+		ObjectCustomViews.assertVisibleEntriesOnFilters(filterBy = "${filterName}");
+
+		Click(
+			key_cardName = "Filters",
+			locator1 = "ObjectCustomViews#SELECT_DROPDOWN_ON_LABEL");
+
+		DropdownMenuItem.click(menuItem = "Delete");
 	}
 
 	macro deleteObjectCustomViewViaUI {
@@ -247,7 +265,9 @@ definition {
 	}
 
 	macro editSortingType {
-		Click(locator1 = "ObjectCustomViews#EDIT_COLUMNS_ON_DEFAULT_SORT");
+		Click(
+			key_cardName = "Default Sort",
+			locator1 = "ObjectCustomViews#SELECT_DROPDOWN_ON_LABEL");
 
 		DropdownMenuItem.click(menuItem = "Edit");
 

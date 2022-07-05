@@ -19,11 +19,9 @@ definition {
 		if ("${testPortalInstance}" == "true") {
 			PortalInstances.tearDownCP();
 		}
-
 		else {
 			ObjectAdmin.deleteAllCustomObjectsViaAPI();
 		}
-
 	}
 
 	@description = "LPS-135394 - Verify it is possible to add a column for the View"
@@ -403,6 +401,43 @@ definition {
 		ObjectCustomViews.assertColumnNotPresent(columnName = "Author");
 
 		ObjectCustomViews.assertEmptyStateTextOnViewBuilder(text = "No columns added yet.");
+	}
+
+	@description = "LPS-144957 - Verify that it's possible to delete the filter"
+	@priority = "4"
+	test CanDeleteFilter {
+		task ("Create Custom Object via API and go to it") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156801",
+				objectName = "CustomObject156801",
+				pluralLabelName = "Custom Objects 156801");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156801");
+		}
+
+		task ("Create Custom View and go to it") {
+			ObjectCustomViews.goToViewsTab();
+
+			ObjectCustomViews.addObjectViewViaUI(viewName = "Custom Views");
+
+			ObjectCustomViews.goToViewsDetails(label = "Custom Views");
+		}
+
+		task ("Go to Filters tab and add new Filter") {
+			ObjectCustomViews.goToFiltersTab();
+
+			ObjectCustomViews.addNewFilterViaUI(
+				filterBy = "Creation Date",
+				filterType = "Excludes");
+		}
+
+		task ("Delete Filter created and assert that it's not present") {
+			ObjectCustomViews.deleteFilterViaUI(filterName = "Creation Date");
+
+			ObjectCustomViews.assertNotPresentEntryOnFilters(filterBy = "Creation Date");
+		}
 	}
 
 	@description = "LPS-144472 - Verify it is possible the user to delete the pre-order column"
