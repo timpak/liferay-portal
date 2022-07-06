@@ -2548,6 +2548,62 @@ definition {
 		CreateObject.assertCustomObjectNotPresent(labelName = "Custom Object 71");
 	}
 
+	@description = "LPS-151877 - Verify that, when adding a new Object, the admin user is able to restrict users to only see entries from an account that they are part of"
+	@priority = "5"
+	test CanOnlySeeEntriesFromAccount {
+		property portal.acceptance = "true";
+
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 156822A",
+			objectName = "CustomObject156822A",
+			pluralLabelName = "Custom Objects 156822A");
+
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 156822B",
+			objectName = "CustomObject156822B",
+			pluralLabelName = "Custom Objects 156822B");
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "AccountEntry",
+			objectName_2 = "CustomObject156822A",
+			relationshipLabel = "RelationshipAccount",
+			relationshipName = "relationshipAccount",
+			relationshipType = "oneToMany");
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "CommerceOrder",
+			objectName_2 = "CustomObject156822A",
+			relationshipLabel = "RelationshipCommerceOrder",
+			relationshipName = "relationshipCommerceOrder",
+			relationshipType = "oneToMany");
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "User",
+			objectName_2 = "CustomObject156822A",
+			relationshipLabel = "RelationshipUser",
+			relationshipName = "relationshipUser",
+			relationshipType = "oneToMany");
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "CustomObject156822B",
+			objectName_2 = "CustomObject156822A",
+			relationshipLabel = "CustomObject156822B",
+			relationshipName = "customObject156822B",
+			relationshipType = "oneToMany");
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156822");
+
+		CreateObject.activeToogleAccountRestriction();
+
+		for (var restrictedFields : list "RelationshipCommerceOrder,RelationshipUser,CustomObject156822B") {
+			CreateObject.assertAccountRestrictedFieldNotPresent(accountRestrictedFieldNotPresent = "${restrictedFields}");
+		}
+
+		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+	}
+
 	@description = "LPS-135549 - Verify it is possible to Publish a Custom Object"
 	@priority = "5"
 	test CanPublishCustomObject {

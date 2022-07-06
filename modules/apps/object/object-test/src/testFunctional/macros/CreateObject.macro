@@ -8,6 +8,10 @@ definition {
 		CreateObject.saveObject();
 	}
 
+	macro activeToogleAccountRestriction {
+		Check.checkToggleSwitch(locator1 = "CreateObject#TOGGLE_ACCOUNT_RESTRICTION");
+	}
+
 	macro addRelationshipAndSelectEntry {
 		LexiconEntry.gotoAdd();
 
@@ -20,6 +24,12 @@ definition {
 		WaitForSPARefresh();
 
 		WaitForPageLoad();
+	}
+
+	macro assertAccountRestrictedFieldNotPresent {
+		AssertNotSelectedLabel(
+			locator1 = "CreateObject#ACCOUNT_RESTRICTED_FIELD",
+			value1 = "${accountRestrictedFieldNotPresent}");
 	}
 
 	macro assertAddedEntryRelationshipIsDisplayed {
@@ -354,6 +364,12 @@ definition {
 		WaitForSPARefresh();
 
 		WaitForPageLoad();
+	}
+
+	macro selectAccountRestrictedField {
+		Select(
+			locator1 = "CreateObject#ACCOUNT_RESTRICTED_FIELD",
+			value1 = "${accountRestrictedField}");
 	}
 
 	macro selectDeletionType {
