@@ -74,6 +74,44 @@ definition {
 		CreateObject.assertCustomObject(labelName = "Commerce Order");
 	}
 
+	@description = "LPS-151877 - Verify that, when adding a new Object, the admin user can activate Account Restrictions if there is a relationship between the created Object and the System Object Account"
+	@priority = "4"
+	test CanActivateAccountRestriction {
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 156819",
+			objectName = "CustomObject156819",
+			pluralLabelName = "Custom Objects 156819");
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
+
+		CreateObject.viewToogleAccountRestrictionDisabled();
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "AccountEntry",
+			objectName_2 = "CustomObject156819",
+			relationshipLabel = "RelationshipAccount",
+			relationshipName = "relationshipAccount",
+			relationshipType = "oneToMany");
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
+
+		CreateObject.activeToogleAccountRestriction();
+
+		Button.clickSave();
+
+		AssertTextEquals.assertPartialText(
+			locator1 = "Message#ERROR",
+			value1 = "If activated, the account restriction field must be selected.");
+
+		CreateObject.activeToogleAccountRestriction();
+
+		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+	}
+
 	@description = "LPS-135397 - Verify if it's possible to add a Block"
 	@priority = "5"
 	test CanAddBlock {

@@ -210,6 +210,11 @@
 		<td>//input[contains(@class,'field toggle-switch-check') and contains(@id,'accountEntryRestricted')]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>TOGGLE_ACCOUNT_RESTRICTION_DISABLED</td>
+		<td>//input[contains(@class,'field disabled toggle-switch-check') and contains(@id,'accountEntryRestricted')]</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>
