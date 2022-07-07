@@ -26,6 +26,10 @@ definition {
 		WaitForPageLoad();
 	}
 
+	macro assertAccountRestrictedFieldDisabled {
+		AssertElementPresent(locator1 = "CreateObject#ACCOUNT_RESTRICTED_FIELD_DISABLED");
+	}
+
 	macro assertAccountRestrictedFieldNotPresent {
 		AssertNotSelectedLabel(
 			locator1 = "CreateObject#ACCOUNT_RESTRICTED_FIELD",
@@ -336,6 +340,10 @@ definition {
 			locator1 = "ObjectAdmin#OBJECT_KEBAB_MENU");
 
 		MenuItem.clickNoError(menuItem = "Delete");
+	}
+
+	macro desactiveToogleAccountRestriction {
+		Uncheck.uncheckToggleSwitch(locator1 = "CreateObject#TOGGLE_ACCOUNT_RESTRICTION");
 	}
 
 	macro editLabel {

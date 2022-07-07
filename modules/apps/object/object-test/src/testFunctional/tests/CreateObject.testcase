@@ -1512,6 +1512,48 @@ definition {
 		ObjectAdmin.assertNoResultsWereFound();
 	}
 
+	@description = "LPS-151877 - Verify that when the admin user deletes the relationship between Account and the Object, the Account Restriction is disabled and the admin user can edit the Object"
+	@priority = "4"
+	test CanDisableAccountRestriction {
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 156824",
+			objectName = "CustomObject156824",
+			pluralLabelName = "Custom Objects 156824");
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+
+		CreateObject.viewToogleAccountRestrictionDisabled();
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "AccountEntry",
+			objectName_2 = "CustomObject156824",
+			relationshipLabel = "RelationshipAccount",
+			relationshipName = "relationshipAccount",
+			relationshipType = "oneToMany");
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+
+		CreateObject.activeToogleAccountRestriction();
+
+		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+
+		Button.clickSave();
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+
+		CreateObject.desactiveToogleAccountRestriction();
+
+		CreateObject.assertAccountRestrictedFieldDisabled();
+
+		Button.clickSave();
+	}
+
 	@description = "LPS-135390 - Verify it is not possible to add an Object without the Add Object Definition permission"
 	@priority = "5"
 	test CannotAddObjectWithoutAddPermission {
