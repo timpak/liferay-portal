@@ -110,6 +110,8 @@ definition {
 		CreateObject.activeToogleAccountRestriction();
 
 		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+
+		Button.clickSave();
 	}
 
 	@description = "LPS-135397 - Verify if it's possible to add a Block"
