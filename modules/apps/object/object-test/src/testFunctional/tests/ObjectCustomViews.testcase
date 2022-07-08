@@ -623,6 +623,50 @@ definition {
 		ObjectCustomViews.assertObjectView(viewLabel = "Custom View 151589 (Copy)");
 	}
 
+	@description = "LPS-144957 - Verify that it's possible to edit the filter"
+	@priority = "4"
+	test CanEditFilter {
+		task ("Create Custom Object via API and go to it") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156800",
+				objectName = "CustomObject156800",
+				pluralLabelName = "Custom Objects 156800");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156800");
+		}
+
+		task ("Create Custom View and go to it") {
+			ObjectCustomViews.goToViewsTab();
+
+			ObjectCustomViews.addObjectViewViaUI(viewName = "Custom Views");
+
+			ObjectCustomViews.goToViewsDetails(label = "Custom Views");
+		}
+
+		task ("Go to Filters tab and add new Filter") {
+			ObjectCustomViews.goToFiltersTab();
+
+			ObjectCustomViews.addNewFilterViaUI(
+				filterBy = "Workflow Status",
+				filterType = "Includes",
+				filterValue = "Approved");
+		}
+
+		task ("Edit Filter, click on approved (remove), click on denied (add)") {
+			ObjectCustomViews.editFilterViaUI(
+				filterName = "Workflow Status",
+				filterValue = "Approved,Denied");
+		}
+
+		task ("Assert Filter edited") {
+			ObjectCustomViews.assertVisibleEntriesOnFilters(
+				filterBy = "Workflow Status",
+				filterValue = "Denied");
+		}
+	}
+
 	@description = "LPS-144472 - Verify it is not is possible to create a Default Sort when there isn't column"
 	@priority = "4"
 	test CannotCreateDefaultSortWhenNoColumn {

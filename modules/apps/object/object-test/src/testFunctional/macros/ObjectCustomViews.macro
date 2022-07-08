@@ -258,6 +258,34 @@ definition {
 		MenuItem.clickNoError(menuItem = "Duplicate");
 	}
 
+	macro editFilterViaUI {
+		ObjectCustomViews.assertVisibleEntriesOnFilters(filterBy = "${filterName}");
+
+		Click(
+			key_cardName = "Filters",
+			locator1 = "ObjectCustomViews#SELECT_DROPDOWN_ON_LABEL");
+
+		DropdownMenuItem.click(menuItem = "Edit");
+
+		if (isSet(filterValue)) {
+			Click(
+				key_filterLabel = "Value",
+				locator1 = "ObjectCustomViews#SELECT_FILTER_GENERIC");
+
+			ObjectCustomViews.assertDefaultMetadataOnFilterValue();
+
+			for (var filterValueList : list "${filterValue}") {
+				Click.clickAtNotVisible(
+					key_columnOption = "${filterValueList}",
+					locator1 = "ObjectCustomViews#CHECKBOX_COLUMN_OPTION");
+			}
+		}
+
+		Click(
+			key_name = "Save",
+			locator1 = "Button#GENERAL_BUTTON_MODAL_FOOTER");
+	}
+
 	macro editName {
 		Type(
 			locator1 = "ObjectCustomViews#OBJECT_VIEWS_NAME",
