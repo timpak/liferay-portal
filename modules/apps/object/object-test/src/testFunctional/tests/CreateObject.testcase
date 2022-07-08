@@ -77,41 +77,51 @@ definition {
 	@description = "LPS-151877 - Verify that, when adding a new Object, the admin user can activate Account Restrictions if there is a relationship between the created Object and the System Object Account"
 	@priority = "4"
 	test CanActivateAccountRestriction {
-		ObjectAdmin.addObjectViaAPI(
-			labelName = "Custom Object 156819",
-			objectName = "CustomObject156819",
-			pluralLabelName = "Custom Objects 156819");
+		task ("Add Custom Object (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156819",
+				objectName = "CustomObject156819",
+				pluralLabelName = "Custom Objects 156819");
+		}
 
-		ObjectAdmin.openObjectAdmin();
+		task ("Go to Custom Object and assert that Account Restriction is disabled") {
+			ObjectAdmin.openObjectAdmin();
 
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
 
-		CreateObject.viewToogleAccountRestrictionDisabled();
+			CreateObject.viewToogleAccountRestrictionDisabled();
 
-		ObjectAdmin.openObjectAdmin();
+			ObjectAdmin.openObjectAdmin();
+		}
 
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "AccountEntry",
-			objectName_2 = "CustomObject156819",
-			relationshipLabel = "RelationshipAccount",
-			relationshipName = "relationshipAccount",
-			relationshipType = "oneToMany");
+		task ("Add Relationship on Account related to Custom Object (via API)") {
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "AccountEntry",
+				objectName_2 = "CustomObject156819",
+				relationshipLabel = "RelationshipAccount",
+				relationshipName = "relationshipAccount",
+				relationshipType = "oneToMany");
+		}
 
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
+		task ("Go to Custom Object, active Account Restriction, and view specific error that need select relationship") {
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156819");
 
-		CreateObject.activeToogleAccountRestriction();
+			CreateObject.activeToogleAccountRestriction();
 
-		Button.clickSave();
+			Button.clickSave();
 
-		AssertTextEquals.assertPartialText(
-			locator1 = "Message#ERROR",
-			value1 = "If activated, the account restriction field must be selected.");
+			AssertTextEquals.assertPartialText(
+				locator1 = "Message#ERROR",
+				value1 = "If activated, the account restriction field must be selected.");
+		}
 
-		CreateObject.activeToogleAccountRestriction();
+		task ("Active Account Restriction and select account's relationship") {
+			CreateObject.activeToogleAccountRestriction();
 
-		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+			CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
 
-		Button.clickSave();
+			Button.clickSave();
+		}
 	}
 
 	@description = "LPS-135397 - Verify if it's possible to add a Block"
@@ -1517,43 +1527,53 @@ definition {
 	@description = "LPS-151877 - Verify that when the admin user deletes the relationship between Account and the Object, the Account Restriction is disabled and the admin user can edit the Object"
 	@priority = "4"
 	test CanDisableAccountRestriction {
-		ObjectAdmin.addObjectViaAPI(
-			labelName = "Custom Object 156824",
-			objectName = "CustomObject156824",
-			pluralLabelName = "Custom Objects 156824");
+		task ("Add Custom Object (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156824",
+				objectName = "CustomObject156824",
+				pluralLabelName = "Custom Objects 156824");
+		}
 
-		ObjectAdmin.openObjectAdmin();
+		task ("Go to Custom Object and assert that Account Restriction is disabled") {
+			ObjectAdmin.openObjectAdmin();
 
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
 
-		CreateObject.viewToogleAccountRestrictionDisabled();
+			CreateObject.viewToogleAccountRestrictionDisabled();
 
-		ObjectAdmin.openObjectAdmin();
+			ObjectAdmin.openObjectAdmin();
+		}
 
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "AccountEntry",
-			objectName_2 = "CustomObject156824",
-			relationshipLabel = "RelationshipAccount",
-			relationshipName = "relationshipAccount",
-			relationshipType = "oneToMany");
+		task ("Add Relationship on Account related to Custom Object (via API)") {
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "AccountEntry",
+				objectName_2 = "CustomObject156824",
+				relationshipLabel = "RelationshipAccount",
+				relationshipName = "relationshipAccount",
+				relationshipType = "oneToMany");
+		}
 
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+		task ("Go to Custom Object, active Account Restriction, and select Account's relationship") {
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
 
-		CreateObject.activeToogleAccountRestriction();
+			CreateObject.activeToogleAccountRestriction();
 
-		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+			CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
 
-		Button.clickSave();
+			Button.clickSave();
+		}
 
-		ObjectAdmin.openObjectAdmin();
+		task ("Go to Custom Object, desactive Account Restriction, and assert that Account Restriction is disabled") {
+			ObjectAdmin.openObjectAdmin();
 
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156824");
 
-		CreateObject.desactiveToogleAccountRestriction();
+			CreateObject.desactiveToogleAccountRestriction();
 
-		CreateObject.assertAccountRestrictedFieldDisabled();
+			CreateObject.assertAccountRestrictedFieldDisabled();
 
-		Button.clickSave();
+			Button.clickSave();
+		}
 	}
 
 	@description = "LPS-135390 - Verify it is not possible to add an Object without the Add Object Definition permission"
@@ -2635,55 +2655,63 @@ definition {
 	test CanOnlySeeEntriesFromAccount {
 		property portal.acceptance = "true";
 
-		ObjectAdmin.addObjectViaAPI(
-			labelName = "Custom Object 156822A",
-			objectName = "CustomObject156822A",
-			pluralLabelName = "Custom Objects 156822A");
+		task ("Add Custom Objects (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156822A",
+				objectName = "CustomObject156822A",
+				pluralLabelName = "Custom Objects 156822A");
 
-		ObjectAdmin.addObjectViaAPI(
-			labelName = "Custom Object 156822B",
-			objectName = "CustomObject156822B",
-			pluralLabelName = "Custom Objects 156822B");
-
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "AccountEntry",
-			objectName_2 = "CustomObject156822A",
-			relationshipLabel = "RelationshipAccount",
-			relationshipName = "relationshipAccount",
-			relationshipType = "oneToMany");
-
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "CommerceOrder",
-			objectName_2 = "CustomObject156822A",
-			relationshipLabel = "RelationshipCommerceOrder",
-			relationshipName = "relationshipCommerceOrder",
-			relationshipType = "oneToMany");
-
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "User",
-			objectName_2 = "CustomObject156822A",
-			relationshipLabel = "RelationshipUser",
-			relationshipName = "relationshipUser",
-			relationshipType = "oneToMany");
-
-		ObjectAdmin.addObjectRelationshipViaAPI(
-			objectName_1 = "CustomObject156822B",
-			objectName_2 = "CustomObject156822A",
-			relationshipLabel = "CustomObject156822B",
-			relationshipName = "customObject156822B",
-			relationshipType = "oneToMany");
-
-		ObjectAdmin.openObjectAdmin();
-
-		ObjectPortlet.selectCustomObject(label = "Custom Object 156822");
-
-		CreateObject.activeToogleAccountRestriction();
-
-		for (var restrictedFields : list "RelationshipCommerceOrder,RelationshipUser,CustomObject156822B") {
-			CreateObject.assertAccountRestrictedFieldNotPresent(accountRestrictedFieldNotPresent = "${restrictedFields}");
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156822B",
+				objectName = "CustomObject156822B",
+				pluralLabelName = "Custom Objects 156822B");
 		}
 
-		CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+		task ("Add some Relationships with System Objects / Custom Object B related to Custom Object A (via API)") {
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "AccountEntry",
+				objectName_2 = "CustomObject156822A",
+				relationshipLabel = "RelationshipAccount",
+				relationshipName = "relationshipAccount",
+				relationshipType = "oneToMany");
+
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "CommerceOrder",
+				objectName_2 = "CustomObject156822A",
+				relationshipLabel = "RelationshipCommerceOrder",
+				relationshipName = "relationshipCommerceOrder",
+				relationshipType = "oneToMany");
+
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "User",
+				objectName_2 = "CustomObject156822A",
+				relationshipLabel = "RelationshipUser",
+				relationshipName = "relationshipUser",
+				relationshipType = "oneToMany");
+
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "CustomObject156822B",
+				objectName_2 = "CustomObject156822A",
+				relationshipLabel = "CustomObject156822B",
+				relationshipName = "customObject156822B",
+				relationshipType = "oneToMany");
+		}
+
+		task ("Go to Custom Object A and active Account Restriction") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156822A");
+
+			CreateObject.activeToogleAccountRestriction();
+		}
+
+		task ("Assert that is not present Relationship that is not related by System Object Account, and select Relationship related to Account") {
+			for (var restrictedFields : list "RelationshipCommerceOrder,RelationshipUser,CustomObject156822B") {
+				CreateObject.assertAccountRestrictedFieldNotPresent(accountRestrictedFieldNotPresent = "${restrictedFields}");
+			}
+
+			CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+		}
 	}
 
 	@description = "LPS-135549 - Verify it is possible to Publish a Custom Object"
