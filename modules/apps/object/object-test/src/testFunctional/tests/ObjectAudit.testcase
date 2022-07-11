@@ -628,7 +628,11 @@ definition {
 
 		ObjectAdmin.saveCustomObject();
 
+		Pause(locator1 = "1000");
+
 		Audit.openAuditAdmin();
+
+		Refresh();
 
 		Audit.viewAuditEntries(
 			clientIP = "127.0.0.1",
