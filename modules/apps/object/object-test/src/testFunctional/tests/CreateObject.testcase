@@ -7375,8 +7375,6 @@ definition {
 	@description = "LPS-135401 - Verify if Prevent deletion type of Relationship Many to Many won't allow the user to delete an entry with relation"
 	@priority = "4"
 	test PreventDeletionManyToManyWontAllowDelete {
-		property portal.upstream = "quarantine";
-
 		for (var nameObject : list "A,B") {
 			ObjectAdmin.addObjectViaAPI(
 				labelName = "Custom Object ${nameObject} 163",
