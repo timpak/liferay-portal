@@ -386,4 +386,40 @@ definition {
 			actionName = "Update Action Name");
 	}
 
+	@description = "LPS-145665. Verify that you can edit the Action name"
+    @priority = "4"
+    test CanEditActionName {
+        ObjectAdmin.addObjectViaAPI(
+            labelName = "Custom Object 145",
+            objectName = "CustomObject145",
+            pluralLabelName = "Custom Objects 145");
+
+        ObjectAdmin.openObjectAdmin();
+
+        ObjectPortlet.selectCustomObject(label = "Custom Object 145");
+
+        ObjectAdmin.goToActionsTab();
+
+        ObjectAdmin.addObjectActionViaUI(
+            actionName = "Custom Action",
+            thenAction = "Webhook",
+            urlAction = "www.liferay.com",
+            whenAction = "On After Add",
+            active = "true");
+
+        ObjectAdmin.assertObjectActions(actionActive = "Custom Action");
+
+		ObjectAdmin.assertObjectActions(actionActive = "Yes");
+
+		ObjectAdmin.editObjectAction(
+			active = "false",
+			viewEntry = "Custom Action",
+			actionName = "New Action Update");
+
+		ObjectAdmin.assertObjectActions(actionActive = "No");
+		
+		ObjectAdmin.assertObjectActions(actionActive = "New Action Update");
+			
+    }
+
 }
