@@ -386,4 +386,53 @@ definition {
 			actionName = "Update Action Name");
 	}
 
+	@description = "LPS-145665. Verify that the admin user is able to enable and disable Condition"
+    @priority = "5"
+    test CanEnableAndDisableCondition {
+        task ("Add object and field") {
+            ObjectAdmin.addObjectViaAPI(
+                labelName = "Custom Object 145",
+                objectName = "CustomObject145",
+                pluralLabelName = "Custom Objects 145");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "false",
+				objectName = "CustomObject14");
+
+            ObjectAdmin.openObjectAdmin();
+
+            ObjectPortlet.selectCustomObject(label = "Custom Object 145");
+        }
+
+        task ("Add a Action and assert that Enable Condition is disabled") {
+            ObjectAdmin.goToActionsTab();
+
+            ObjectAdmin.addObjectActionViaUI(
+                actionName = "Custom Action",
+                active = "false",
+                thenAction = "Webhook",
+                urlAction = "www.liferay.com",
+                whenAction = "On After Add");
+
+            ObjectAdmin.assertObjectActions(actionActive = "Custom Action");
+
+            ObjectAdmin.assertObjectActions(actionActive = "No");
+        }
+
+        task ("Edit Action Builder and assert that Enable Condition is enable") {
+            ObjectAdmin.editObjectAction(
+                actionName = "New Action Update",
+                active = "true",
+                viewEntry = "Custom Action");
+
+            ObjectAdmin.assertObjectActions(actionActive = "Yes");
+
+            ObjectAdmin.assertObjectActions(actionActive = "New Action Update");
+        }
+    }
+
 }
