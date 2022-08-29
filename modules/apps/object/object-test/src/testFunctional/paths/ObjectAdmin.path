@@ -447,7 +447,7 @@
 	</tr>
 	<tr>
 		<td>VIEW_ACTIONS_TAB</td>
-		<td>//div[contains(@class,'dnd-tr') and contains (.,'${key_actionName}') and contains (.,'${key_actionActive}')]</td>
+		<td>//div[contains(@class, 'dnd-td') and contains(., '${key_actionActive}')]</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -516,6 +516,7 @@
 		<td></td>
 	</tr>
 	<tr>
+<<<<<<< HEAD
 		<td>DROPDOWN_DEFAULT_VALUE</td>
 		<td>//div[contains(@class,'form-group')]//label[contains(text(),'Default Value')]//..//div[contains(@class,'dropdown')]</td>
 		<td></td>
@@ -533,6 +534,15 @@
 	<tr>
 		<td>VIEW_STATE_NAME</td>
 		<td>//h3[(@class='lfr-objects__card-title') and text()='Select the State Flow']//..//..//div[contains(@class,'lfr-objects__card-title--with-padding') and contains(.,'${key_stateName}')]</td>
+=======
+		<td>SELECT_CHOOSE_OPTION</td>
+		<td>//option[contains(text(),'${chooseOption}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>INPUT_METHOD</td>
+		<td>//input[contains(@class, 'custom-control-input') and contains(@type,'checkbox')]/..//span[contains(text(),'${inputMethod}')]</td>
+>>>>>>> a02f5cb (LPS-156563 Add ObjectActions#CanEditActionName)
 		<td></td>
 	</tr>
 </tbody>
