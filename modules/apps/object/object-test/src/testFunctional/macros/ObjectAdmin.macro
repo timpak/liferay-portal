@@ -30,6 +30,21 @@ definition {
 		}
 	}
 
+	macro addObjectActionEntryViaUi {
+		ObjectAdmin.gotoAddObjectAction();
+
+		ObjectAdmin.fillObjectAction(
+			actionName = "${actionName}",
+			active = "${active}",
+			click = "save",
+			inputAction = "${inputActionActive}",
+			onAction = "${chooseOption}",
+			secretAction = "${secretAction}",
+			thenAction = "${thenAction}",
+			urlAction = "${urlAction}",
+			whenAction = "${whenAction}");
+	}
+
 	macro addObjectActionViaUI {
 		ObjectAdmin.gotoAddObjectAction();
 
@@ -41,21 +56,6 @@ definition {
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
 			whenAction = "${whenAction}");
-	}
-
-	macro addObjectActionEntryViaUi {
-		ObjectAdmin.gotoAddObjectAction();
-
-		ObjectAdmin.fillObjectAction(
-			actionName = "${actionName}",
-			active = "${active}",
-			click = "save",
-			secretAction = "${secretAction}",
-			thenAction = "${thenAction}",
-			urlAction = "${urlAction}",
-			whenAction = "${whenAction}",
-			onAction = "${chooseOption}",
-			inputAction = "${inputActionActive}");
 	}
 
 	macro addObjectBooleanFieldEntryViaUI {
@@ -459,10 +459,10 @@ definition {
 	}
 
 	macro assertObjectActions {
-        AssertElementPresent(
-            key_actionActive = "${actionActive}",
-            locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
-    }
+		AssertElementPresent(
+			key_actionActive = "${actionActive}",
+			locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
+	}
 
 	macro assertObjectActionsNotPresent {
 		AssertElementNotPresent(
@@ -843,8 +843,8 @@ definition {
 			Click(locator1 = "ObjectAdmin#ENTRY_CHOOSE_OPTION");
 
 			Select(
-				locator1 = "ObjectAdmin#SELECT_CHOOSE_OPTION",
-				chooseOption = "${chooseOption}");
+				chooseOption = "${chooseOption}",
+				locator1 = "ObjectAdmin#SELECT_CHOOSE_OPTION");
 		}
 
 		if (isSet(inputAction)) {
