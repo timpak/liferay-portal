@@ -30,6 +30,21 @@ definition {
 		}
 	}
 
+	macro addObjectActionEntryViaUi {
+		ObjectAdmin.gotoAddObjectAction();
+
+		ObjectAdmin.fillObjectAction(
+			actionName = "${actionName}",
+			active = "${active}",
+			click = "save",
+			inputAction = "${inputActionActive}",
+			onAction = "${chooseOption}",
+			secretAction = "${secretAction}",
+			thenAction = "${thenAction}",
+			urlAction = "${urlAction}",
+			whenAction = "${whenAction}");
+	}
+
 	macro addObjectActionViaUI {
 		ObjectAdmin.gotoAddObjectAction();
 
@@ -446,7 +461,6 @@ definition {
 	macro assertObjectActions {
 		AssertElementPresent(
 			key_actionActive = "${actionActive}",
-			key_actionName = "${actionName}",
 			locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
 	}
 
@@ -823,6 +837,22 @@ definition {
 			Click(
 				key_type = "${thenAction}",
 				locator1 = "ObjectAdmin#SELECT_RELATIONSHIPS_TYPE_OPTION");
+		}
+
+		if (isSet(onAction)) {
+			Click(locator1 = "ObjectAdmin#ENTRY_CHOOSE_OPTION");
+
+			Select(
+				chooseOption = "${chooseOption}",
+				locator1 = "ObjectAdmin#SELECT_CHOOSE_OPTION");
+		}
+
+		if (isSet(inputAction)) {
+			if ("${inputActionActive}" == "true") {
+				Click(
+					locator1 = "ObjectAdmin#INPUT_METHOD",
+					value1 = "${inputMethod}");
+			}
 		}
 
 		if (isSet(urlAction)) {
