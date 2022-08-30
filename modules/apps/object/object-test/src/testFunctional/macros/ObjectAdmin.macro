@@ -30,6 +30,26 @@ definition {
 		}
 	}
 
+	macro addObjectActionEntryViaUi {
+		ObjectAdmin.gotoAddObjectAction();
+
+		ObjectAdmin.fillObjectAction(
+			actionName = "${actionName}",
+			active = "${active}",
+			click = "save",
+			inputAction = "${inputActionActive}",
+			inputCondition = "${inputCondition}",
+			inputExpression = "${inputExpression}",
+			inputMethod = "${inputMethod}",
+			inputValue = "${inputValue}",
+			objectLabel = "${objectLabel}",
+			onAction = "${chooseOption}",
+			secretAction = "${secretAction}",
+			thenAction = "${thenAction}",
+			urlAction = "${urlAction}",
+			whenAction = "${whenAction}");
+	}
+
 	macro addObjectActionViaUI {
 		ObjectAdmin.gotoAddObjectAction();
 
@@ -37,6 +57,11 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
+			inputCondition = "${inputCondition}",
+			inputExpression = "${inputExpression}",
+			inputMethod = "${inputMethod}",
+			inputValue = "${inputValue}",
+			objectLabel = "${objectLabel}",
 			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
@@ -446,7 +471,6 @@ definition {
 	macro assertObjectActions {
 		AssertElementPresent(
 			key_actionActive = "${actionActive}",
-			key_actionName = "${actionName}",
 			locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
 	}
 
@@ -735,6 +759,10 @@ definition {
 		Refresh();
 	}
 
+	macro disableCondition {
+		Uncheck.uncheckToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
+	}
+
 	macro editClobEntryName {
 		Type(
 			key_clobType = "",
@@ -783,10 +811,19 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
+			inputCondition = "${inputCondition}",
+			inputExpression = "${inputExpression}",
+			inputMethod = "${inputMethod}",
+			inputValue = "${inputValue}",
+			objectLabel = "${objectLabel}",
 			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
 			whenAction = "${whenAction}");
+	}
+
+	macro enableCondition {
+		Check.checkToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
 	}
 
 	macro fillObjectAction {
@@ -823,6 +860,35 @@ definition {
 			Click(
 				key_type = "${thenAction}",
 				locator1 = "ObjectAdmin#SELECT_RELATIONSHIPS_TYPE_OPTION");
+
+			if ("${thenAction}" == "Add an Object Entry") {
+				Click(locator1 = "ObjectAdmin#CHOOSE_AN_OBJECT");
+
+				ClickNoError.clickNoMouseOver(
+					key_objectLabel = "${objectLabel}",
+					locator1 = "ObjectAdmin#CHOOSE_OBJECT_LABEL");
+
+				Click(
+					key_inputMethod = "${inputMethod}",
+					locator1 = "ObjectAdmin#INPUT_METHOD");
+
+				Type(
+					locator1 = "ObjectAction#INPUT_VALUE",
+					value1 = "${inputValue}");
+			}
+		}
+
+		if (isSet(inputExpression)) {
+			if ("${inputCondition}" == "true") {
+				ObjectAdmin.enableCondition();
+
+				Type(
+					locator1 = "ObjectAction#INPUT_EXPRESSION",
+					value1 = "${inputExpression}");
+			}
+			else if ("${inputCondition}" == "false") {
+				ObjectAdmin.disableCondition();
+			}
 		}
 
 		if (isSet(urlAction)) {
