@@ -38,6 +38,7 @@ definition {
 			active = "${active}",
 			click = "save",
 			inputAction = "${inputActionActive}",
+			inputValue = "${inputValue}",
 			onAction = "${chooseOption}",
 			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
@@ -52,6 +53,11 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
+			inputCondition = "${inputCondition}",
+			inputExpression = "${inputExpression}",
+			inputMethod = "${inputMethod}",
+			inputValue = "${inputValue}",
+			objectLabel = "${objectLabel}",
 			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
@@ -797,6 +803,11 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
+			inputCondition = "${inputCondition}",
+			inputExpression = "${inputExpression}",
+			inputMethod = "${inputMethod}",
+			inputValue = "${inputValue}",
+			objectLabel = "${objectLabel}",
 			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
@@ -837,21 +848,29 @@ definition {
 			Click(
 				key_type = "${thenAction}",
 				locator1 = "ObjectAdmin#SELECT_RELATIONSHIPS_TYPE_OPTION");
-		}
 
-		if (isSet(onAction)) {
-			Click(locator1 = "ObjectAdmin#ENTRY_CHOOSE_OPTION");
+			if ("${thenAction}" == "Add an Object Entry") {
+				Click(locator1 = "ObjectAdmin#CHOOSE_AN_OBJECT");
 
-			Select(
-				chooseOption = "${chooseOption}",
-				locator1 = "ObjectAdmin#SELECT_CHOOSE_OPTION");
-		}
+				ClickNoError.clickNoMouseOver(
+					key_objectLabel = "${objectLabel}",
+					locator1 = "ObjectAdmin#CHOOSE_OBJECT_LABEL");
 
-		if (isSet(inputAction)) {
-			if ("${inputActionActive}" == "true") {
 				Click(
-					locator1 = "ObjectAdmin#INPUT_METHOD",
-					value1 = "${inputMethod}");
+					key_inputMethod = "${inputMethod}",
+					locator1 = "ObjectAdmin#INPUT_METHOD");
+
+				Type(
+					locator1 = "ObjectAction#INPUT_VALUE",
+					value1 = "${inputValue}");
+			}
+		}
+
+		if (isSet(inputExpression)) {
+			if ("${inputCondition}" == "true") {
+				Type(
+					locator1 = "ObjectAction#INPUT_VALUE",
+					value1 = "${inputExpression}");
 			}
 		}
 
@@ -1120,11 +1139,13 @@ definition {
 	}
 
 	macro viewDetails {
-		SelectFrame(locator1 = "IFrame#IFRAME");
+		if (IsElementPresent(locator1 = "IFrame#IFRAME")) {
+			SelectFrame(locator1 = "IFrame#IFRAME");
 
-		AssertElementPresent(locator1 = "ObjectAdmin#SIDE_PANEL");
+			AssertElementPresent(locator1 = "ObjectAdmin#SIDE_PANEL");
 
-		AssertElementPresent(locator1 = "ObjectAdmin#SIDE_PANEL_TITLE");
+			AssertElementPresent(locator1 = "ObjectAdmin#SIDE_PANEL_TITLE");
+		}
 	}
 
 	macro viewFieldValueDisabled {

@@ -512,7 +512,17 @@
 	</tr>
 	<tr>
 		<td>INPUT_METHOD</td>
-		<td>//input[contains(@class, 'custom-control-input') and contains(@type,'checkbox')]/..//span[contains(text(),'${inputMethod}')]</td>
+		<td>//input[contains(@class, 'custom-control-input') and contains(@type, 'checkbox')]//..//span[contains(text(), '${key_inputMethod}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>CHOOSE_AN_OBJECT</td>
+		<td>//select[@class="form-control"]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>CHOOSE_OBJECT_LABEL</td>
+		<td>//*[contains(@label,'Unrelated Objects')]//..//option[contains(.,'${key_objectLabel}')]</td>
 		<td></td>
 	</tr>
 </tbody>
