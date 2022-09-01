@@ -27,6 +27,11 @@
 		<td>//input[(@placeholder='Input a value.')]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>INPUT_EXPRESSION</td>
+		<td>//input[(@placeholder="Create an expression.")]</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>
