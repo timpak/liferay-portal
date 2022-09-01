@@ -21,6 +21,79 @@ definition {
 		}
 	}
 
+	@description = "LPS-145665. Verify that it's possible to activate and deactivate an Action"
+	@priority = "5"
+	test CanActivateOrDeactivateAction {
+		task ("Add an object, field, action, and check if an action is active") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object",
+				objectName = "CustomObject",
+				pluralLabelName = "Custom Objects");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "true",
+				objectName = "CustomObject");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.addObjectActionViaUI(
+				actionName = "Custom Action",
+				active = "true",
+				inputActionActive = "true",
+				inputCondition = "true",
+				inputExpression = "Entry Action",
+				inputMethod = "Input as a value",
+				inputValue = "Entry Action",
+				objectLabel = "Custom Object",
+				thenAction = "Add an Object Entry",
+				whenAction = "On After Add");
+
+			ObjectAdmin.assertObjectActions(actionActive = "Yes");
+		}
+
+		task ("Add an Entry and check if it has been created") {
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Custom Entry");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.viewEntry(entry = "Custom Entry");
+
+			ObjectPortlet.viewEntry(entry = "Entry Action");
+		}
+
+		task ("Delete an entry, desactivate the object, and try to create a new entry") {
+			ObjectPortlet.deleteEntry(entry = "Entry Action");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.editObjectAction(
+				active = "false",
+				viewEntry = "Custom Action");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Custom Entry 2");
+
+			ObjectPortlet.assertEntryNotPresent(entry = "Custom Entry 2");
+		}
+	}
+
 	@description = "LPS-139008 - Verify it is possible to cancel the creation of an Action"
 	@priority = "4"
 	test CanCancelAction {

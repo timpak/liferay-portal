@@ -541,8 +541,22 @@
 	</tr>
 	<tr>
 		<td>INPUT_METHOD</td>
+<<<<<<< HEAD
 		<td>//input[contains(@class, 'custom-control-input') and contains(@type,'checkbox')]/..//span[contains(text(),'${inputMethod}')]</td>
 >>>>>>> a02f5cb (LPS-156563 Add ObjectActions#CanEditActionName)
+=======
+		<td>//input[contains(@class, 'custom-control-input') and contains(@type, 'checkbox')]//..//span[contains(text(), '${key_inputMethod}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>CHOOSE_AN_OBJECT</td>
+		<td>//select[@class="form-control"]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>CHOOSE_OBJECT_LABEL</td>
+		<td>//*[contains(@label,'Unrelated Objects')]//..//option[contains(.,'${key_objectLabel}')]</td>
+>>>>>>> ebeae7d (LPS-156561 Add test ObjectActions#CanActivateOrDeactivateAction)
 		<td></td>
 	</tr>
 </tbody>
