@@ -755,6 +755,10 @@ definition {
 		Refresh();
 	}
 
+	macro disableCondition {
+		Uncheck.uncheckToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
+	}
+
 	macro editClobEntryName {
 		Type(
 			key_clobType = "",
@@ -814,6 +818,10 @@ definition {
 			whenAction = "${whenAction}");
 	}
 
+	macro enableCondition {
+		Check.checkToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
+	}
+
 	macro fillObjectAction {
 		if (isSet(actionName)) {
 			Type(
@@ -863,6 +871,19 @@ definition {
 				Type(
 					locator1 = "ObjectAction#INPUT_VALUE",
 					value1 = "${inputValue}");
+			}
+		}
+
+		if (isSet(inputExpression)) {
+			if ("${inputCondition}" == "true") {
+				ObjectAdmin.enableCondition();
+
+				Type(
+					locator1 = "ObjectAction#INPUT_EXPRESSION",
+					value1 = "${inputExpression}");
+			}
+			else if ("${inputCondition}" == "false") {
+				ObjectAdmin.disableCondition();
 			}
 		}
 

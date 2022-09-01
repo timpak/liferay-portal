@@ -525,6 +525,11 @@
 		<td>//*[contains(@label,'Unrelated Objects')]//..//option[contains(.,'${key_objectLabel}')]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>ENABLE_DISABLE_CONDITION</td>
+		<td>//span[contains(., 'Enable Condition')]/..//span[contains(@class, 'toggle-switch-check-bar')]//input[contains(@type, 'checkbox')]</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>

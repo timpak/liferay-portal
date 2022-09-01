@@ -247,6 +247,75 @@ definition {
 		ObjectAdmin.assertObjectActions(actionActive = "New Action Update");
 	}
 
+	@description = "LPS-145665 - Verify that the user can edit a previously saved expression"
+	@priority = "5"
+	test CanEditExpression {
+		task ("Add an Object, Field and Action") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object",
+				objectName = "CustomObject",
+				pluralLabelName = "Custom Objects");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "true",
+				objectName = "CustomObject");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.addObjectActionViaUI(
+				actionName = "Custom Action",
+				active = "true",
+				inputActionActive = "true",
+				inputCondition = "true",
+				inputExpression = "contains(customField, 'Entry Test')",
+				inputMethod = "Input as a value",
+				inputValue = "Action shot on add",
+				objectLabel = "Custom Object",
+				thenAction = "Add an Object Entry",
+				whenAction = "On After Add");
+		}
+
+		task ("Edit the expression and Check if the user can edit a previously saved expression") {
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.editObjectAction(
+				inputExpression = "contains(customField, 'Entry Action')",
+				viewEntry = "Custom Action");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Test");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.viewEntry(entry = "Entry Test");
+
+			ObjectPortlet.assertEntryNotPresent(entry = "Action shot");
+
+			Navigator.openURL();
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Action");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.viewEntry(entry = "Entry Action");
+
+			ObjectPortlet.viewEntry(entry = "Entry shot");
+		}
+	}
+
 	@description = "LPS-145665. Verify that the admin user is able to enable and disable Condition"
 	@priority = "5"
 	test CanEnableAndDisableCondition {
