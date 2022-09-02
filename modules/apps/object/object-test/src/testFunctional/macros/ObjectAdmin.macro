@@ -891,6 +891,19 @@ definition {
 			}
 		}
 
+		if (isSet(inputExpression)) {
+			if ("${inputCondition}" == "true") {
+				ObjectAdmin.enableCondition();
+
+				Type(
+					locator1 = "ObjectAction#INPUT_EXPRESSION",
+					value1 = "${inputExpression}");
+			}
+			else if ("${inputCondition}" == "false") {
+				ObjectAdmin.disableCondition();
+			}
+		}
+
 		if (isSet(urlAction)) {
 			Type(
 				locator1 = "ObjectAdmin#ACTION_URL_FIELD",
