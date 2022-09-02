@@ -454,4 +454,80 @@ definition {
 			actionName = "Update Action Name");
 	}
 
+	@description = "LPS-145665 - Verify that Action can be triggered after disabling the expression"
+	@priority = "4"
+	test CanTriggerActionAfterDisablingExpression {
+		task ("Add an object, field and action") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object",
+				objectName = "CustomObject",
+				pluralLabelName = "Custom Objects");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "true",
+				objectName = "CustomObject");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.addObjectActionViaUI(
+				actionName = "Custom Action",
+				active = "true",
+				inputActionActive = "true",
+				inputCondition = "true",
+				inputExpression = "contains(customField, 'Entry Action')",
+				inputMethod = "Input as a value",
+				inputValue = "Action shot on add",
+				objectLabel = "Custom Object",
+				thenAction = "Add an Object Entry",
+				whenAction = "On After Add");
+		}
+
+		task ("Add a new Entry, check if it has been created and delete the Entry") {
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Test");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.viewEntry(entry = "Entry Test");
+
+			ObjectPortlet.assertEntryNotPresent(entry = "Action shot");
+
+			ObjectPortlet.deleteEntry(entry = "Entry Test");
+		}
+
+		task ("Verify that Action can be triggered after disabling the expression") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.editObjectAction(
+				actionName = "Custom Action Update",
+				inputCondition = "false",
+				objectLabel = "Custom Object");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Test");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			ObjectPortlet.viewEntry(entry = "Entry Test");
+
+			ObjectPortlet.viewEntry(entry = "Action shot");
+		}
+	}
+
 }
