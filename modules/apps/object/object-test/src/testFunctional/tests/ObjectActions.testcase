@@ -419,41 +419,6 @@ definition {
 			actionName = "Action Name 2");
 	}
 
-	@description = "LPS-139008 - Verify it is possible to update an Action"
-	@priority = "4"
-	test CanUpdateAction {
-		property portal.upstream = "quarantine";
-
-		ObjectAdmin.addObjectViaAPI(
-			labelName = "Custom Object 192",
-			objectName = "CustomObject192",
-			pluralLabelName = "Custom Objects 192");
-
-		ObjectAdmin.openObjectAdmin();
-
-		ObjectPortlet.selectCustomObject(label = "Custom Object 192");
-
-		ObjectAdmin.goToActionsTab();
-
-		ObjectAdmin.addObjectActionViaUI(
-			actionName = "Action Name",
-			thenAction = "Webhook",
-			urlAction = "http://localhost:8080",
-			whenAction = "On After Add");
-
-		ObjectAdmin.assertObjectActions(
-			actionActive = "Yes",
-			actionName = "Action Name");
-
-		ObjectAdmin.editObjectAction(
-			actionName = "Update Action Name",
-			viewEntry = "Action Name");
-
-		ObjectAdmin.assertObjectActions(
-			actionActive = "Yes",
-			actionName = "Update Action Name");
-	}
-
 	@description = "LPS-145665 - Verify that Action can be triggered after disabling the expression"
 	@priority = "4"
 	test CanTriggerActionAfterDisablingExpression {
@@ -528,6 +493,41 @@ definition {
 
 			ObjectPortlet.viewEntry(entry = "Action shot");
 		}
+	}
+
+	@description = "LPS-139008 - Verify it is possible to update an Action"
+	@priority = "4"
+	test CanUpdateAction {
+		property portal.upstream = "quarantine";
+
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 192",
+			objectName = "CustomObject192",
+			pluralLabelName = "Custom Objects 192");
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 192");
+
+		ObjectAdmin.goToActionsTab();
+
+		ObjectAdmin.addObjectActionViaUI(
+			actionName = "Action Name",
+			thenAction = "Webhook",
+			urlAction = "http://localhost:8080",
+			whenAction = "On After Add");
+
+		ObjectAdmin.assertObjectActions(
+			actionActive = "Yes",
+			actionName = "Action Name");
+
+		ObjectAdmin.editObjectAction(
+			actionName = "Update Action Name",
+			viewEntry = "Action Name");
+
+		ObjectAdmin.assertObjectActions(
+			actionActive = "Yes",
+			actionName = "Update Action Name");
 	}
 
 }
