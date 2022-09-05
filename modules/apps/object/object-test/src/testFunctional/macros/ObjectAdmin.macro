@@ -36,14 +36,14 @@ definition {
 		}
 	}
 
-	macro addObjectActionEntryViaUi {
+	macro addObjectActionEntryViaUI {
 		ObjectAdmin.gotoAddObjectAction();
 
 		ObjectAdmin.fillObjectAction(
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
-			inputAction = "${inputActionActive}",
+			actionActive = "${actionActive}",
 			inputValue = "${inputValue}",
 			onAction = "${chooseOption}",
 			secretAction = "${secretAction}",
@@ -59,7 +59,6 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
-			inputCondition = "${inputCondition}",
 			inputExpression = "${inputExpression}",
 			inputMethod = "${inputMethod}",
 			inputValue = "${inputValue}",
@@ -487,6 +486,7 @@ definition {
 	macro assertObjectActions {
 		AssertElementPresent(
 			key_actionActive = "${actionActive}",
+			key_actionName = "${actionName}",
 			locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
 	}
 
@@ -827,7 +827,6 @@ definition {
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
-			inputCondition = "${inputCondition}",
 			inputExpression = "${inputExpression}",
 			inputMethod = "${inputMethod}",
 			inputValue = "${inputValue}",
@@ -884,35 +883,30 @@ definition {
 					key_objectLabel = "${objectLabel}",
 					locator1 = "ObjectAdmin#CHOOSE_OBJECT_LABEL");
 
-				Click(
-					key_inputMethod = "${inputMethod}",
-					locator1 = "ObjectAdmin#INPUT_METHOD");
+				if ("${inputMethod}" == "true") {
+					Click(locator1 = "ObjectAction#INPUT_METHOD");
 
-				Type(
-					locator1 = "ObjectAction#INPUT_VALUE",
-					value1 = "${inputValue}");
+					Type(
+						locator1 = "ObjectAction#INPUT_VALUE",
+						value1 = "${inputValue}");
+				}
+
+				else if("${inputMethod}" == "false") {
+					Type(
+						locator1 = "ObjectAction#INPUT_NEW_VALUE",
+						value1 = "${inputExpression}");
+
+				}
+				
 			}
 		}
 
 		if (isSet(inputExpression)) {
-			if ("${inputCondition}" == "true") {
-				ObjectAdmin.enableCondition();
+			ObjectAdmin.enableCondition();
 
-				Type(
-					locator1 = "ObjectAction#INPUT_EXPRESSION",
-					value1 = "${inputExpression}");
-			}
-			else if ("${inputCondition}" == "false") {
-				ObjectAdmin.disableCondition();
-			}
-		}
-
-		if (isSet(inputExpression)) {
-			if ("${inputCondition}" == "true") {
-				Type(
-					locator1 = "ObjectAction#INPUT_VALUE",
-					value1 = "${inputExpression}");
-			}
+			Type(
+				locator1 = "ObjectAction#INPUT_EXPRESSION",
+				value1 = "${inputExpression}");
 		}
 
 		if (isSet(urlAction)) {

@@ -516,7 +516,6 @@
 		<td></td>
 	</tr>
 	<tr>
-<<<<<<< HEAD
 		<td>DROPDOWN_DEFAULT_VALUE</td>
 		<td>//div[contains(@class,'form-group')]//label[contains(text(),'Default Value')]//..//div[contains(@class,'dropdown')]</td>
 		<td></td>
@@ -534,18 +533,11 @@
 	<tr>
 		<td>VIEW_STATE_NAME</td>
 		<td>//h3[(@class='lfr-objects__card-title') and text()='Select the State Flow']//..//..//div[contains(@class,'lfr-objects__card-title--with-padding') and contains(.,'${key_stateName}')]</td>
-=======
-		<td>SELECT_CHOOSE_OPTION</td>
-		<td>//option[contains(text(),'${chooseOption}')]</td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>INPUT_METHOD</td>
-<<<<<<< HEAD
-		<td>//input[contains(@class, 'custom-control-input') and contains(@type,'checkbox')]/..//span[contains(text(),'${inputMethod}')]</td>
->>>>>>> a02f5cb (LPS-156563 Add ObjectActions#CanEditActionName)
-=======
-		<td>//input[contains(@class, 'custom-control-input') and contains(@type, 'checkbox')]//..//span[contains(text(), '${key_inputMethod}')]</td>
+		<td>SELECT_CHOOSE_OPTION</td>
+		<td>//option[contains(text(),'${chooseOption}')]</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -556,7 +548,6 @@
 	<tr>
 		<td>CHOOSE_OBJECT_LABEL</td>
 		<td>//*[contains(@label,'Unrelated Objects')]//..//option[contains(.,'${key_objectLabel}')]</td>
->>>>>>> ebeae7d (LPS-156561 Add test ObjectActions#CanActivateOrDeactivateAction)
 		<td></td>
 	</tr>
 	<tr>

@@ -32,6 +32,16 @@
 		<td>//input[(@placeholder="Create an expression.")]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>INPUT_NEW_VALUE</td>
+		<td>//input[(@placeholder="Input a value or create an expression.")]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>INPUT_METHOD</td>
+		<td>//input[contains(@class, 'custom-control-input') and contains(@type,'checkbox')]/..//span[contains(text(),'Input as a value.')]</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>
