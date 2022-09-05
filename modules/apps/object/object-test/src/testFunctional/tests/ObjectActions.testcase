@@ -74,8 +74,6 @@ definition {
 		}
 
 		task ("Delete an entry, desactivate the object, and try to create a new entry") {
-			ObjectPortlet.deleteEntry(entry = "Entry Action");
-
 			ObjectAdmin.openObjectAdmin();
 
 			ObjectPortlet.selectCustomObject(label = "Custom Object");
@@ -297,7 +295,6 @@ definition {
 		}
 
 		task ("Edit the expression and Check if the user can edit a previously saved expression") {
-
 			ObjectAdmin.openObjectAdmin();
 
 			ObjectPortlet.selectCustomObject(label = "Custom Object");
@@ -307,7 +304,7 @@ definition {
 			ObjectAdmin.editObjectAction(
 				inputExpression = "contains(customField, 'Entry Test Updated')",
 				viewEntry = "Custom Action");
-			
+
 			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
 				fieldName = "customObjectField",
 				objectName = "CustomObject",
@@ -386,7 +383,6 @@ definition {
 			ObjectAdmin.goToActionsTab();
 
 			ObjectAdmin.goToActionDetails(viewEntry = "Custom Action");
-
 		}
 	}
 

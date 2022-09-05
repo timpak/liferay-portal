@@ -40,10 +40,10 @@ definition {
 		ObjectAdmin.gotoAddObjectAction();
 
 		ObjectAdmin.fillObjectAction(
+			actionActive = "${actionActive}",
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
-			actionActive = "${actionActive}",
 			inputValue = "${inputValue}",
 			onAction = "${chooseOption}",
 			secretAction = "${secretAction}",
@@ -890,14 +890,11 @@ definition {
 						locator1 = "ObjectAction#INPUT_VALUE",
 						value1 = "${inputValue}");
 				}
-
-				else if("${inputMethod}" == "false") {
+				else if ("${inputMethod}" == "false") {
 					Type(
 						locator1 = "ObjectAction#INPUT_NEW_VALUE",
 						value1 = "${inputExpression}");
-
 				}
-				
 			}
 		}
 
