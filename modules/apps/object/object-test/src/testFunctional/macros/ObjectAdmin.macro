@@ -776,7 +776,7 @@ definition {
 	}
 
 	macro disableCondition {
-		Uncheck.uncheckToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
+		Uncheck.uncheckToggleSwitch(locator1 = "ObjectAction#ENABLE_DISABLE_CONDITION");
 	}
 
 	macro editClobEntryName {
@@ -838,7 +838,7 @@ definition {
 	}
 
 	macro enableCondition {
-		Check.checkToggleSwitch(locator1 = "ObjectAdmin#ENABLE_DISABLE_CONDITION");
+		Check.checkToggleSwitch(locator1 = "ObjectAction#ENABLE_DISABLE_CONDITION");
 	}
 
 	macro fillObjectAction {

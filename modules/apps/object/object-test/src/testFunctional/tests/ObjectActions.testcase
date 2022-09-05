@@ -326,49 +326,67 @@ definition {
 	test CanEnableAndDisableCondition {
 		property portal.acceptance = "true";
 
-		task ("Add object and field") {
+		task ("Add object, field, and publish then") {
 			ObjectAdmin.addObjectViaAPI(
-				labelName = "Custom Object 145",
-				objectName = "CustomObject145",
-				pluralLabelName = "Custom Objects 145");
+				labelName = "Custom Object",
+				objectName = "CustomObject",
+				pluralLabelName = "Custom Objects");
 
 			ObjectAdmin.addObjectFieldViaAPI(
 				fieldBusinessType = "Text",
 				fieldLabelName = "Custom Field",
 				fieldName = "customObjectField",
 				fieldType = "String",
-				isRequired = "false",
-				objectName = "CustomObject14");
+				isRequired = "true",
+				objectName = "CustomObject");
 
-			ObjectAdmin.openObjectAdmin();
-
-			ObjectPortlet.selectCustomObject(label = "Custom Object 145");
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject");
 		}
 
-		task ("Add a Action and assert that Enable Condition is disabled") {
+		task ("Add a Action and enable condition") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
 			ObjectAdmin.goToActionsTab();
 
 			ObjectAdmin.addObjectActionViaUI(
 				actionName = "Custom Action",
-				active = "false",
-				thenAction = "Webhook",
-				urlAction = "www.liferay.com",
+				active = "true",
+				inputExpression = "contains(customField, 'Entry that require condition')",
+				inputMethod = "true",
+				inputValue = "Condition works",
+				objectLabel = "Custom Object",
+				thenAction = "Add an Object Entry",
 				whenAction = "On After Add");
 
 			ObjectAdmin.assertObjectActions(actionActive = "Custom Action");
 
-			ObjectAdmin.assertObjectActions(actionActive = "No");
+			ObjectAdmin.assertObjectActions(actionActive = "Yes");
 		}
 
-		task ("Edit Action Builder and assert that Enable Condition is enable") {
-			ObjectAdmin.editObjectAction(
-				actionName = "New Action Update",
-				active = "true",
-				viewEntry = "Custom Action");
+		task ("Add entry and assert that condition it's works") {
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject",
+				value = "Entry that require condition");
 
-			ObjectAdmin.assertObjectActions(actionActive = "Yes");
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
 
-			ObjectAdmin.assertObjectActions(actionActive = "New Action Update");
+			ObjectPortlet.viewEntry(entry = "Entry that require condition");
+
+			ObjectPortlet.viewEntry(entry = "condition works");
+		}
+
+		task ("Add another entry with condition is disabled") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			ObjectAdmin.goToActionsTab();
+
+			ObjectAdmin.goToActionDetails(viewEntry = "Custom Action");
+
 		}
 	}
 
