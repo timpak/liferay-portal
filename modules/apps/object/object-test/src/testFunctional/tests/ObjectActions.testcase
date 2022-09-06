@@ -51,7 +51,6 @@ definition {
 			ObjectAdmin.addObjectActionViaUI(
 				actionName = "Custom Action",
 				active = "true",
-				inputExpression = "contains(customField, 'Entry Test')",
 				inputMethod = "true",
 				inputValue = "Action shot on add",
 				objectLabel = "Custom Object",
@@ -61,10 +60,11 @@ definition {
 			ObjectAdmin.assertObjectActions(actionActive = "Yes");
 		}
 
-		task ("Add an Entry and check if it has been created") {
-			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
-
-			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Test");
+		task ("Add an Entry and check if the action is works") {
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject",
+				value = "Entry Test");
 
 			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
 
@@ -73,20 +73,28 @@ definition {
 			ObjectPortlet.viewEntry(entry = "Action shot on add");
 		}
 
-		task ("Delete an entry, desactivate the object, and try to create a new entry") {
+		task ("Delete an entry, desactivate the action, and try to create a new entry") {
+			ObjectAdmin.deleteObjectEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject",
+				value = "Action shot on add");
+
 			ObjectAdmin.openObjectAdmin();
 
 			ObjectPortlet.selectCustomObject(label = "Custom Object");
 
 			ObjectAdmin.goToActionsTab();
 
-			ObjectAdmin.editObjectAction(
+			ObjectAdmin.activateOrDeactivateAction(
 				active = "false",
 				viewEntry = "Custom Action");
 
-			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject",
+				value = "Entry Test");
 
-			ObjectPortlet.addSingleFieldEntryViaUI(entry = "Entry Test");
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
 
 			ObjectPortlet.assertEntryNotPresent(entry = "Action shot on add");
 		}
@@ -389,7 +397,6 @@ definition {
 			ObjectAdmin.assertObjectActions(actionActive = "Custom Action");
 
 			ObjectAdmin.assertObjectActions(actionActive = "Yes");
-
 		}
 	}
 
