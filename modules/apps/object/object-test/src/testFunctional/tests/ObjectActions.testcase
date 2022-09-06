@@ -350,7 +350,7 @@ definition {
 			ObjectAdmin.addObjectActionViaUI(
 				actionName = "Custom Action",
 				active = "true",
-				inputExpression = "contains(customField, 'Entry that require condition')",
+				inputExpression = "customObjectField == 'Entry with condition'",
 				inputMethod = "true",
 				inputValue = "Condition works",
 				objectLabel = "Custom Object",
@@ -366,16 +366,16 @@ definition {
 			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
 				fieldName = "customObjectField",
 				objectName = "CustomObject",
-				value = "Entry that require condition");
+				value = "Entry with condition");
 
 			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
 
-			ObjectPortlet.viewEntry(entry = "Entry that require condition");
+			ObjectPortlet.viewEntry(entry = "Entry with condition");
 
-			ObjectPortlet.viewEntry(entry = "condition works");
+			ObjectPortlet.viewEntry(entry = "Condition works");
 		}
 
-		task ("Add another entry with condition is disabled") {
+		task ("Assert that condition is disabled") {
 			ObjectAdmin.openObjectAdmin();
 
 			ObjectPortlet.selectCustomObject(label = "Custom Object");
@@ -383,6 +383,13 @@ definition {
 			ObjectAdmin.goToActionsTab();
 
 			ObjectAdmin.goToActionDetails(viewEntry = "Custom Action");
+
+			ObjectAdmin.disableCondition();
+
+			ObjectAdmin.assertObjectActions(actionActive = "Custom Action");
+
+			ObjectAdmin.assertObjectActions(actionActive = "Yes");
+
 		}
 	}
 

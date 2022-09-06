@@ -776,7 +776,15 @@ definition {
 	}
 
 	macro disableCondition {
+		SelectFrame.selectFrameNoLoading(locator1 = "ObjectAction#IFRAME_SIDE_PANEL");
+
+		Click(
+			key_tabName = "Action Builder",
+			locator1 = "ObjectAction#TAB_GENERIC");
+
 		Uncheck.uncheckToggleSwitch(locator1 = "ObjectAction#ENABLE_DISABLE_CONDITION");
+
+		Button.clickSave();
 	}
 
 	macro editClobEntryName {

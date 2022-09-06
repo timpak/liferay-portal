@@ -47,6 +47,11 @@
 		<td>//span[contains(., 'Enable Condition')]/..//span[contains(@class, 'toggle-switch-check-bar')]//input[contains(@type, 'checkbox')]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>IFRAME_SIDE_PANEL</td>
+		<td>//div[contains(@class,'side-panel') and contains(@class,'is-visible')]//iframe</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>
