@@ -865,6 +865,186 @@ definition {
 		}
 	}
 
+	@description = "LPS-144957 - Verify that it's possible to filter entries"
+	@priority = "4"
+	test CanFilterEntries {
+		task ("Create Custom Object, Custom Field and publish it via API") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 156806",
+				objectName = "CustomObject156806",
+				pluralLabelName = "Custom Objects 156806");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "false",
+				objectName = "CustomObject156806");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject156806");
+		}
+
+		task ("Go to Custom Object") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 156806");
+		}
+
+		task ("Create Custom View and go to it") {
+			ObjectCustomViews.goToViewsTab();
+
+			ObjectCustomViews.addObjectViewViaUI(viewName = "Custom Views");
+
+			ObjectCustomViews.goToViewsDetails(label = "Custom Views");
+		}
+
+		task ("Mark as default and add columns for Custom View") {
+			ObjectCustomViews.markViewAsDefault();
+
+			ObjectCustomViews.goToViewsBuilderTab();
+
+			var listMetaData = "Author,Create Date,External Reference Code,Modified Date,Status,ID,Custom Field";
+
+			ObjectCustomViews.addColumnsViaUI(addColumns = "${listMetaData}");
+		}
+
+		task ("Go to Filters tab and add new Filter") {
+			ObjectCustomViews.goToFiltersTab();
+
+			ObjectCustomViews.addNewFilterViaUI(filterBy = "Create Date");
+
+			ObjectCustomViews.addNewFilterViaUI(filterBy = "Modified Date");
+
+			ObjectCustomViews.addNewFilterViaUI(
+				filterBy = "Status",
+				filterType = "Includes",
+				filterValue = "Approved,Denied,Draft,Expired,Inactive,Incomplete,In Recycle Bin,Scheduled");
+
+			Button.clickSave();
+		}
+
+		task ("Define workflow to Custom Object") {
+			ObjectAdmin.openWorkflowProcessBuilderConfiguration();
+
+			Workflow.configureWorkflow(
+				workflowDefinition = "Single Approver",
+				workflowResourceValue = "Custom Object 156806");
+		}
+
+		task ("Create entry (approved) via API") {
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject156806",
+				value = "Entry Approved");
+		}
+
+		task ("Define the entry as approved") {
+			Navigator.openURL();
+
+			ObjectAdmin.openMyWorkflowTasks();
+
+			Navigator.gotoNavTab(navTab = "Assigned to My Roles");
+
+			LexiconEntry.gotoEllipsisMenuItem(menuItem = "Assign to Me");
+
+			Workflow.confirmWorkflowAction();
+
+			LexiconEntry.gotoEllipsisMenuItem(menuItem = "Approve");
+
+			Workflow.confirmWorkflowAction();
+		}
+
+		task ("Create entry (pending) via API") {
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "customObjectField",
+				objectName = "CustomObject156806",
+				value = "Entry Pending");
+		}
+
+		task ("Go to Custom Object entries and assert entry with filter") {
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject156806");
+
+			ObjectPortlet.viewEntry(entry = "Entry Approved");
+
+			ObjectPortlet.assertEntryNotPresent(entry = "Entry Pending");
+		}
+
+		task ("Change filter by Status") {
+			ObjectCustomViews.clickOnFilterOnEntries();
+
+			SelectFrame(locator1 = "ObjectCustomViews#VIEW_DROPDOWN_MENU_ON_MODAL_DEFAULT_SORT");
+
+			Type(
+				locator1 = "ObjectCustomViews#SEARCH_DROPDOWN_MENU_FILTER",
+				value1 = "Status");
+
+			Click(
+				key_optionName = "Status",
+				locator1 = "ObjectCustomViews#OPTIONS_DROPDOWN_MENU_FILTER");
+
+			ObjectCustomViews.optionsStatusOnEntryFilter(optionStatus = "Draft");
+
+			Check.checkNotVisible(locator1 = "ObjectCustomViews#TOGGLE_SWITCH_EXCLUDE_STATUS");
+
+			Click(locator1 = "ObjectCustomViews#BUTTON_EDIT_FILTER");
+		}
+
+		task ("Assert entry with new filter by Status") {
+			ObjectCustomViews.clickOnFilterOnEntries();
+
+			ObjectPortlet.viewEntry(entry = "Entry Pending");
+
+			ObjectPortlet.assertEntryNotPresent(entry = "Entry Approved");
+		}
+
+		task ("Change filter by Create Date") {
+			ObjectCustomViews.clickOnFilterOnEntries();
+
+			SelectFrame(locator1 = "ObjectCustomViews#VIEW_DROPDOWN_MENU_ON_MODAL_DEFAULT_SORT");
+
+			ObjectCustomViews.clickOnBackInFilter();
+
+			Type(
+				locator1 = "ObjectCustomViews#SEARCH_DROPDOWN_MENU_FILTER",
+				value1 = "Create Date");
+
+			ObjectCustomViews.defineDateCreateDateFilter(fromCreateDate = "01012022");
+		}
+
+		task ("Change filter by Modified Date") {
+			ObjectCustomViews.clickOnBackInFilter();
+
+			Type(
+				locator1 = "ObjectCustomViews#SEARCH_DROPDOWN_MENU_FILTER",
+				value1 = "Modified Date");
+
+			ObjectCustomViews.defineDateModifiedDateFilter(fromModifiedDate = "01012022");
+		}
+
+		task ("Assert label sections and reset filters") {
+			ObjectCustomViews.clickOnFilterOnEntries();
+
+			for (var filters : list "Create Date,Modified Date,Status") {
+				AssertElementPresent(
+					key_filter = "${filters}",
+					locator1 = "ObjectCustomViews#LABEL_SECTION_FILTER_ENTRY");
+			}
+
+			Click(locator1 = "ObjectCustomViews#BUTTON_RESET_FILTERS");
+
+			for (var filters : list "Create Date,Modified Date,Status") {
+				AssertElementNotPresent(
+					key_filter = "${filters}",
+					locator1 = "ObjectCustomViews#LABEL_SECTION_FILTER_ENTRY");
+			}
+
+			ObjectPortlet.viewEntry(entry = "Entry Pending");
+
+			ObjectPortlet.viewEntry(entry = "Entry Approved");
+		}
+	}
+
 	@description = "LPS-144472 - Verify it is not is possible to create a Default Sort when there isn't column"
 	@priority = "4"
 	test CannotCreateDefaultSortWhenNoColumn {

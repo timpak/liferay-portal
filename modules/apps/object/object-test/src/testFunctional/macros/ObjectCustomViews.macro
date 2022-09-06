@@ -186,10 +186,44 @@ definition {
 		}
 	}
 
+	macro clickOnBackInFilter {
+		Click(locator1 = "ObjectCustomViews#BACK_FILTER");
+	}
+
+	macro clickOnFilterOnEntries {
+		Click(
+			key_buttonName = "Filter",
+			locator1 = "ObjectCustomViews#DROPDOWN_BUTTON_ON_OBJECT_VIEW");
+	}
+
 	macro clickSaveOnModal {
 		Click(
 			key_name = "Save",
 			locator1 = "Button#GENERAL_BUTTON_MODAL_FOOTER");
+	}
+
+	macro defineDateCreateDateFilter {
+		Click(
+			key_optionName = "Create Date",
+			locator1 = "ObjectCustomViews#OPTIONS_DROPDOWN_MENU_FILTER");
+
+		Type(
+			locator1 = "ObjectCustomViews#FROM_CREATED_DATE_FILTER",
+			value1 = "${fromCreateDate}");
+
+		Click(locator1 = "ObjectCustomViews#BUTTON_ADD_FILTER");
+	}
+
+	macro defineDateModifiedDateFilter {
+		Click(
+			key_optionName = "Modified Date",
+			locator1 = "ObjectCustomViews#OPTIONS_DROPDOWN_MENU_FILTER");
+
+		Type(
+			locator1 = "ObjectCustomViews#FROM_MODIFIED_DATE_FILTER",
+			value1 = "${fromModifiedDate}");
+
+		Click(locator1 = "ObjectCustomViews#BUTTON_ADD_FILTER");
 	}
 
 	macro deleteObjectCustomViewViaUI {
@@ -290,6 +324,14 @@ definition {
 		Click(locator1 = "ObjectAdmin#LAYOUT_INFO_TAB");
 
 		Click.clickAtNotVisible(locator1 = "ObjectCustomViews#MARK_AS_DEFAULT");
+	}
+
+	macro optionsStatusOnEntryFilter {
+		for (var filterValueList : list "${optionStatus}") {
+			Click.clickAtNotVisible(
+				key_optionStatus = "${filterValueList}",
+				locator1 = "ObjectCustomViews#OPTION_STATUS_ON_FILTER");
+		}
 	}
 
 	macro saveColumnsModal {

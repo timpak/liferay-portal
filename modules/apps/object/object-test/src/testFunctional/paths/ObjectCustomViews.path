@@ -245,6 +245,61 @@
 		<td>//h3[(@class='lfr-objects__card-title') and text()='Filters']//..//..//li[contains(@class,'custom-view-builder-item') and contains(.,'${key_filterName}')]//button[contains(@class,'dropdown-toggle btn btn-monospaced btn-unstyled')]</td>
 		<td></td>
 	</tr>
+	<tr>
+		<td>SEARCH_DROPDOWN_MENU_FILTER</td>
+		<td>//div[contains(@class,'dropdown-menu show')]//input[contains(@class, 'form-control input-group-inset input-group-inset-after') and contains(@type,'text')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>OPTIONS_DROPDOWN_MENU_FILTER</td>
+		<td>//ul[contains(@class,'list-unstyled')]//li[contains(@role,'presentation') and (@aria-selected='false')]//button[(@class='dropdown-item') and contains (.,'${key_optionName}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>TOGGLE_SWITCH_EXCLUDE_STATUS</td>
+		<td>//div[contains(@id,'clay-dropdown-menu')]//input[contains(@class,'toggle-switch-check')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>BUTTON_EDIT_FILTER</td>
+		<td>//div[contains(@id, 'clay-dropdown-menu')]//button[contains(@class,'btn-primary')][contains(text(),'Edit Filter')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>BUTTON_ADD_FILTER</td>
+		<td>//div[contains(@id, 'clay-dropdown-menu')]//button[contains(@class,'btn-primary')][contains(text(),'Add Filter')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>BACK_FILTER</td>
+		<td>//div[contains(@id,'clay-dropdown-menu')]//*[contains(@class,'lexicon-icon lexicon-icon-angle-left')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>FROM_CREATED_DATE_FILTER</td>
+		<td>//div[contains(@id,'clay-dropdown-menu')]//input[(@id='from-dateCreated')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>FROM_MODIFIED_DATE_FILTER</td>
+		<td>//div[contains(@id,'clay-dropdown-menu')]//input[(@id='from-dateModified')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>OPTION_STATUS_ON_FILTER</td>
+		<td>//div[contains(@id,'clay-dropdown-menu')]//input[(@aria-label='${key_optionStatus}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>LABEL_SECTION_FILTER_ENTRY</td>
+		<td>//*[@class='tbar-section']//*[@class='label-section' and contains(.,'${key_filter}')]</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>BUTTON_RESET_FILTERS</td>
+		<td>//button[contains(@class,'btn btn-unstyled') and contains(text(),'Reset Filters')]</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 </body>
