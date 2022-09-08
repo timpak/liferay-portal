@@ -283,7 +283,7 @@ definition {
 			ObjectAdmin.addObjectActionViaUI(
 				actionName = "Custom Action",
 				active = "true",
-				inputExpression = "contains(customField, 'Entry Test')",
+				inputExpression = "customObjectField == 'Entry Test'",
 				inputMethod = "true",
 				inputValue = "Action shot on add",
 				objectLabel = "Custom Object",
@@ -310,7 +310,7 @@ definition {
 			ObjectAdmin.goToActionsTab();
 
 			ObjectAdmin.editObjectAction(
-				inputExpression = "contains(customField, 'Entry Test Updated')",
+				inputExpression = "customObjectField == 'Entry Test Updated'",
 				viewEntry = "Custom Action");
 
 			ObjectAdmin.addObjectSingleFieldEntryViaAPI(

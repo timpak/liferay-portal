@@ -850,6 +850,8 @@ definition {
 
 		ObjectAdmin.viewDetails();
 
+		SelectFrame.selectFrameNoLoading(locator1 = "ObjectAction#IFRAME_SIDE_PANEL");
+
 		ObjectAdmin.fillObjectAction(
 			actionName = "${actionName}",
 			active = "${active}",
