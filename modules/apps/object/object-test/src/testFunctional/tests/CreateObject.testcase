@@ -2963,6 +2963,63 @@ definition {
 		}
 	}
 
+	@description = "LPS-155962 - Verify that it's possible to restrict a previously created Object"
+	@priority = "4"
+	test CanRestrictExistingObject {
+		task ("Add first Custom Object (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 161897A",
+				objectName = "CustomObject161897A",
+				pluralLabelName = "Custom Objects 161897A");
+		}
+
+		task ("Add second Custom Object (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 161897B",
+				objectName = "CustomObject161897B",
+				pluralLabelName = "Custom Objects 161897B");
+		}
+
+		task ("Add Relationship Account to Custom Object (via API)") {
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "AccountEntry",
+				objectName_2 = "CustomObject161897B",
+				relationshipLabel = "RelationshipAccount",
+				relationshipName = "relationshipAccount",
+				relationshipType = "oneToMany");
+		}
+
+		task ("Go to Custom Object A and assert that it's not possible to active Account Restriction") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 161897A");
+
+			CreateObject.assertAccountRestrictedFieldDisabled(valueName = "Choose an Option");
+
+			CreateObject.viewToogleAccountRestrictionDisabled();
+		}
+
+		task ("Go to Custom Object B and assert that it's possible to active Account Restriction") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 161897B");
+
+			CreateObject.activeToogleAccountRestriction();
+
+			CreateObject.selectAccountRestrictedField(accountRestrictedField = "RelationshipAccount");
+
+			Button.clickPublish();
+		}
+
+		task ("Assert that it's not possible to update Account Restriction") {
+			WaitForSPARefresh();
+
+			CreateObject.assertAccountRestrictedFieldDisabled(valueName = "RelationshipAccount");
+
+			CreateObject.viewToogleAccountRestrictionDisabled();
+		}
+	}
+
 	@description = "LPS-135551 - Verify it is possible to scope the Object by Company"
 	@priority = "5"
 	test CanScopeObjectByCompany {

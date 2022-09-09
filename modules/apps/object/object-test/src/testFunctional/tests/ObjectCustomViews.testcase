@@ -1369,7 +1369,7 @@ definition {
 	@priority = "5"
 	test CanSeeRenamedColumnOnViewBuilder {
 		property portal.acceptance = "true";
-		
+
 		ObjectAdmin.addObjectViaAPI(
 			labelName = "Custom Object 152068",
 			objectName = "CustomObject152068",
