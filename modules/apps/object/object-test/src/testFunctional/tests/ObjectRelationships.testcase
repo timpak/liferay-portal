@@ -826,6 +826,16 @@ definition {
 			Button.clickSave();
 		}
 
+		task ("Define First Name as a title field on the native object") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "User");
+
+			CreateObject.selectTitleField(fieldLabel = "First Name");
+
+			CreateObject.saveObject();
+		}
+
 		task ("Add 2 entries by API to relate to user entries") {
 			for (var entryName : list "A,B") {
 				ObjectAdmin.addObjectSingleFieldEntryViaAPI(
