@@ -402,7 +402,7 @@ definition {
 			for (var entryName : list "A,B") {
 				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
 
-				CreateObject.deleteEntryInRelationshipTab(kebabOption = "Delete");
+				CreateObject.deleteEntryInRelationshipTab(entryName = "userfn_1");
 
 				ObjectPortlet.assertEntryNotPresent(entry = "userfn_1");
 
@@ -412,7 +412,7 @@ definition {
 			for (var entryName : list "A,B") {
 				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
 
-				CreateObject.deleteEntryInRelationshipTab(kebabOption = "Delete");
+				CreateObject.deleteEntryInRelationshipTab(entryName = "userfn_2");
 
 				ObjectPortlet.assertEntryNotPresent(entry = "userfn_2");
 
@@ -746,7 +746,7 @@ definition {
 	test CanRelateManyToManyCustomObjectEntryWithNativeObjectEntries {
 		property portal.acceptance = "true";
 
-		task ("Add 3 users entries to relate to custom object entries") {
+		task ("Add 2 users entries to relate to custom object entries") {
 			JSONUser.addUser(
 				userEmailAddress = "user1@liferay.com",
 				userFirstName = "userfn_1",
@@ -768,17 +768,6 @@ definition {
 				agreeToTermsAndAnswerReminderQuery = "true",
 				requireReset = "false",
 				userEmailAddress = "user2@liferay.com");
-
-			JSONUser.addUser(
-				userEmailAddress = "user3@liferay.com",
-				userFirstName = "userfn_3",
-				userLastName = "userln_3",
-				userScreenName = "usersn3");
-
-			JSONUser.setFirstPassword(
-				agreeToTermsAndAnswerReminderQuery = "true",
-				requireReset = "false",
-				userEmailAddress = "user3@liferay.com");
 		}
 
 		task ("Add a custom object, a field, and create a many-to-many relationship with the User object") {
@@ -837,8 +826,8 @@ definition {
 			Button.clickSave();
 		}
 
-		task ("Add 3 entries by API to relate to user entries") {
-			for (var entryName : list "A,B,C") {
+		task ("Add 2 entries by API to relate to user entries") {
+			for (var entryName : list "A,B") {
 				ObjectAdmin.addObjectSingleFieldEntryViaAPI(
 					fieldName = "customObjectField",
 					objectName = "CustomObject",
@@ -851,32 +840,26 @@ definition {
 
 			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
 
-			for (var entryName : list "A,B,C") {
+			for (var entryName : list "A,B") {
 				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
 
 				ObjectAdmin.gotoRelationshipsTab();
 
-				CreateObject.addRelationshipAndSelectEntry(titleFieldName = "userfn_1 userln_1");
+				CreateObject.addRelationshipAndSelectEntry(titleFieldName = "userfn_1");
+
+				ObjectPortlet.viewEntry(entry = "userfn_1");
 
 				Navigator.gotoBack();
 			}
 
-			for (var entryName : list "A,B,C") {
+			for (var entryName : list "A,B") {
 				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
 
 				ObjectAdmin.gotoRelationshipsTab();
 
-				CreateObject.addRelationshipAndSelectEntry(titleFieldName = "userfn_2 userln_2");
+				CreateObject.addRelationshipAndSelectEntry(titleFieldName = "userfn_2");
 
-				Navigator.gotoBack();
-			}
-
-			for (var entryName : list "A,B,C") {
-				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
-
-				ObjectAdmin.gotoRelationshipsTab();
-
-				CreateObject.addRelationshipAndSelectEntry(titleFieldName = "userfn_3 userln_3");
+				ObjectPortlet.viewEntry(entry = "userfn_2");
 
 				Navigator.gotoBack();
 			}
