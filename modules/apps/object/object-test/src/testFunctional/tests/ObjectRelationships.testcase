@@ -461,6 +461,73 @@ definition {
 		ObjectPortlet.viewEntry(entry = "Entry B");
 	}
 
+	@description = "LPS-151676 - Verify that it's possible to edit the relationships of the Custom Object entry (One-to-Many)"
+	@priority = "4"
+	test CanEditOneToManyRelationshipOfCustomObjectEntries {
+		task ("Add a custom object, field, and add a relationship itself") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object",
+				objectName = "CustomObject",
+				pluralLabelName = "Custom Objects");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "false",
+				objectName = "CustomObject");
+
+			ObjectAdmin.addObjectRelationshipViaAPI(
+				objectName_1 = "CustomObject",
+				objectName_2 = "CustomObject",
+				relationshipLabel = "Relationship",
+				relationshipName = "relationship",
+				relationshipType = "oneToMany");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject");
+		}
+
+		task ("Define custom field as title field on the object") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object");
+
+			CreateObject.selectTitleField(fieldLabel = "Custom Field");
+
+			CreateObject.saveObject();
+		}
+
+		task ("Add 3 entries by API to relate to other entries") {
+			for (var entryName : list "A,B,C") {
+				ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+					fieldName = "customObjectField",
+					objectName = "CustomObject",
+					value = "Entry ${entryName}");
+			}
+		}
+
+		task ("Add one-to-many relationships with entries and add additional relationships") {
+			Navigator.openURL();
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject");
+
+			for (var entryName : list "B,C") {
+				ObjectPortlet.viewEntryDetails(entry = "Entry ${entryName}");
+
+				ObjectPortlet.selectRelationshipFieldEntry(
+					entry = "",
+					newEntry = "Entry A");
+
+				CreateObject.assertEntrySelectedOnRelationshipField(entry = "Entry A");
+
+				Navigator.gotoBack();
+
+				ObjectPortlet.viewEntry(entry = "Entry A");
+			}
+		}
+	}
+
 	@description = "LPS-146754 - Verify that it's not possible for a Custom Object to create a Many-to-Many relationship with itself"
 	@priority = "4"
 	test CannotCreateManytoManyRelationshipWithItself {
