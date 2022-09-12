@@ -45,39 +45,42 @@ definition {
 		}
 	}
 
-    @description = "LPS-161918 - Verify that it's possible to edit an e-mail notification template"
+	@description = "LPS-161918 - Verify that it's possible to edit an e-mail notification template"
 	@priority = "3"
 	test CanEditEmailTemplate {
 		task ("Go to Templates and add a new Notification Template") {
-            ApplicationsMenu.gotoPortlet(
-                category = "Notifications",
-                panel = "Control Panel",
-                portlet = "Templates");
+			ApplicationsMenu.gotoPortlet(
+				category = "Notifications",
+				panel = "Control Panel",
+				portlet = "Templates");
 
-            ObjectNotifications.addNewNotificationTemplate(
-                fromAddress = "test@liferay.com",
-                fromName = "Test Test",
-                name = "Notification Template Name");
+			ObjectNotifications.addNewNotificationTemplate(
+				fromAddress = "test@liferay.com",
+				fromName = "Test Test",
+				name = "Notification Template Name");
 
-            Button.clickSave();
-        }
-        task ("Assert that Notification Template is present") {
-            Refresh();
+			Button.clickSave();
+		}
 
-            ObjectNotifications.viewNotificationTemplate(notificationTemplateName = "Notification Template Name");
-        }
-        task ("Edit the created notification Template") {
-            ObjectNotifications.editNotificationTemplate(
-                notificationTemplateName = "Notification Template Name",
-                name = "Notification Template Name Edited");
+		task ("Assert that Notification Template is present") {
+			Refresh();
 
-            Button.clickSave();
-        }
-        task ("Assert that the Notification Template edited is present") {
-            Refresh();
+			ObjectNotifications.viewNotificationTemplate(notificationTemplateName = "Notification Template Name");
+		}
 
-            ObjectNotifications.viewNotificationTemplate(notificationTemplateName = "Notification Template Name Edited");
-        }
+		task ("Edit the created notification Template") {
+			ObjectNotifications.editNotificationTemplate(
+				name = "Notification Template Name Edited",
+				notificationTemplateName = "Notification Template Name");
+
+			Button.clickSave();
+		}
+
+		task ("Assert that the Notification Template edited is present") {
+			Refresh();
+
+			ObjectNotifications.viewNotificationTemplate(notificationTemplateName = "Notification Template Name Edited");
+		}
 	}
 
 }
