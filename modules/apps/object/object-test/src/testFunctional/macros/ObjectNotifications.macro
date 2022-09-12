@@ -25,4 +25,33 @@ definition {
 			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
 	}
 
+    macro goToNotificationTemplate {
+        Click(
+            key_notificationTemplateName = "${notificationTemplateName}",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
+    }
+
+    macro editNotificationTemplate {
+        ObjectNotifications.goToNotificationTemplate(notificationTemplateName = "${notificationTemplateName}");
+
+        if(isSet(name)) {
+        Type(
+			key_inputName = "name",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${name}");
+        }
+        if(isSet(fromAddress)) {
+		Type(
+			key_inputName = "fromAddress",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromAddress}");
+        }
+        if(isSet(fromName)) { 
+		Type(
+			key_inputName = "fromName",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromName}");
+        }
+    }
+
 }
