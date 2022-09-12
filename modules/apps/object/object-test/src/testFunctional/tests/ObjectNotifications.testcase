@@ -1,7 +1,7 @@
 @component-name = "portal-object"
 definition {
 
-    property portal.release = "true";
+	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Object";
 
@@ -21,25 +21,24 @@ definition {
 		}
 	}
 
-    @description = "LPS-161917 - Verify that it's possible to create an e-mail notification template"
+	@description = "LPS-161917 - Verify that it's possible to create an e-mail notification template"
 	@priority = "3"
 	test CanCreateEmailTemplate {
-        ApplicationsMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Notifications",
 			panel = "Control Panel",
 			portlet = "Templates");
 
-        ObjectNotifications.addNewNotificationTemplate(
-            name = "Notification Template Name",
-            fromAddress = "test@liferay.com",
-            fromName = "Test Test");
+		ObjectNotifications.addNewNotificationTemplate(
+			fromAddress = "test@liferay.com",
+			fromName = "Test Test",
+			name = "Notification Template Name");
 
-        Button.clickSave();
+		Button.clickSave();
 
-        Refresh();
+		Refresh();
 
-        ObjectNotifications.viewNewNotificationTemplate(notificationTemplateName = "Notification Template Name");
-
-    }
+		ObjectNotifications.viewNewNotificationTemplate(notificationTemplateName = "Notification Template Name");
+	}
 
 }

@@ -1,30 +1,28 @@
 definition {
 
-    macro addNewNotificationTemplate{
-        LexiconEntry.gotoAdd();
+	macro addNewNotificationTemplate {
+		LexiconEntry.gotoAdd();
 
-        Type(
-        locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
-        value1 = "${name}",
-        key_inputName = "name");
+		Type(
+			key_inputName = "name",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${name}");
 
-        Type(
-        locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
-        value1 = "${fromAddress}",
-        key_inputName = "fromAddress");
+		Type(
+			key_inputName = "fromAddress",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromAddress}");
 
-        Type(
-        locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
-        value1 = "${fromName}",
-        key_inputName = "fromName");
+		Type(
+			key_inputName = "fromName",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromName}");
+	}
 
-    }
-
-    macro viewNewNotificationTemplate{
-        AssertElementPresent(
-            locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE",
-            key_notificationTemplateName = "${notificationTemplateName}");
-
-    }
+	macro viewNewNotificationTemplate {
+		AssertElementPresent(
+			key_notificationTemplateName = "${notificationTemplateName}",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
+	}
 
 }
