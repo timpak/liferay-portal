@@ -1,0 +1,29 @@
+definition {
+
+	macro addNewNotificationTemplate {
+		LexiconEntry.gotoAdd();
+
+		Type(
+			key_inputName = "name",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${name}");
+
+		Type(
+			key_inputName = "fromAddress",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromAddress}");
+
+		Type(
+			key_inputName = "fromName",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE_INPUT",
+			value1 = "${fromName}");
+	}
+
+	macro viewNotificationTemplate {
+		AssertElementPresent(
+			key_notificationTemplateName = "${notificationTemplateName}",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
+	}
+   
+
+}
