@@ -24,6 +24,5 @@ definition {
 			key_notificationTemplateName = "${notificationTemplateName}",
 			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
 	}
-   
 
 }
