@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>ObjectNotifications</title>
+</head>
+
+<body>
+<table border="1" cellpadding="1" cellspacing="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ObjectNotifications</td></tr>
+</thead>
+
+<tbody>
+
+<tr>
+	<td>NOTIFICATION_TEMPLATE_INPUT</td>
+	<td>//div[@class= 'form-group']//input[@name= '${key_inputName}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>NOTIFICATION_TEMPLATE</td>
+	<td>//div[@class= 'table-list-title' and contains(., '${key_notificationTemplateName}')]</td>
+	<td></td>
+</tr>
+
+
+</tbody>
+</table>
+</body>
+</html>

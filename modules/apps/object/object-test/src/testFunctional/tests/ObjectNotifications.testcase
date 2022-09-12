@@ -1,0 +1,45 @@
+@component-name = "portal-object"
+definition {
+
+    property portal.release = "true";
+	property portal.upstream = "true";
+	property testray.main.component.name = "Object";
+
+	setUp {
+		TestCase.setUpPortalInstance();
+
+		User.firstLoginPG();
+	}
+
+	tearDown {
+		ObjectAdmin.deleteAllCustomObjectsViaAPI();
+
+		var testPortalInstance = PropsUtil.get("test.portal.instance");
+
+		if ("${testPortalInstance}" == "true") {
+			PortalInstances.tearDownCP();
+		}
+	}
+
+    @description = "LPS-161917 - Verify that it's possible to create an e-mail notification template"
+	@priority = "3"
+	test CanCreateEmailTemplate {
+        ApplicationsMenu.gotoPortlet(
+			category = "Notifications",
+			panel = "Control Panel",
+			portlet = "Templates");
+
+        ObjectNotifications.addNewNotificationTemplate(
+            name = "Notification Template Name",
+            fromAddress = "test@liferay.com",
+            fromName = "Test Test");
+
+        Button.clickSave();
+
+        Refresh();
+
+        ObjectNotifications.viewNewNotificationTemplate(notificationTemplateName = "Notification Template Name");
+
+    }
+
+}
