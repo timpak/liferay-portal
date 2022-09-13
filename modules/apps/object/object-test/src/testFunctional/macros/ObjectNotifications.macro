@@ -19,6 +19,18 @@ definition {
 			value1 = "${fromName}");
 	}
 
+	macro deleteNotificationTemplate {
+		Click(
+			key_templateName = "${templateName}",
+			locator1 = "ObjectNotifications#DROPDOW_MENU");
+
+		ClickNoError(
+			key_menuItem = "Delete",
+			locator1 = "ObjectNotifications#DROPDOW_MENU_ITEM");
+
+		Alert.viewSuccessMessage();
+	}
+
 	macro editNotificationTemplate {
 		ObjectNotifications.goToNotificationTemplate(notificationTemplateName = "${notificationTemplateName}");
 
@@ -56,23 +68,10 @@ definition {
 			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
 	}
 
-    macro deleteNotificationTemplate {
-		Click(
-			locator1 = "ObjectNotifications#DROPDOW_MENU",
-			key_templateName = "${templateName}");
-
-		ClickNoError(
-			locator1 = "ObjectNotifications#DROPDOW_MENU_ITEM",
-			key_menuItem = "Delete");
-
-        Alert.viewSuccessMessage();
-    }
-
-     macro viewNotificationTemplateNotPresent {
+	macro viewNotificationTemplateNotPresent {
 		AssertElementNotPresent(
 			key_notificationTemplateName = "${notificationTemplateName}",
 			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
 	}
-
 
 }
