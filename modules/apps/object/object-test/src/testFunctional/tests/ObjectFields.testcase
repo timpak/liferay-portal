@@ -815,6 +815,39 @@ definition {
 			locator1 = "DocumentsAndMedia#DESCRIPTIVE_LIST_FOLDER_TITLE");
 	}
 
+	@description = "LPS-158821 - Verify that the user is able to set the ERC field as a Title Field"
+	@priority = "4"
+	test CanSetERCFieldAsTitleField {
+		task ("Create Custom Object and Custom Field (via API)") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 162184",
+				objectName = "CustomObject162184",
+				pluralLabelName = "Custom Objects 162184");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Text",
+				fieldLabelName = "Custom Field",
+				fieldName = "customObjectField",
+				fieldType = "String",
+				isRequired = "false",
+				objectName = "CustomObject162184");
+		}
+
+		task ("Go to Custom Object") {
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 162184");
+		}
+
+		task ("Select title field and assert it") {
+			CreateObject.selectTitleField(fieldLabel = "External Reference Code");
+
+			CreateObject.saveObject();
+
+			CreateObject.assertTitleFieldIsSelected(fieldLabel = "External Reference Code");
+		}
+	}
+
 	@description = "LPS-148112 - Verify if on the side panel the 'Show files' path can be edited"
 	@priority = "4"
 	test CanUpdateShowFilesOptionBeforePublished {
