@@ -56,4 +56,23 @@ definition {
 			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
 	}
 
+    macro deleteNotificationTemplate {
+		Click(
+			locator1 = "ObjectNotifications#DROPDOW_MENU",
+			key_templateName = "${templateName}");
+
+		ClickNoError(
+			locator1 = "ObjectNotifications#DROPDOW_MENU_ITEM",
+			key_menuItem = "Delete");
+
+        Alert.viewSuccessMessage();
+    }
+
+     macro viewNotificationTemplateNotPresent {
+		AssertElementNotPresent(
+			key_notificationTemplateName = "${notificationTemplateName}",
+			locator1 = "ObjectNotifications#NOTIFICATION_TEMPLATE");
+	}
+
+
 }

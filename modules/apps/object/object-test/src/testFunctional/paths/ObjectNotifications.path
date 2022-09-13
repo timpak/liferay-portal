@@ -20,6 +20,17 @@
 	<td>//div[@class= 'table-list-title' and contains(., '${key_notificationTemplateName}')]</td>
 	<td></td>
 </tr>
+<tr>
+	<td>DROPDOW_MENU</td>
+	<td>//div[@class='table-list-title' and contains(., '${key_templateName}')]//..//..//button[@class='dropdown-toggle component-action dropdown-toggle ml-1 btn btn-unstyled']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DROPDOW_MENU_ITEM</td>
+	<td>//div[@class='dropdown-menu show']//button[@class='dropdown-item' and contains(., '${key_menuItem}')]</td>
+	<td></td>
+</tr>
+
 </tbody>
 </table>
 </body>
