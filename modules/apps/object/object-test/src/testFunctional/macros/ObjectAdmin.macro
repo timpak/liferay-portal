@@ -67,8 +67,8 @@ definition {
 			inputMethod = "${inputMethod}",
 			inputValue = "${inputValue}",
 			objectLabel = "${objectLabel}",
-			secretAction = "${secretAction}",
 			scriptValidation = "${scriptValidation}",
+			secretAction = "${secretAction}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
 			whenAction = "${whenAction}");
@@ -958,9 +958,9 @@ definition {
 		}
 
 		if ("${thenAction}" == "Groovy Script") {
-				ObjectCustomValidation.insertScriptOnValidation(scriptValidation = "${scriptValidation}");
+			ObjectCustomValidation.insertScriptOnValidation(scriptValidation = "${scriptValidation}");
 		}
-		
+
 		if (isSet(urlAction)) {
 			Type(
 				locator1 = "ObjectAdmin#ACTION_URL_FIELD",
