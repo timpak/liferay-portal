@@ -1,0 +1,23 @@
+definition {
+
+	macro assertRelationshipParameterNotPresent {
+		Click(locator1 = "ObjectRelationships#SELECT_PARAMETER_FORM");
+
+		AssertElementNotPresent(
+			key_parameterOption = "${parameter}",
+			locator1 = "ObjectRelationships#SELECT_PARAMETER_OPTION");
+	}
+
+	macro editRelationshipsParameter {
+		Click(locator1 = "ObjectRelationships#SELECT_PARAMETER_FORM");
+
+		AssertElementPresent(
+			key_parameterOption = "${parameter}",
+			locator1 = "ObjectRelationships#SELECT_PARAMETER_OPTION");
+
+		ClickNoError.clickNoMouseOver(
+			key_parameterOption = "${parameter}",
+			locator1 = "ObjectRelationships#SELECT_PARAMETER_OPTION");
+	}
+
+}
