@@ -141,9 +141,11 @@ definition {
 	}
 
 	macro assertEmptyStateTextOnViewBuilder {
+		SelectFrame(locator1 = "ObjectCustomViews#CUSTOM_VIEW_MODAL");
+
 		AssertElementPresent(
 			key_text = "${text}",
-			locator1 = "ObjectCustomViews#VIEW_BUILDER_EMPTY_STATE_TEXT");
+			locator1 = "ObjectCustomViews#CUSTOM_VIEW_MODAL");
 	}
 
 	macro assertNoColumnPresentInDefaultSort {
