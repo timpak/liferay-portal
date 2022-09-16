@@ -59,6 +59,7 @@ definition {
 		ObjectAdmin.gotoAddObjectAction();
 
 		ObjectAdmin.fillObjectAction(
+			actionDescription = "${actionDescription}",
 			actionName = "${actionName}",
 			active = "${active}",
 			click = "save",
@@ -67,6 +68,7 @@ definition {
 			inputValue = "${inputValue}",
 			objectLabel = "${objectLabel}",
 			secretAction = "${secretAction}",
+			scriptValidation = "${scriptValidation}",
 			thenAction = "${thenAction}",
 			urlAction = "${urlAction}",
 			whenAction = "${whenAction}");
@@ -515,6 +517,12 @@ definition {
 			key_actionActive = "${actionActive}",
 			key_actionName = "${actionName}",
 			locator1 = "ObjectAdmin#VIEW_ACTIONS_TAB");
+
+		if (isSet(status)) {
+			AssertElementPresent(
+				key_statusInfo = "${status}",
+				locator1 = "ObjectAction#ACTIONS_STATUS_INFO");
+		}
 	}
 
 	macro assertObjectActionsNotPresent {
@@ -885,6 +893,12 @@ definition {
 				value1 = "${actionName}");
 		}
 
+		if (isSet(actionDescription)) {
+			Type(
+				locator1 = "ObjectAdmin#ACTION_DESCRIPTION_FIELD",
+				value1 = "${actionDescription}");
+		}
+
 		if (isSet(active)) {
 			if ("${active}" == "true") {
 				CreateObject.checkToggleActive();
@@ -943,6 +957,10 @@ definition {
 				value1 = "${inputExpression}");
 		}
 
+		if ("${thenAction}" == "Groovy Script") {
+				ObjectCustomValidation.insertScriptOnValidation(scriptValidation = "${scriptValidation}");
+		}
+		
 		if (isSet(urlAction)) {
 			Type(
 				locator1 = "ObjectAdmin#ACTION_URL_FIELD",
