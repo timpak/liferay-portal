@@ -55,6 +55,23 @@ definition {
 		}
 	}
 
+	macro addObjectActionEntryViaUI {
+		ObjectAdmin.gotoAddObjectAction();
+
+		ObjectAdmin.fillObjectAction(
+			actionActive = "${actionActive}",
+			actionName = "${actionName}",
+			active = "${active}",
+			click = "save",
+			inputValue = "${inputValue}",
+			notRefreshAttribute = "true",
+			onAction = "${chooseOption}",
+			secretAction = "${secretAction}",
+			thenAction = "${thenAction}",
+			urlAction = "${urlAction}",
+			whenAction = "${whenAction}");
+	}
+
 	macro addObjectActionViaUI {
 		ObjectAdmin.gotoAddObjectAction();
 
@@ -1021,14 +1038,19 @@ definition {
 		}
 
 		if (isSet(click)) {
-			if ("${click}" == "cancel") {
+			if (("${click}" == "save") && ("${notRefreshAttribute}" == "true")) {
+				Button.clickSave();
+			}
+			else if ("${click}" == "cancel") {
 				Button.clickCancel();
+
+				Refresh();
 			}
 			else if ("${click}" == "save") {
 				Button.clickSave();
-			}
 
-			Refresh();
+				Refresh();
+			}
 		}
 	}
 
