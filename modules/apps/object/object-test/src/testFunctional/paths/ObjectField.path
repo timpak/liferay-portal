@@ -93,6 +93,11 @@
 		<td></td>
 	</tr>
 	<tr>
+		<td>OBJECT_FIELD_DISABLED</td>
+		<td>//label[contains(.,'Object')]//..//div[contains(@aria-controls,'clay-dropdown-menu') and contains(@class,'disabled')]</td>
+		<td></td>
+	</tr>
+	<tr>
 		<td>REQUEST_FILES_INPUT</td>
 		<td>//label[contains(text(), 'Request Files')]/..//input[@placeholder='Choose an Option']</td>
 		<td></td>
