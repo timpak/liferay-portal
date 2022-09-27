@@ -66,6 +66,10 @@ definition {
 		AssertElementPresent(locator1 = "ObjectField#NAME_FIELD_DISABLED");
 	}
 
+	macro assertObjectDisabled {
+		AssertElementPresent(locator1 = "ObjectField#OBJECT_FIELD_DISABLED");
+	}
+
 	macro assertOptionAndDescription {
 		Click(locator1 = "ObjectField#TYPE_FIELD");
 
