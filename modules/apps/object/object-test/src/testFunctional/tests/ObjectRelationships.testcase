@@ -963,6 +963,46 @@ definition {
 		ObjectAdmin.viewOptionTitleField(optionNameNotPresent = "Relationship");
 	}
 
+	@description = "163655 - Verify that the user is not allowed to update the Name, Type, or Object from the parent Relationship"
+	@priority = "3"
+	test CannotUpdateNameTypeObjectFromParentRelationship {
+		ObjectAdmin.addObjectViaAPI(
+			labelName = "Custom Object 290",
+			objectName = "CustomObject290",
+			pluralLabelName = "Custom Objects 290");
+
+		ObjectAdmin.addObjectFieldViaAPI(
+			fieldBusinessType = "Text",
+			fieldLabelName = "Custom Field",
+			fieldName = "customObjectField",
+			fieldType = "String",
+			isRequired = "true",
+			objectName = "CustomObject290");
+
+		ObjectAdmin.addObjectRelationshipViaAPI(
+			objectName_1 = "CustomObject290",
+			objectName_2 = "User",
+			relationshipLabel = "Relationship",
+			relationshipName = "relationship",
+			relationshipType = "manyToMany");
+
+		ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject290");
+
+		ObjectAdmin.openObjectAdmin();
+
+		ObjectPortlet.selectCustomObject(label = "Custom Object 290");
+
+		ObjectAdmin.gotoRelationshipsTab();
+
+		ObjectAdmin.goToRelationshipsDetails(fieldName = "Relationship");
+
+		ObjectField.assertNameDisabled();
+
+		ObjectField.assertTypeDisabled();
+
+		ObjectField.assertObjectDisabled();
+	}
+
 	@description = "LPS-146754 - Verify that it's possible to relate a Custom Object entry with many Native Object entries (Many-to-Many)"
 	@priority = "5"
 	test CanRelateManyToManyCustomObjectEntryWithNativeObjectEntries {
