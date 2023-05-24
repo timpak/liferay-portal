@@ -617,4 +617,34 @@ definition {
 			locator1 = "VisualizeObjectDisplayPage#DISPLAY_ENTRY");
 	}
 
+	test EchoVar {
+		property portal.acceptance = "timpak";
+
+		var testA = PropsUtil.get("digital.signature.rsa.private.key");
+		var testB = PropsUtil.get("object.storage.salesforce.consumer.key");
+		var testC = PropsUtil.get("object.storage.salesforce.consumer.secret");
+		var testD = PropsUtil.get("object.storage.salesforce.login.url");
+		var testE = PropsUtil.get("object.storage.salesforce.password");
+		var testF = PropsUtil.get("object.storage.salesforce.username");
+		var testG = PropsUtil.get("site.initializer.partner.portal.consumer.key");
+
+		echo("Start of properties asdf.");
+
+		echo(${testA});
+
+		echo(${testB});
+
+		echo(${testC});
+
+		echo(${testD});
+
+		echo(${testE});
+
+		echo(${testF});
+
+		echo(${testG});
+
+		echo("End of properties asdf.");
+	}
+
 }
