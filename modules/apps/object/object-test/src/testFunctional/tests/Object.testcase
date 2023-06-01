@@ -22,7 +22,7 @@ definition {
 	}
 
 	@description = "LPS-150886 - Verify that it's possible to delete an object after deleting the relationship"
-	@priority = 4
+	@priority = 5
 	test CanDeleteCustomObjectAfterDeleteRelationship {
 		ObjectAdmin.addObjectViaAPI(
 			labelName = "Custom Object 290",
