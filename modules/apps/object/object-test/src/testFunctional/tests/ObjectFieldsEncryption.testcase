@@ -60,4 +60,57 @@ definition {
 		}
 	}
 
+	@description = "LPS-186235 - Verify is possible to update entries of the encrypted object fields"
+	@priority = 5
+	test CanUpdateEntry {
+		property custom.properties = PropsUtil.get("object.encryption.algorithm");
+		property custom.properties = PropsUtil.get("object.encryption.key");
+		property portal.acceptance = "true";
+
+		task ("Given a custom object with an encrypted field and an object entry") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 186235",
+				objectName = "CustomObject186235",
+				pluralLabelName = "Custom Objects 186235");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Encrypted",
+				fieldLabelName = "Encrypted Field",
+				fieldName = "encryptedField",
+				fieldType = "Clob",
+				indexed = "false",
+				isRequired = "false",
+				objectName = "CustomObject186235");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject186235");
+
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "encryptedField",
+				objectName = "CustomObject186235",
+				value = "Entry Test");
+		}
+
+		task ("When the user edits the entry") {
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject186235");
+
+			ObjectPortlet.viewEntryDetails(entry = "Entry Test");
+
+			ObjectPortlet.typeCustomField(
+				customField = "Encrypted Field",
+				entry = "Edited Entry");
+
+			Button.clickSave();
+		}
+
+		task ("Then the field value is decrypted and the value is updated on the table") {
+			AssertElementPresent(
+				locator1 = "ObjectAdmin#ENTRY_STRING_VALUE_FIELD",
+				value1 = "Edited Entry");
+
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject186235");
+
+			ObjectPortlet.viewEntry(entry = "Edited Entry");
+		}
+	}
+
 }
