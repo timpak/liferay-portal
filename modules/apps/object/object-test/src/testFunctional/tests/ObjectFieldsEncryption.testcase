@@ -113,4 +113,61 @@ definition {
 		}
 	}
 
+	@description = "LPS-186236 - Verify the field value is decrypted in collection display"
+	@priority = 4
+	test CanViewEntryWithCollectionDisplay {
+		property custom.properties = PropsUtil.get("object.encryption.algorithm");
+		property custom.properties = PropsUtil.get("object.encryption.key");
+
+		task ("Given an object with an encrypted field and an object entry") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 186236",
+				objectName = "CustomObject186236",
+				pluralLabelName = "Custom Objects 186236");
+
+			ObjectAdmin.addObjectFieldViaAPI(
+				fieldBusinessType = "Encrypted",
+				fieldLabelName = "Encrypted Field",
+				fieldName = "encryptedField",
+				fieldType = "Clob",
+				indexed = "false",
+				isRequired = "false",
+				objectName = "CustomObject186236");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject186236");
+
+			ObjectAdmin.addObjectSingleFieldEntryViaAPI(
+				fieldName = "encryptedField",
+				objectName = "CustomObject186236",
+				value = "Entry Test");
+		}
+
+		task ("And given a page with a collection display") {
+			ContentPages.addPage(pageName = "Blank Display Page");
+
+			PageEditor.addFragment(
+				collectionName = "Content Display",
+				fragmentName = "Collection Display");
+		}
+
+		task ("And given select the object as a collection provider using a display style as Table") {
+			PageEditor.editCollectionDisplay(
+				fragmentName = "Collection Display",
+				infoListProviderName = "Custom Objects 186236",
+				styleDisplay = "Table");
+
+			Button.clickPublish();
+		}
+
+		task ("When go to the created page") {
+			Navigator.gotoPage(pageName = "Blank Display Page");
+		}
+
+		task ("Then the field value is decrypted on the table") {
+			AssertElementPresent(
+				key_entryName = "Entry Test",
+				locator1 = "ObjectAdmin#VIEW_ENTRY_NAME_ON_PAGE");
+		}
+	}
+
 }
