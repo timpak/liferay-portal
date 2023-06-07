@@ -1,0 +1,63 @@
+definition {
+
+	property portal.release = "true";
+	property portal.upstream = "true";
+	property testray.main.component.name = "Object";
+
+	setUp {
+		TestCase.setUpPortalInstance();
+
+		User.firstLoginPG();
+	}
+
+	tearDown {
+		ObjectAdmin.deleteAllCustomObjectsViaAPI();
+
+		var testPortalInstance = PropsUtil.get("test.portal.instance");
+
+		if (${testPortalInstance} == "true") {
+			PortalInstances.tearDownCP();
+		}
+	}
+
+	@description = "LPS-186234 - Verify is possible to add entries of the encrypted object fields"
+	@priority = 5
+	test CanAddEntry {
+		property custom.properties = PropsUtil.get("object.encryption.algorithm");
+		property custom.properties = PropsUtil.get("object.encryption.key");
+		property portal.acceptance = "true";
+
+		task ("Given a custom object with an encrypted field") {
+			ObjectAdmin.addObjectViaAPI(
+				labelName = "Custom Object 186234",
+				objectName = "CustomObject186234",
+				pluralLabelName = "Custom Objects 186234");
+
+			ObjectAdmin.openObjectAdmin();
+
+			ObjectPortlet.selectCustomObject(label = "Custom Object 186234");
+
+			ObjectAdmin.goToFieldsTab();
+
+			ObjectAdmin.addObjectFieldViaUI(
+				fieldLabel = "Encrypted Field",
+				fieldName = "encryptedField",
+				fieldType = "Encrypted");
+
+			ObjectAdmin.publishObjectViaAPI(objectName = "CustomObject186234");
+		}
+
+		task ("When the user adds an entry") {
+			ObjectAdmin.goToCustomObject(objectName = "CustomObject186234");
+
+			ObjectAdmin.addObjectStringFieldEntryViaUI(entryValue = "Entry Test");
+		}
+
+		task ("Then the field value is decrypted on the table") {
+			Navigator.gotoBack();
+
+			ObjectPortlet.viewEntry(entry = "Entry Test");
+		}
+	}
+
+}
