@@ -21,7 +21,7 @@ definition {
 		}
 	}
 
-	@description = "LPS-186234 - Verify is possible to add entries of the encrypted object fields"
+	@description = "LPS-178057 - Verify a custom object entry with an encrypted field can be added"
 	@priority = 5
 	test CanAddEntry {
 		property portal.acceptance = "true";
@@ -59,7 +59,7 @@ definition {
 		}
 	}
 
-	@description = "LPS-186235 - Verify is possible to update entries of the encrypted object fields"
+	@description = "LPS-178057 - Verify a custom object entry with an encrypted field can be added"
 	@priority = 5
 	test CanUpdateEntry {
 		property portal.acceptance = "true";
@@ -110,7 +110,7 @@ definition {
 		}
 	}
 
-	@description = "LPS-186236 - Verify the field value is decrypted in collection display"
+	@description = "LPS-178057 - Verify the field value is decrypted in collection display"
 	@priority = 4
 	test CanViewEntryWithCollectionDisplay {
 
@@ -138,14 +138,14 @@ definition {
 		}
 
 		task ("And given a page with a collection display") {
-			ContentPages.addPage(pageName = "Blank Display Page");
+			ContentPages.addPage(pageName = "Collection Display Page");
 
 			PageEditor.addFragment(
 				collectionName = "Content Display",
 				fragmentName = "Collection Display");
 		}
 
-		task ("And given select the object as a collection provider using a display style as Table") {
+		task ("And given the display style is set to Table") {
 			PageEditor.editCollectionDisplay(
 				fragmentName = "Collection Display",
 				infoListProviderName = "Custom Objects 186236",
@@ -154,8 +154,8 @@ definition {
 			Button.clickPublish();
 		}
 
-		task ("When go to the created page") {
-			Navigator.gotoPage(pageName = "Blank Display Page");
+		task ("When the user navigates to the page") {
+			Navigator.gotoPage(pageName = "Collection Display Page");
 		}
 
 		task ("Then the field value is decrypted on the table") {
