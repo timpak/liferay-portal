@@ -1,5 +1,6 @@
 definition {
 
+	property object.encryption.enabled = "true";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Object";
@@ -23,8 +24,6 @@ definition {
 	@description = "LPS-186234 - Verify is possible to add entries of the encrypted object fields"
 	@priority = 5
 	test CanAddEntry {
-		property custom.properties = PropsUtil.get("object.encryption.algorithm");
-		property custom.properties = PropsUtil.get("object.encryption.key");
 		property portal.acceptance = "true";
 
 		task ("Given a custom object with an encrypted field") {
@@ -63,8 +62,6 @@ definition {
 	@description = "LPS-186235 - Verify is possible to update entries of the encrypted object fields"
 	@priority = 5
 	test CanUpdateEntry {
-		property custom.properties = PropsUtil.get("object.encryption.algorithm");
-		property custom.properties = PropsUtil.get("object.encryption.key");
 		property portal.acceptance = "true";
 
 		task ("Given a custom object with an encrypted field and an object entry") {
@@ -116,8 +113,6 @@ definition {
 	@description = "LPS-186236 - Verify the field value is decrypted in collection display"
 	@priority = 4
 	test CanViewEntryWithCollectionDisplay {
-		property custom.properties = PropsUtil.get("object.encryption.algorithm");
-		property custom.properties = PropsUtil.get("object.encryption.key");
 
 		task ("Given an object with an encrypted field and an object entry") {
 			ObjectAdmin.addObjectViaAPI(
