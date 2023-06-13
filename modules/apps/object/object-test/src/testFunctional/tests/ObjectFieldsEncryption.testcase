@@ -24,7 +24,7 @@ definition {
 	@description = "LPS-178057 - Verify a custom object entry with an encrypted field can be added"
 	@priority = 5
 	test CanAddEntry {
-		property portal.acceptance = "true";
+		property portal.acceptance = "timpak";
 
 		task ("Given a custom object with an encrypted field") {
 			ObjectAdmin.addObjectViaAPI(
@@ -62,7 +62,7 @@ definition {
 	@description = "LPS-178057 - Verify a custom object entry with an encrypted field can be added"
 	@priority = 5
 	test CanUpdateEntry {
-		property portal.acceptance = "true";
+		property portal.acceptance = "timpak";
 
 		task ("Given a custom object with an encrypted field and an object entry") {
 			ObjectAdmin.addObjectViaAPI(
@@ -113,6 +113,7 @@ definition {
 	@description = "LPS-178057 - Verify the field value is decrypted in collection display"
 	@priority = 4
 	test CanViewEntryWithCollectionDisplay {
+		property portal.acceptance = "timpak";
 
 		task ("Given an object with an encrypted field and an object entry") {
 			ObjectAdmin.addObjectViaAPI(
