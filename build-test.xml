@@ -12352,6 +12352,19 @@ session.cookie.use.full.hostname=true
 			</then>
 		</if>
 
+		<get-testcase-property property.name="object.encryption.enabled" />
+
+		<if>
+			<equals arg1="${object.encryption.enabled}" arg2="true" />
+			<then>
+				<echo append="true" file="portal-impl/src/portal-ext.properties">
+
+object.encryption.algorithm=${object.encryption.algorithm}
+object.encryption.key=${object.encryption.key}
+</echo>
+			</then>
+		</if>
+
 		<get-testcase-property property.name="portal.proxy.path" />
 		<propertycopy from="portal.proxy.path[${env.CI_TEST_SUITE}]" name="portal.proxy.path" silent="true" />
 
