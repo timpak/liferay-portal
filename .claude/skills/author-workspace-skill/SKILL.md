@@ -87,7 +87,7 @@ single short pass:
 
 - **Skill name** — a proposed kebab-case verb phrase, checked for collisions.
 
-- **Skill Index group** — which group in `liferay-rules.md` the skill belongs under.
+- **Router-table intent** — the user intent the skill answers, for its `liferay-rules.md` row.
 
 - **Trigger phrases** — the `Use when the user asks to …` list and the `## When to Invoke`
   bullets.
@@ -101,10 +101,14 @@ Write any field left unanswered as `TODO`.
 ### Draft the Skill
 
 Write `<workspace-rules>/skills/<name>/SKILL.md` following the skeleton and conventions in
-[references/workspace-skill-anatomy.md](references/workspace-skill-anatomy.md). Keep the
-frontmatter to exactly `name` and `description`. On a re-run where the file already exists,
-**update in place**: refresh the derived sections (endpoints, schemas, flag table) and preserve
-human-edited sections (confirmed triggers, hand-written gotchas).
+[references/workspace-skill-anatomy.md](references/workspace-skill-anatomy.md) — the fixed section
+order, list/table-first prose, and a `## Success Signal` promoted from the workflow's own
+verification (or `TODO / inferred — verify` when none exists; never invented). Frontmatter is
+`description` + `name`; Claude-only metadata keys the other agents ignore (`allowed-tools`,
+`argument-hint`) are allowed, but never `globs`/`alwaysApply`/`disable-model-invocation`. On a
+re-run where the file already exists, **update in place**: refresh the derived sections (endpoints,
+schemas, flag table) and preserve human-edited sections (confirmed triggers, hand-written gotchas,
+success signal).
 
 ### Draft or Update Cards
 
@@ -117,8 +121,8 @@ relative path, and dedup rows when extending a card on a re-run.
 ### Wire Into Every Agent
 
 For each base file written under `.workspace-rules`, create the matching symlink in all five
-agent directories and register the skill in the entry point — under the confirmed Skill Index
-group, and in the Reference Cards list for any new card. The exact symlink targets and index
+agent directories and register the skill in the entry point — a row in the intent → skill router
+table, and a Reference Cards entry for any new card. The exact symlink targets and router
 edits are specified in
 [references/workspace-skill-anatomy.md](references/workspace-skill-anatomy.md). Skip any symlink
 or index entry that already exists.
@@ -129,12 +133,16 @@ Verify the generated artifacts before reporting.
 
 Structural gate:
 
-- Frontmatter carries **only** `name` and `description`. Strip any `allowed-tools` or
-  `argument-hint` that leaked in — those are Claude-only keys and would pollute the other agents.
+- Frontmatter has `description` + `name`; `allowed-tools`/`argument-hint` are allowed. Strip any
+  `globs`, `alwaysApply`, or `disable-model-invocation` — those are parsed by other agents or drive
+  Claude-specific behavior and break agent-agnostic parity.
 
 - Headings are Title Case and unnumbered; the file otherwise passes `.claude/rules/markdown-style.md`.
 
-- Every cited card exists, every created symlink resolves (`readlink -e`), and the Skill Index
+- The skill ends with a `## Success Signal` (promoted from the workflow, or `TODO`), and any new
+  card holds facts only — no curl blocks or step sequences leaked into a card.
+
+- Every cited card exists, every created symlink resolves (`readlink -e`), and the router-table
   and Reference Cards entries are present in `liferay-rules.md`.
 
 Coverage checklist:
