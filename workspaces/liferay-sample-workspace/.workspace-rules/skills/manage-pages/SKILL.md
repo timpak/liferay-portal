@@ -18,7 +18,11 @@ Create and wire site pages, navigation menus, and page templates. The reliable p
 
 ## Prerequisites
 
-Feature flag `LPD-35443` must be on for the public layout API. Verify and enable via `feature-flags` skill.
+Verify and enable via the `feature-flags` skill. Flag defaults are `inferred — verify`.
+
+| Flag | Default | Required For |
+| --- | --- | --- |
+| `LPD-35443` | off | Public layout (page) REST API |
 
 ## Page Types
 
@@ -31,11 +35,13 @@ Consult `rules/page-types.md` for the full table. Common types:
 | Display Page Template | Object/content type landing page | headless-admin-site |
 | Page Template | Reusable page blueprint | headless-admin-site |
 
-## Authoring Pages in the Site Initializer (Primary)
+## Workflow
+
+### Author Pages in the Site Initializer (Primary)
 
 Pages live in the initializer tree and come into being when the initializer is triggered. This avoids the unreliable live page creation API and keeps the page definitions in source control.
 
-### Write `page.json`
+#### Write `page.json`
 
 Create `site-initializer/layouts/<NN-page-name>/page.json`. The `NN` prefix controls creation order. Set the type, name, friendly URL, and any per role permissions (see the `page.json` format in `rules/site-initializer-format.md`):
 
@@ -52,7 +58,7 @@ Create `site-initializer/layouts/<NN-page-name>/page.json`. The `NN` prefix cont
 }
 ```
 
-### Write `page-definition.json`
+#### Write `page-definition.json`
 
 Compose the layout in `site-initializer/layouts/<NN-page-name>/page-definition.json`. Reference each fragment by its `key` and `siteKey` (the fragments must exist under `site-initializer/fragments/group/<collection-key>/fragments/`):
 
@@ -78,15 +84,15 @@ Compose the layout in `site-initializer/layouts/<NN-page-name>/page-definition.j
 
 The `key` is the fragment's directory name under the collection's `fragments/` folder (e.g. a folder `fragments/group/myco/fragments/hero/` → `"key": "hero"`). The `siteKey` token `[$GROUP_KEY$]` resolves to the current site at provision time and tells the importer the fragment lives in this site's collection (omit `siteKey` only for built in fragments, which use a combined key like `"key": "BASIC_COMPONENT-paragraph"`). **Do not** use `collectionExternalReferenceCode`/`fragmentEntryKey` here — the site-initializer importer reads `key`/`siteKey` and silently drops any fragment element it cannot resolve, leaving the page blank.
 
-### Navigation and SEO
+#### Navigation and SEO
 
 Set sitewide navigation and theme in `site-initializer/layout-set/public/metadata.json`. Per page SEO metadata lives alongside the page in `page.json`.
 
-### Provision
+#### Provision
 
 Trigger (or, for `layouts/` changes on an existing site, reprovision) the site — delete and recreate it from the initializer. See `rules/site-initializer-format.md` for the commands. Because the source tree is current and object data is company scoped, runtime entries survive the reprovision.
 
-## Display Object Data on a Page
+### Display Object Data on a Page
 
 To show a list of object entries on a page, use a **server side Collection Display**, not a client side `fetch`. A browser `fetch` to `/o/c/<pluralLabel>` carries the visitor's cookies, so the headless object API evaluates the request as the Guest user and typically returns **0 items** (Guest lacks entry level view permission). The Collection element renders on the server with the page's own permission context, so it returns the entries.
 
@@ -132,7 +138,7 @@ Compose it in `page-definition.json` (see the `Collection` / `CollectionItem` el
 	]
 	```
 
-### Mapping Limits — Denormalize Into Display Fields
+#### Mapping Limits — Denormalize Into Display Fields
 
 Field mapping renders the raw stored value and cannot transform it. In particular:
 
@@ -142,13 +148,13 @@ Field mapping renders the raw stored value and cannot transform it. In particula
 
 The workaround is to **denormalize**: add a plain `Text` display field on the object and populate it with the presentation ready value, then map that field. For example add `timeLabel` (a preformatted time string instead of the raw `DateTime`) or `speakerName` (the related person's name copied onto the entry), and map `ObjectField_timeLabel` / `ObjectField_speakerName`.
 
-## Fallback: Live API
+### Create Pages via the Live API (Fallback)
 
 Use the Headless Admin Site API (`/o/headless-admin-site/v1.0`) only when reprovisioning is undesirable and the change is small. This path is unreliable for page **creation** in particular. When the MCP server is available, prefer MCP tool calls over raw curl.
 
 > **Field/path corrections for the examples below** (verify against the OpenAPI spec — `get-openapi` MCP tool, or `GET /o/headless-admin-site/v1.0/openapi.json`). This module addresses sites by **`<site-erc>`** (external reference code), not numeric ID, and subresources are nested under `/sites/<site-erc>/…` (there is no top level `/site-pages/{id}`). On the current API the `SitePage` / `DisplayPageTemplate` / `MasterPage` DTOs use **`pageSpecifications`** (not the initializer's `pageDefinition`), `*_i18n` localized maps (`name_i18n`, `friendlyUrlPath_i18n` — `SitePage` has no `title` field), and `DisplayPageTemplate` binds via **`contentTypeReference`** (not flat `contentType`/`contentSubtype`). The illustrative bodies below predate that model — see "Page Specification Workflow (Draft and Publish)" for the verified shape. The `type` enum is **`ContentPage` / `WidgetPage` / `LinkToURLPage` / `EmbeddedPage` / `PageSetPage` / `LinkToPagePage`** (not `content`) — distinct from the site-initializer `page.json` `type` (`Content`/`Portlet`/`URL`/`Embedded`) and `headless-delivery`'s `pageType`. Page element operations also require flag `LPD-74328`.
 
-### Ensure the Site Exists
+#### Ensure the Site Exists
 
 ```bash
 # List sites
@@ -176,7 +182,7 @@ curl \
 	--user "test@liferay.com:test"
 ```
 
-### Create a Content Page
+#### Create a Content Page
 
 ```bash
 curl \
@@ -195,7 +201,7 @@ curl \
 
 Save the returned `id` as `<page-id>`.
 
-### Add Fragment Sections to a Content Page
+#### Add Fragment Sections to a Content Page
 
 > **Caution:** Prefer the site-initializer `page-definition.json` flow above — it is the verified path. The simple `collectionExternalReferenceCode`/`fragmentEntryKey` form shown below is **not** how either importer resolves a custom fragment: the site-initializer importer uses `key`/`siteKey`, and the live Headless API uses the `BasicFragment` + `fragmentReferenceType` form (see "Custom Fragment Placement via the Headless API" below). A reference written the wrong way is silently dropped and the section renders blank.
 
@@ -229,7 +235,7 @@ curl \
 	--user "test@liferay.com:test"
 ```
 
-### Create a Display Page Template
+#### Create a Display Page Template
 
 Display page templates bind an object or content type to a page layout so each entry has its own URL.
 
@@ -257,7 +263,7 @@ curl \
 
 Replace `contentType` and `contentSubtype` with the Liferay class name string for the target object. For Liferay Objects, use `com.liferay.object.model.ObjectEntry` and set `contentSubtype` to the object definition's ERC.
 
-### Create a Navigation Menu
+#### Create a Navigation Menu
 
 ```bash
 curl \
@@ -281,7 +287,7 @@ curl \
 
 The `uuid` is the `friendlyUrlPath` slug or the page UUID from the create response.
 
-### Configure SEO Settings
+#### Configure SEO Settings
 
 Update page SEO fields after creation:
 
@@ -306,28 +312,19 @@ curl \
 	--user "test@liferay.com:test"
 ```
 
-### Verify
+### Place a Client Extension Widget on a Page
 
-```bash
-# List pages
+When the user wants to add a deployed Custom Element CET to a page:
 
-curl \
-	--silent \
-	--url "http://localhost:${PORT}/o/headless-admin-site/v1.0/sites/<site-erc>/site-pages" \
-	--user "test@liferay.com:test" \
-	| jq '[.items[] | {externalReferenceCode, name, friendlyUrlPath, type}]'
+1. Confirm the CET is verified active first (see `deploy-and-verify`).
 
-# Probe the page URL
+1. Ask the user which page to add it to — do not assume.
 
-curl \
-	--head \
-	--silent \
-	--url "http://localhost:${PORT}/web/<site-friendly-url>/<page-url-slug>"
-```
+1. If the widget is already on the page, ask whether to replace or add a new one.
 
-Expect `200 OK` on the page probe.
+1. Place the widget via MCP, the Headless Admin Site API, or the Liferay UI depending on what the environment supports. See `mcp-server` for MCP availability per DXP version.
 
-## Live API Patterns and Gotchas
+## Patterns and Gotchas
 
 ### Schema Discovery Before Write Operations
 
@@ -403,14 +400,25 @@ Discriminators for fragment placement:
 
 Headless fragment CRUD endpoints are not consistently available across DXP versions — verify before assuming an endpoint exists (the `get-openapi` MCP tool, or fetch `GET /o/headless-admin-site/v1.0/openapi.json` with curl). If no fragment import endpoint appears in the live API surface, import via the portal UI instead. For programmatic placement on pages, use the discriminators above.
 
-## Placing a Client Extension Widget on a Page
+## Success Signal
 
-When the user wants to add a deployed Custom Element CET to a page:
+The page lists via the API and its URL responds `200 OK`:
 
-1. Confirm the CET is verified active first (see `deploy-and-verify`).
+```bash
+# List pages
 
-1. Ask the user which page to add it to — do not assume.
+curl \
+	--silent \
+	--url "http://localhost:${PORT}/o/headless-admin-site/v1.0/sites/<site-erc>/site-pages" \
+	--user "test@liferay.com:test" \
+	| jq '[.items[] | {externalReferenceCode, name, friendlyUrlPath, type}]'
 
-1. If the widget is already on the page, ask whether to replace or add a new one.
+# Probe the page URL
 
-1. Place the widget via MCP, the Headless Admin Site API, or the Liferay UI depending on what the environment supports. See `mcp-server` for MCP availability per DXP version.
+curl \
+	--head \
+	--silent \
+	--url "http://localhost:${PORT}/web/<site-friendly-url>/<page-url-slug>"
+```
+
+Expect `200 OK` on the page probe.

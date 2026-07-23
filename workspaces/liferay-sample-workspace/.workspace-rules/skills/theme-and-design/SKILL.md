@@ -19,11 +19,13 @@ When iterating on a site built from a site initializer, theme changes apply **li
 - "Create a dark variant of the site"
 - Called by `build-site` when the user specifies visual design requirements
 
-## Layer 1: themeCSS Client Extension
+## Workflow
+
+### Layer 1: themeCSS Client Extension
 
 A `themeCSS` CET injects custom CSS that overrides Clay Design System variables. This replaces the legacy Liferay theme WAR.
 
-### Scaffold
+#### Scaffold
 
 ```
 client-extensions/<name>/
@@ -78,11 +80,11 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
 Build the SCSS to CSS: `blade gw buildClientExtension` or configure the Sass build in `build.gradle`. Then run `deploy-and-verify`.
 
-### Apply to Site
+#### Apply to Site
 
 After deployment, go to Site Administration → Design → Theme → Configure and select the deployed theme CSS client extension.
 
-## Layer 2: Style Book
+### Layer 2: Style Book
 
 A style book maps Clay token names to site specific values. It overrides the themeCSS tokens without touching the code.
 
@@ -110,11 +112,11 @@ Save the returned `id`. Apply the style book to the site via Site Administration
 
 Consult learn.liferay.com for the full style book token reference (search `style book tokens`).
 
-## Layer 3: Master Page
+### Layer 3: Master Page
 
 Master pages define the persistent header and footer that surround all Content Pages assigned to that master.
 
-### Create via API
+#### Create via API
 
 ```bash
 curl \
@@ -200,7 +202,7 @@ A `themeCSS` CET overrides Clay Design System variables and is selected per site
 
 Use `globalCSS` for site agnostic CSS that must always load; use `themeCSS` for brand tokens applied through the theme picker.
 
-## Verify
+## Success Signal
 
 After deploying and assigning:
 
