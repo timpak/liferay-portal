@@ -92,8 +92,6 @@ single short pass:
 - **Trigger phrases** — the `Use when the user asks to …` list and the `## When to Invoke`
   bullets.
 
-- **`Maps to` learning path** — the tail of the description.
-
 - **Known gotchas** — any the developer wants to add beyond what mining found.
 
 Write any field left unanswered as `TODO`.
