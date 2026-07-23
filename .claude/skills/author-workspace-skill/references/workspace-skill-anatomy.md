@@ -46,18 +46,18 @@ changes Claude's routing — all three break agent-agnostic parity and are forbi
 ```
 ---
 
-description: <what it does>. Use when the user asks to <trigger>, <trigger>, or <trigger>. Maps to <Liferay learning path or doc>.
+description: <what it does>. Use when the user asks to <trigger>, <trigger>, or <trigger>.
 name: <name>
 
 ---
 ```
 
-The `description` follows a fixed formula: one clause stating what the skill does, a
+The `description` follows a fixed formula: one clause stating what the skill does and a
 `Use when the user asks to …` clause listing concrete trigger phrases (favor the words a user would
-actually say), and an optional `Maps to …` tail tying the skill to a Liferay learning path. Enrich
+actually say). Enrich
 the triggers with the concrete nouns a user would say (`hero`, `card`, `picklist`, `objectAction`)
 — but only nouns grounded in Liferay documentation or already in the corpus; never invent
-colloquial synonyms. The trigger list and the `Maps to` tail come from the checkpoint; any left
+colloquial synonyms. The trigger list comes from the checkpoint; any left
 unanswered are written `TODO`.
 
 ## Prose Style
@@ -217,7 +217,7 @@ A skill or card is invisible until it is registered in `liferay-rules.md`:
 When a target already exists, update in place rather than clobbering:
 
 - **Skill** — refresh the derived sections (endpoints, schemas, flag table); preserve
-  human-edited sections (confirmed triggers, `Maps to`, hand-written gotchas, success signal).
+  human-edited sections (confirmed triggers, hand-written gotchas, success signal).
 
 - **Card** — dedup rows; add only rows not already present.
 
