@@ -1,6 +1,6 @@
 ---
 
-description: Create, update, and publish Liferay Object definitions — fields, relationships, picklists, and validations. Use when the user asks to create an object, add a field, define a picklist, add a relationship, or set up an object validation. Maps to "Mastering Data Modeling with Liferay Objects".
+description: Create, update, and publish Liferay Object definitions — fields, relationships, picklists, and validations. Use when the user asks to create an object, add a field, define a picklist, add a relationship, or set up an object validation.
 name: manage-objects
 
 ---
