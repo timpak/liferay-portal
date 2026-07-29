@@ -46,7 +46,12 @@ The tables below list the common endpoints per module — they are not exhaustiv
 | Resource | Method | Path |
 | --- | --- | --- |
 | List structured contents (site) | GET | `/sites/{siteId}/structured-contents` |
+| List blog posts | GET | `/sites/{siteId}/blog-postings` |
 | Create blog post | POST | `/sites/{siteId}/blog-postings` |
+| Get, update, delete blog post by ID | GET / PUT / PATCH / DELETE | `/blog-postings/{blogPostingId}` |
+| Get, replace, delete blog post by ERC | GET / PUT / DELETE | `/sites/{siteId}/blog-postings/by-external-reference-code/{externalReferenceCode}` |
+| Upload blog cover image (`multipart/form-data`) | POST | `/sites/{siteId}/blog-posting-images` |
+| Blog post comments, rating, permissions | GET / POST | `/blog-postings/{blogPostingId}/{comments,my-rating,permissions}` |
 | Get document | GET | `/documents/{documentId}` |
 | Upload document | POST | `/sites/{siteId}/documents` |
 | Get site page content | GET | `/sites/{siteId}/site-pages/{pageFriendlyUrl}/page-contents` |
