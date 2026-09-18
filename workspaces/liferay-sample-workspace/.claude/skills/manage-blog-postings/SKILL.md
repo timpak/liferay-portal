@@ -1,0 +1,1 @@
+../../../.agents/skills/manage-blog-postings/SKILL.md

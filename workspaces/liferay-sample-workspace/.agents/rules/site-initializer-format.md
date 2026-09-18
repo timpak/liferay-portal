@@ -120,6 +120,7 @@ The `headless-admin-fragment` API **does** expose per fragment create/update/del
 client-extensions/<name>/
   client-extension.yaml
   site-initializer/
+    blog-postings.json            # Blog entries; ONE file holding a flat array, not a directory
     documents/                    # Documents and media
       group/
         <folder-name>/
@@ -289,6 +290,28 @@ A raw `ObjectRelationship`. This handler resolves the parent by **numeric ID** (
 The field sits on the child but is named for the **parent**, first letter lowercased — the relationship above puts `r_eventRegistrations_c_eventId` on `Registration`, not `..._c_registrationId`. Getting it wrong is silent: the unknown key is ignored, the child is created with the FK left at `0`, and the POST still returns `200`. There is an ERC twin, `r_eventRegistrations_c_eventERC`, which is what OData relationship filters require (see `skills/manage-objects/SKILL.md`).
 
 Do **not** copy `"system": true` from portal internal initializers (seo-studio, ai-hub) — it makes the object or picklist nonmodifiable.
+
+## `blog-postings.json`
+
+A bare JSON array of raw `BlogPosting` DTOs, applied by `_addOrUpdateBlogPostings`. Unlike `object-definitions/` or `layouts/`, this is a **single file, not a directory** — a `blog-postings/` directory is read by nothing and ignored without a warning.
+
+```json
+[
+	{
+		"articleBody": "<p><html body></p>",
+		"description": "<abstract>",
+		"externalReferenceCode": "<STABLE_ERC>",
+		"friendlyUrlPath": "<url-slug>",
+		"headline": "<Title>"
+	}
+]
+```
+
+The handler calls `putSiteBlogPostingByExternalReferenceCode`, so **`externalReferenceCode` is the upsert key** and rerunning is idempotent. Each posting then registers `[$BLOG_POSTING_ID:<ERC>$]` for later handlers.
+
+It runs after `addKeywords` and `addOrUpdateDocuments`, and before `addLayoutPageTemplates`, `addLayoutUtilityPageEntries`, `addAssetListEntries`, and `addOrUpdateAssetLinkEntries` — so a posting may reference an uploaded document and existing keywords, and a display page template or asset list may bind to the posting.
+
+Procedure and the live API equivalent: `skills/manage-blog-postings/SKILL.md`.
 
 ## `resource-permissions.json`
 

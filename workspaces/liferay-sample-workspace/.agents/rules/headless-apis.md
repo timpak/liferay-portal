@@ -154,7 +154,7 @@ Fragment code is in `fragmentVersions[]` (`html`, `css`, `js`, `configuration`, 
 | 401 | Not authenticated; check credentials or OAuth token |
 | 403 | Authenticated but forbidden; scope too narrow or permissions missing |
 | 404 | Resource not found or feature flag off; check flag state |
-| 409 | Conflict; typically duplicate name or ERC |
+| 409 | Conflict; typically duplicate name or ERC. **Not universal** — `headless-delivery` blog postings return `400` with `"This external reference code is already in use."` for a duplicate ERC (verified 2026.Q3.4). Probe for the entry rather than branching on `409` |
 | 500 | Server error; check `bundles/logs/liferay.<date>.log` |
 
 ## References
